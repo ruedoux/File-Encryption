@@ -11,14 +11,17 @@ struct GlobalTest : public :: testing::Test
 
 TEST_F(GlobalTest, encrypt_bytes_and_decrypt_back) 
 {
+    // Given
     std::vector<BYTE> bytes = Encryption::get_random_bytes(
         GLOBAL::get_random_number(1024, 2056)
     );
     std::vector<BYTE> key = Encryption::get_random_bytes(Encryption::KEY_LEN);
     std::vector<BYTE> vi = Encryption::get_random_bytes(Encryption::VI_LEN);
     
+    // When
     std::vector<BYTE> encryptedBytes = Encryption::encrypt(bytes, key, vi);
     std::vector<BYTE> decryptedBytes = Encryption::decrypt(encryptedBytes, key, vi);
 
+    // Then
     ASSERT_EQ(bytes, decryptedBytes);
 }
