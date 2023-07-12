@@ -13,9 +13,9 @@
 // -------------------------------------------------
 
 // C libs
-#include <time.h>      // For random numbers
-#include <cstring>     // For linux memcpy
-#include <sys/stat.h>  // Paths
+#include <time.h>     // For random numbers
+#include <cstring>    // For linux memcpy
+#include <sys/stat.h> // Paths
 #include <cmath>
 
 // C++ STD
@@ -23,11 +23,11 @@
 #include <string>
 #include <memory>
 #include <tuple>
-#include <functional>  // Function pointers
-#include <limits>      // Overflow management
-#include <fstream>     // Files
-#include <chrono>      // Timer
-#include <thread>      // Timer
+#include <functional> // Function pointers
+#include <limits>     // Overflow management
+#include <fstream>    // Files
+#include <chrono>     // Timer
+#include <thread>     // Timer
 
 // C++ STL
 #include <unordered_map>
@@ -37,25 +37,26 @@
 // MACROS
 // -------------------------------------------------
 
-#define PRINTLN(x) std::cout<<x<<"\n"
-#define PRINT(x) std::cout<<x
+#define PRINTLN(x) std::cout << x << "\n"
+#define PRINT(x) std::cout << x
 
 // Ansi colors
-# define _BOLD				"\033[1m"
-# define _RED				"\033[31m"
-# define _GREEN				"\033[32m"
-# define _BLUE				"\033[34m"
-# define _ANSI_RESET		"\033[0m"
+#define _BOLD "\033[1m"
+#define _RED "\033[31m"
+#define _GREEN "\033[32m"
+#define _BLUE "\033[34m"
+#define _ANSI_RESET "\033[0m"
 
 // ERROR and DEBUG
-#define DEBUG_MSG(msg,...) fprintf(stdout, _BOLD _BLUE"[DEBUG](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET"\n" , __FILE__, __LINE__, ##__VA_ARGS__)
-#define ERROR_MSG(msg,...) fprintf(stderr, _BOLD _RED"[ERROR](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET"\n" , __FILE__, __LINE__, ##__VA_ARGS__)
+#define DEBUG_MSG(msg, ...) fprintf(stdout, _BOLD _BLUE "[DEBUG](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#define ERROR_MSG(msg, ...) fprintf(stderr, _BOLD _RED "[ERROR](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET "\n", __FILE__, __LINE__, ##__VA_ARGS__)
 
-#define ERROR_EXIT(msg,...) fprintf(stderr, _BOLD _RED"[ERROR|EXIT](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET"\n" , __FILE__, __LINE__, ##__VA_ARGS__); exit(1)
-#define ERROR_RETURN(R, msg,...) fprintf(stderr, _BOLD _RED"[ERROR|RETURN](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET"\n" , __FILE__, __LINE__, ##__VA_ARGS__); return R
-
-// Frees a given allocated pointer and NULL's it
-#define free_and_NULL(ptr) (free(ptr), ptr = NULL)
+#define ERROR_EXIT(msg, ...)                                                                                                    \
+  fprintf(stderr, _BOLD _RED "[ERROR|EXIT](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
+  exit(1)
+#define ERROR_RETURN(R, msg, ...)                                                                                                 \
+  fprintf(stderr, _BOLD _RED "[ERROR|RETURN](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
+  return R
 
 #define KiB(x) ((size_t)(x) << 10) // Binary kilobyte
 #define MiB(x) ((size_t)(x) << 20) // Binary megabyte
@@ -72,89 +73,92 @@
 #endif
 
 // -------------------------------------------------
-// GLOBAL TYPEDEFS 
+// GLOBAL TYPEDEFS
 // -------------------------------------------------
 
-typedef uint8_t  u8;
+typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-typedef int8_t  i8;
+typedef int8_t i8;
 typedef int16_t i16;
 typedef int32_t i32;
 typedef int64_t i64;
 
-typedef float  f32;
+typedef float f32;
 typedef double f64;
 
-enum ErrorCode {
-    OK = 0,
-    FAILED = 1,
+enum ErrorCode
+{
+  OK = 0,
+  FAILED = 1,
 };
 
 // -------------------------------------------------
 // DECLARATION
 // -------------------------------------------------
 
-namespace GLOBAL{
-    struct Timer
-    {
-        std::chrono::steady_clock::time_point s;
-        std::chrono::steady_clock::time_point e;
-        Timer();
+namespace GLOBAL
+{
+  struct Timer
+  {
+    std::chrono::steady_clock::time_point s;
+    std::chrono::steady_clock::time_point e;
+    Timer();
 
-        // Start timer
-        void start();
+    // Start timer
+    void start();
 
-        // Get time from start
-        i64 end();
+    // Get time from start
+    i64 end();
 
-        // Sleep for x ms
-        static void sleep(i32 sleepTime);
-    };
+    // Sleep for x ms
+    static void sleep(i32 sleepTime);
+  };
 
-    // Converts unsigned char vector into string
-    std::string convert_bytes_to_string(const std::vector<BYTE> Utext);
+  // Converts unsigned char vector into string
+  std::string convert_bytes_to_string(const std::vector<BYTE> Utext);
 
-    // Converts string to unsigned char vector
-    std::vector<BYTE> convert_string_to_bytes(const std::string str);
+  // Converts string to unsigned char vector
+  std::vector<BYTE> convert_string_to_bytes(const std::string str);
 
-    // Converts whole string to lower case
-    std::string str_to_lower(std::string str);
+  // Converts whole string to lower case
+  std::string str_to_lower(std::string str);
 
-    // Prints vector to console
-    void print_bytes(const std::vector<BYTE> v);
+  // Prints vector to console
+  void print_bytes(const std::vector<BYTE> v);
 
-    template<typename T>
-    bool check_multiplication_overflow(T a, T b)
-    {
-        constexpr auto maxValue = std::numeric_limits<T>::max();
-        constexpr auto minValue = std::numeric_limits<T>::min();
+  template <typename T>
+  bool check_multiplication_overflow(T a, T b)
+  {
+    constexpr auto maxValue = std::numeric_limits<T>::max();
+    constexpr auto minValue = std::numeric_limits<T>::min();
 
-        if (a == -1 && b == minValue)
-            return false;
-        if (b == -1 && a == minValue)
-            return false;
+    if (a == -1 && b == minValue)
+      return false;
+    if (b == -1 && a == minValue)
+      return false;
 
-        if (b != 0 && a > maxValue / b)
-            return false;
-        if (b != 0 && a < minValue / b)
-            return false;
+    if (b != 0 && a > maxValue / b)
+      return false;
+    if (b != 0 && a < minValue / b)
+      return false;
 
-        return true;
-    }
+    return true;
+  }
 
-    template <typename T>
-    T get_random_number(T from, T to)
-    {
-        T n = to - from + 1;
-        T i = rand() % n;
-        if (i < 0) i = -i;
-        return from + i;
-    }
+  template <typename T>
+  T get_random_number(T from, T to)
+  {
+    T n = to - from + 1;
+    T i = rand() % n;
+    if (i < 0)
+      i = -i;
+    return from + i;
+  }
 
-    f64 round_up_number(f64 value, u32 places);
+  f64 round_up_number(f64 value, u32 places);
 }
 
 #endif

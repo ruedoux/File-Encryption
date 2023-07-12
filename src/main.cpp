@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[])
 {
-    PRINTLN("Something is written");
+    PRINTLN(MiB(1));
     return 0;
 }
 

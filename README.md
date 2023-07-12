@@ -24,6 +24,6 @@ Development
 
 **(!Currently project is WIP!)**
 
-Project will only build after all unit tests pass. All testing is located in src/test directory. Library for doing the tests is [gtest](https://github.com/google/googletest)
+Project will only build after all unit tests pass. All testing is located in src/test directory. Library for doing the tests is [gtest](https://github.com/google/googletest).
 
 
