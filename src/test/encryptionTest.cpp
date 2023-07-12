@@ -15,8 +15,8 @@ TEST_F(GlobalTest, encrypt_bytes_and_decrypt_back)
     std::vector<BYTE> bytes = Encryption::get_random_bytes(
         GLOBAL::get_random_number(1024, 2056)
     );
-    std::vector<BYTE> key = Encryption::get_random_bytes(Encryption::KEY_LEN);
-    std::vector<BYTE> vi = Encryption::get_random_bytes(Encryption::VI_LEN);
+    std::vector<BYTE> key = Encryption::get_random_bytes(Encryption::KEY_BYTE_SIZE);
+    std::vector<BYTE> vi = Encryption::get_random_bytes(Encryption::VI_BYTE_SIZE);
     
     // When
     std::vector<BYTE> encryptedBytes = Encryption::encrypt(bytes, key, vi);

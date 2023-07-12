@@ -101,33 +101,24 @@ enum ErrorCode
 
 namespace GLOBAL
 {
-  struct Timer
+  class Timer
   {
+  private:
     std::chrono::steady_clock::time_point s;
     std::chrono::steady_clock::time_point e;
+  public:
     Timer();
 
-    // Start timer
     void start();
-
-    // Get time from start
-    i64 end();
-
-    // Sleep for x ms
+    i64 get_ms_since_start();
     static void sleep(i32 sleepTime);
   };
 
-  // Converts unsigned char vector into string
-  std::string convert_bytes_to_string(const std::vector<BYTE> Utext);
-
-  // Converts string to unsigned char vector
+  std::string convert_bytes_to_string(const std::vector<BYTE> bytes);
   std::vector<BYTE> convert_string_to_bytes(const std::string str);
-
-  // Converts whole string to lower case
   std::string str_to_lower(std::string str);
-
-  // Prints vector to console
-  void print_bytes(const std::vector<BYTE> v);
+  void print_bytes(const std::vector<BYTE> bytes);
+  f64 round_up_number(f64 value, u32 places);
 
   template <typename T>
   bool check_multiplication_overflow(T a, T b)
@@ -157,8 +148,6 @@ namespace GLOBAL
       i = -i;
     return from + i;
   }
-
-  f64 round_up_number(f64 value, u32 places);
 }
 
 #endif

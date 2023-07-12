@@ -8,17 +8,11 @@
 // DEFINITIONS
 // -------------------------------------------------
 
-GLOBAL::Timer::Timer()
-{
-  GLOBAL::Timer::start();
-}
+GLOBAL::Timer::Timer() { GLOBAL::Timer::start(); }
 
-void GLOBAL::Timer::start()
-{
-  s = std::chrono::steady_clock::now();
-}
+void GLOBAL::Timer::start() { s = std::chrono::steady_clock::now(); }
 
-i64 GLOBAL::Timer::end()
+i64 GLOBAL::Timer::get_ms_since_start()
 {
   e = std::chrono::steady_clock::now();
   return std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count();
@@ -29,29 +23,29 @@ void GLOBAL::Timer::sleep(i32 sleepTime)
   std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds(sleepTime));
 }
 
-std::string GLOBAL::convert_bytes_to_string(const std::vector<BYTE> Utext)
+std::string GLOBAL::convert_bytes_to_string(const std::vector<BYTE> bytes)
 {
   std::string output;
-  for (size_t i = 0; i < Utext.size(); i++)
+  for (size_t i = 0; i < bytes.size(); i++)
   {
-    BYTE Uchar = Utext[i];
-    if (Uchar > 126)
+    BYTE byte = bytes[i];
+    if (byte > 126)
     {
-      Uchar = 48;
-    } // return 0 if over the range
-    output.push_back(static_cast<char>(Uchar));
+      byte = 48; // 0
+    }
+    output.push_back(static_cast<char>(byte));
   }
   return output;
 }
 
 std::vector<BYTE> GLOBAL::convert_string_to_bytes(const std::string str)
 {
-  std::vector<BYTE> Utext;
+  std::vector<BYTE> bytes;
   for (size_t i = 0; i < str.size(); i++)
   {
-    Utext.push_back(static_cast<BYTE>(str[i]));
+    bytes.push_back(static_cast<BYTE>(str[i]));
   }
-  return Utext;
+  return bytes;
 }
 
 std::string GLOBAL::str_to_lower(std::string str)
@@ -63,11 +57,11 @@ std::string GLOBAL::str_to_lower(std::string str)
   return str;
 }
 
-void GLOBAL::print_bytes(const std::vector<BYTE> v)
+void GLOBAL::print_bytes(const std::vector<BYTE> bytes)
 {
-  for (size_t i = 0; i < v.size(); i++)
+  for (size_t i = 0; i < bytes.size(); i++)
   {
-    PRINT(v[i] << " ");
+    PRINT(bytes[i] << " ");
   }
   PRINT("\n");
 }

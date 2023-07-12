@@ -8,6 +8,8 @@
 // --------------------------------------------
 
 #include "global.h"
+#include "encryption.h"
+#include "fileAccess.h"
 
 // --------------------------------------------
 // DECLARATIONS
@@ -23,16 +25,9 @@ class Batching
     - Up to 1048559 Bytes of data
     */
 
-    static constexpr size_t dataBytes = 1048560;
-    static constexpr size_t viBytes = 16;
-    static constexpr size_t chunkBytes = dataBytes + viBytes; // 1048576 Bytes
-
-    static constexpr std::ios::openmode readMode =
-        std::ios::binary;
-    static constexpr std::ios::openmode writeMode =
-        std::ios::binary;
-    static constexpr std::ios::openmode writeAppendMode =
-        std::ios::app | std::ios::binary;
+    static constexpr size_t VI_BYTE_SIZE = Encryption::VI_BYTE_SIZE;
+    static constexpr size_t DATA_BYTE_SIZE = MiB(1) - VI_BYTE_SIZE;
+    static constexpr size_t CHUNK_BYTE_SIZE = MiB(1);
 
     std::vector<BYTE> data;
     std::vector<BYTE> vi;

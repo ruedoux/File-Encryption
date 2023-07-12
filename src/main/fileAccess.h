@@ -6,7 +6,7 @@
 // DEPENDENCIES
 // -------------------------------------------------
 
-#include<limits>
+#include <limits>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -40,6 +40,11 @@ private:
   FileManager() {}
 
 public:
+  static constexpr std::ios::openmode READ_MODE =
+      std::ios::binary;
+  static constexpr std::ios::openmode WRITE_APPEND_MODE =
+      std::ios::app | std::ios::binary;
+  
   static bool file_delete(std::string &filePath);
   static bool file_create(std::string &filePath);
   static bool dir_create(std::string &dirPath);

@@ -25,8 +25,8 @@ private:
   Encryption() {}
 
 public:
-  static constexpr u64 KEY_LEN = 32;
-  static constexpr u64 VI_LEN = 16;
+  static constexpr u64 KEY_BYTE_SIZE = 32;
+  static constexpr u64 VI_BYTE_SIZE = 16;
   static constexpr u64 HASH_ROTATIONS = 32;
 
   static std::vector<BYTE> encrypt(
