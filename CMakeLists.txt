@@ -1,14 +1,15 @@
 cmake_minimum_required(VERSION 3.25)
 
 ## ---------------------------
-## Names
+## Variables
 ## ---------------------------
 
 set(This "FC")
-set(ThisTest "${This}Test")
 set(ThisLib "${This}Lib")
+set(CryptoAlgorithmsLib "CryptoAlgorithmsLib")
 
-set(CryptoAlgorithmsLib "${This}CryptoAlgorithmsLib")
+set(ThisUT "UTests")
+set(ThisIT "ITests")
 
 ## ---------------------------
 ## Settings
@@ -16,8 +17,9 @@ set(CryptoAlgorithmsLib "${This}CryptoAlgorithmsLib")
 
 project(${This} C CXX)
 
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 enable_testing()
@@ -43,8 +45,12 @@ file(GLOB AlgorithmsSource
      "${CMAKE_SOURCE_DIR}/dependencies/crypto-algorithms/*.h"
 )
 
-file(GLOB TestSource
-     "${CMAKE_SOURCE_DIR}/src/test/*.cpp"
+file(GLOB UTSource
+     "${CMAKE_SOURCE_DIR}/src/test/unit/*.cpp"
+)
+
+file(GLOB ITSource
+     "${CMAKE_SOURCE_DIR}/src/test/integration/*.cpp"
 )
 
 ## ---------------------------
@@ -55,17 +61,22 @@ add_library(${ThisLib} STATIC ${MainSource})
 add_library(${CryptoAlgorithmsLib} STATIC ${AlgorithmsSource})
 
 ## ---------------------------
-## Build Test
+## Tests
 ## ---------------------------
 
-add_executable(${ThisTest} ${TestSource} ${AlgorithmsSource})
-target_link_libraries(${ThisTest} PUBLIC gtest_main ${ThisLib})
+add_executable(${ThisUT} ${UTSource} ${AlgorithmsSource})
+target_link_libraries(${ThisUT} PUBLIC gtest_main ${ThisLib})
 
-add_test(NAME ${ThisTest} COMMAND ${ThisTest})
+add_test(NAME ${ThisUT} COMMAND ${ThisUT})
+
+add_executable(${ThisIT} ${ITSource} ${AlgorithmsSource})
+target_link_libraries(${ThisIT} PUBLIC gtest_main ${ThisLib})
+
+add_test(NAME ${ThisIT} COMMAND ${ThisIT})
 
 add_custom_target(RunTests
     COMMAND ${CMAKE_CTEST_COMMAND} --verbose
-    DEPENDS ${ThisTest}
+    DEPENDS ${ThisIT} ${ThisUT}
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 

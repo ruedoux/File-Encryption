@@ -1,59 +1,38 @@
 #include "fileAccess.h"
 
-bool FileManager::file_delete(std::string &filePath)
+bool FileAccess::file_delete(std::string &filePath)
 {
-  i32 result = remove(filePath.c_str());
-  return result == 0;
+  return std::filesystem::remove(filePath);
 }
 
-bool FileManager::file_create(std::string &filePath)
+bool FileAccess::file_create(std::string &filePath)
 {
   std::fstream file(filePath, std::fstream::in | std::fstream::out | std::fstream::trunc);
   return file.is_open();
 }
 
-bool FileManager::file_exist(std::string &filePath)
+bool FileAccess::file_exist(std::string &filePath)
 {
-  std::ifstream file(filePath);
-  return file.good();
+  return std::filesystem::is_regular_file(filePath);
 }
 
-bool FileManager::dir_exist(std::string &dirPath)
+bool FileAccess::dir_exist(std::string &dirPath)
 {
-  struct stat info;
-  if (stat(dirPath.c_str(), &info) != 0)
-    return false;
-  return info.st_mode & S_IFDIR;
+  return std::filesystem::is_directory(dirPath);
 }
 
-std::streampos FileManager::get_file_size(std::string &filePath)
+std::uintmax_t FileAccess::get_file_size(std::string &filePath)
 {
-  std::fstream file(filePath, std::ifstream::ate | std::ifstream::binary);
-  return file.tellg();
+  return std::filesystem::file_size(filePath);
 }
 
-std::string FileManager::get_file_folder_path(std::string &filePath)
+std::string FileAccess::get_file_folder_path(std::string &filePath)
 {
-  if (dir_exist(filePath))
-  {
-    return filePath;
-  }
-
-  i32 count = 0;
-  for (size_t i = 0; i < filePath.size(); i++)
-  {
-    count++;
-    if (filePath[i] == '\\' || filePath[i] == '/')
-    {
-      count = 0;
-    }
-  }
-
-  filePath = filePath.substr(0, filePath.size() - count);
-  return filePath;
+  std::filesystem::path path(filePath);
+  return path.parent_path().string();
 }
 
-std::string FileManager::get_exe_folder_path()
+std::string FileAccess::get_exe_folder_path()
 {
 #ifdef _WIN32
   char selfdirc[MAX_PATH] = {0};
@@ -69,7 +48,12 @@ std::string FileManager::get_exe_folder_path()
   return exeFolderPath;
 }
 
-bool FileManager::dir_create(std::string &dirPath)
+bool FileAccess::dir_create(std::string &dirPath)
 {
-  return makeDir(dirPath.c_str());
+  if (dir_exist(dirPath))
+  {
+    return true;
+  }
+
+  return std::filesystem::create_directory(dirPath);
 }

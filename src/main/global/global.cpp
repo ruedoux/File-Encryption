@@ -1,27 +1,4 @@
-// -------------------------------------------------
-// DEPENDENCIES
-// -------------------------------------------------
-
-#include "global.h"
-
-// -------------------------------------------------
-// DEFINITIONS
-// -------------------------------------------------
-
-GLOBAL::Timer::Timer() { GLOBAL::Timer::start(); }
-
-void GLOBAL::Timer::start() { s = std::chrono::steady_clock::now(); }
-
-i64 GLOBAL::Timer::get_ms_since_start()
-{
-  e = std::chrono::steady_clock::now();
-  return std::chrono::duration_cast<std::chrono::milliseconds>(e - s).count();
-}
-
-void GLOBAL::Timer::sleep(i32 sleepTime)
-{
-  std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds(sleepTime));
-}
+#include "global/global.h"
 
 std::string GLOBAL::convert_bytes_to_string(const std::vector<BYTE> bytes)
 {

@@ -6,17 +6,12 @@
 #ifndef MAIN_GLOBAL
 #define MAIN_GLOBAL
 
-// #define NOMINMAX // overflow management
-
 // -------------------------------------------------
 // DEPENDENCIES
 // -------------------------------------------------
 
 // C libs
-#include <time.h>     // For random numbers
-#include <cstring>    // For linux memcpy
-#include <sys/stat.h> // Paths
-#include <cmath>
+#include <time.h>
 
 // C++ STD
 #include <iostream>
@@ -25,9 +20,6 @@
 #include <tuple>
 #include <functional> // Function pointers
 #include <limits>     // Overflow management
-#include <fstream>    // Files
-#include <chrono>     // Timer
-#include <thread>     // Timer
 
 // C++ STL
 #include <unordered_map>
@@ -89,31 +81,12 @@ typedef int64_t i64;
 typedef float f32;
 typedef double f64;
 
-enum ErrorCode
-{
-  OK = 0,
-  FAILED = 1,
-};
-
 // -------------------------------------------------
 // DECLARATION
 // -------------------------------------------------
 
 namespace GLOBAL
 {
-  class Timer
-  {
-  private:
-    std::chrono::steady_clock::time_point s;
-    std::chrono::steady_clock::time_point e;
-  public:
-    Timer();
-
-    void start();
-    i64 get_ms_since_start();
-    static void sleep(i32 sleepTime);
-  };
-
   std::string convert_bytes_to_string(const std::vector<BYTE> bytes);
   std::vector<BYTE> convert_string_to_bytes(const std::string str);
   std::string str_to_lower(std::string str);

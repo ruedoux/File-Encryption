@@ -7,7 +7,7 @@
 // DEPENDENCIES
 // --------------------------------------------
 
-#include "global.h"
+#include "global/global.h"
 #include "encryption.h"
 #include "fileAccess.h"
 
