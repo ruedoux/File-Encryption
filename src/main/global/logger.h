@@ -14,7 +14,14 @@
 // Macros
 // -------------------------------------------------
 
-#define LOGGER_GET_LINE "("+std::string(__FILE__)+":"+std::to_string(__LINE__)+") "
+#define LOGGER_GET_LINE "(" + std::string(__FILE__) + ":" + std::to_string(__LINE__) + ") "
+
+// Ansi colors
+#define _BOLD "\033[1m"
+#define _RED "\033[31m"
+#define _GREEN "\033[32m"
+#define _BLUE "\033[34m"
+#define _ANSI_RESET "\033[0m"
 
 // -------------------------------------------------
 // DECLARATIONS
@@ -22,9 +29,10 @@
 
 namespace
 {
-  static const std::string INFO_MARKER = "[INFO]";
-  static const std::string ERROR_MARKER = "[ERROR]";
-  static const std::string DEBUG_MARKER = "[DEBUG]";
+  static const std::string INFO_MARKER =
+      std::string(_BOLD) + std::string(_BLUE) + "[INFO] ";
+  static const std::string ERROR_MARKER =
+      std::string(_BOLD) + std::string(_RED) + "[ERROR] ";
 }
 
 class Logger
@@ -33,6 +41,14 @@ private:
   Logger() {}
 
 public:
+  template <typename... Args>
+  static void log(const std::string &msg, Args... args)
+  {
+    std::string concatenatedMessage = msg;
+    (concatenatedMessage += ... += args);
+    log_stdout("", concatenatedMessage);
+  }
+
   template <typename... Args>
   static void log_info(const std::string &msg, Args... args)
   {
