@@ -16,7 +16,7 @@ bool FileAccess::file_exist(std::string &filePath)
   return std::filesystem::is_regular_file(filePath);
 }
 
-bool FileAccess::delete_dir(std::string &dirPath) 
+bool FileAccess::delete_dir(std::string &dirPath)
 {
   return std::filesystem::remove_all(dirPath) > 0;
 }

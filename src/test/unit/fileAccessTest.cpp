@@ -54,7 +54,7 @@ TEST_F(FileAccessTest, delete_file)
   // When
   std::fstream file(filePath, std::fstream::out);
   file.close();
-  
+
   bool deletedFile = FileAccess::delete_file(filePath);
 
   // Then

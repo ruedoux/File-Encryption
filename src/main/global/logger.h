@@ -11,6 +11,12 @@
 #include <cstdarg>
 
 // -------------------------------------------------
+// Macros
+// -------------------------------------------------
+
+#define LOGGER_GET_LINE "("+std::string(__FILE__)+":"+std::to_string(__LINE__)+") "
+
+// -------------------------------------------------
 // DECLARATIONS
 // -------------------------------------------------
 
@@ -23,17 +29,20 @@ namespace
 
 class Logger
 {
+private:
+  Logger() {}
+
 public:
-  template<typename... Args>
-  static void log_info(const std::string& msg, Args... args)
+  template <typename... Args>
+  static void log_info(const std::string &msg, Args... args)
   {
     std::string concatenatedMessage = msg;
     (concatenatedMessage += ... += args);
     log_stdout(INFO_MARKER, concatenatedMessage);
   }
 
-  template<typename... Args>
-  static void log_error(const std::string& msg, Args... args)
+  template <typename... Args>
+  static void log_error(const std::string &msg, Args... args)
   {
     std::string concatenatedMessage = msg;
     (concatenatedMessage += ... += args);
