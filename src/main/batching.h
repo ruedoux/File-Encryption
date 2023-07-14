@@ -25,9 +25,9 @@ class Batching
     - Up to 1048559 Bytes of data
     */
 
-    static constexpr size_t VI_BYTE_SIZE = Encryption::VI_BYTE_SIZE;
-    static constexpr size_t DATA_BYTE_SIZE = MiB(1) - VI_BYTE_SIZE;
-    static constexpr size_t CHUNK_BYTE_SIZE = MiB(1);
+    static constexpr u64 VI_BYTE_SIZE = Encryption::VI_BYTE_SIZE;
+    static constexpr u64 DATA_BYTE_SIZE = MiB(1) - VI_BYTE_SIZE;
+    static constexpr u64 CHUNK_BYTE_SIZE = MiB(1);
 
     std::vector<BYTE> data;
     std::vector<BYTE> vi;

@@ -1,4 +1,4 @@
-#include "global/global.h"
+#include "global.h"
 
 std::string GLOBAL::convert_bytes_to_string(const std::vector<BYTE> bytes)
 {

@@ -1,7 +1,3 @@
-// -------------------------------------------------
-// Header included in all files (global includes and typedefs)
-// -------------------------------------------------
-
 #pragma once
 #ifndef TIMER_GLOBAL
 #define TIMER_GLOBAL

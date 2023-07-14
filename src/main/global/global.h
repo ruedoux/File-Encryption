@@ -12,6 +12,7 @@
 
 // C libs
 #include <time.h>
+#include <cmath>
 
 // C++ STD
 #include <iostream>
@@ -31,24 +32,6 @@
 
 #define PRINTLN(x) std::cout << x << "\n"
 #define PRINT(x) std::cout << x
-
-// Ansi colors
-#define _BOLD "\033[1m"
-#define _RED "\033[31m"
-#define _GREEN "\033[32m"
-#define _BLUE "\033[34m"
-#define _ANSI_RESET "\033[0m"
-
-// ERROR and DEBUG
-#define DEBUG_MSG(msg, ...) fprintf(stdout, _BOLD _BLUE "[DEBUG](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET "\n", __FILE__, __LINE__, ##__VA_ARGS__)
-#define ERROR_MSG(msg, ...) fprintf(stderr, _BOLD _RED "[ERROR](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET "\n", __FILE__, __LINE__, ##__VA_ARGS__)
-
-#define ERROR_EXIT(msg, ...)                                                                                                    \
-  fprintf(stderr, _BOLD _RED "[ERROR|EXIT](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
-  exit(1)
-#define ERROR_RETURN(R, msg, ...)                                                                                                 \
-  fprintf(stderr, _BOLD _RED "[ERROR|RETURN](%s:%d) " _ANSI_RESET _BOLD msg _ANSI_RESET "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
-  return R
 
 #define KiB(x) ((size_t)(x) << 10) // Binary kilobyte
 #define MiB(x) ((size_t)(x) << 20) // Binary megabyte

@@ -35,7 +35,7 @@ include_directories(
      "${CMAKE_SOURCE_DIR}/src"
 )
 
-file(GLOB MainSource
+file(GLOB_RECURSE MainSource
      "${CMAKE_SOURCE_DIR}/src/main/*.cpp"
      "${CMAKE_SOURCE_DIR}/src/main/*.h"
 )
@@ -45,11 +45,11 @@ file(GLOB AlgorithmsSource
      "${CMAKE_SOURCE_DIR}/dependencies/crypto-algorithms/*.h"
 )
 
-file(GLOB UTSource
+file(GLOB_RECURSE UTSource
      "${CMAKE_SOURCE_DIR}/src/test/unit/*.cpp"
 )
 
-file(GLOB ITSource
+file(GLOB_RECURSE ITSource
      "${CMAKE_SOURCE_DIR}/src/test/integration/*.cpp"
 )
 

@@ -1,8 +1,8 @@
-#include "main/global/global.h"
+#include "main/global/logger.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-    PRINTLN(MiB(1));
-    return 0;
+  PRINTLN("asss");
+  Logger::log_info("First", "Second");
+  return 0;
 }
-

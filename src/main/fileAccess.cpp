@@ -1,11 +1,11 @@
 #include "fileAccess.h"
 
-bool FileAccess::file_delete(std::string &filePath)
+bool FileAccess::delete_file(std::string &filePath)
 {
   return std::filesystem::remove(filePath);
 }
 
-bool FileAccess::file_create(std::string &filePath)
+bool FileAccess::create_file(std::string &filePath)
 {
   std::fstream file(filePath, std::fstream::in | std::fstream::out | std::fstream::trunc);
   return file.is_open();
@@ -14,6 +14,21 @@ bool FileAccess::file_create(std::string &filePath)
 bool FileAccess::file_exist(std::string &filePath)
 {
   return std::filesystem::is_regular_file(filePath);
+}
+
+bool FileAccess::delete_dir(std::string &dirPath) 
+{
+  return std::filesystem::remove_all(dirPath) > 0;
+}
+
+bool FileAccess::create_dir(std::string &dirPath)
+{
+  if (dir_exist(dirPath))
+  {
+    return true;
+  }
+
+  return std::filesystem::create_directory(dirPath);
 }
 
 bool FileAccess::dir_exist(std::string &dirPath)
@@ -46,14 +61,4 @@ std::string FileAccess::get_exe_folder_path()
   std::string exeFolderPath = get_file_folder_path(exeFilePath);
 
   return exeFolderPath;
-}
-
-bool FileAccess::dir_create(std::string &dirPath)
-{
-  if (dir_exist(dirPath))
-  {
-    return true;
-  }
-
-  return std::filesystem::create_directory(dirPath);
 }

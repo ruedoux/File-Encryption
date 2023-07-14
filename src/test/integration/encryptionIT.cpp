@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <main/encryption.h>
 
-struct EncryptionTest : public ::testing::Test
+struct EncryptionIT : public ::testing::Test
 {
   virtual void SetUp() override
   {
@@ -10,7 +10,7 @@ struct EncryptionTest : public ::testing::Test
   virtual void TearDown() override {}
 };
 
-TEST_F(EncryptionTest, encrypt_bytes_and_decrypt_back)
+TEST_F(EncryptionIT, encrypt_bytes_and_decrypt_back)
 {
   // Given
   std::vector<BYTE> bytes = Encryption::get_random_bytes(

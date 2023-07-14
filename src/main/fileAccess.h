@@ -29,16 +29,14 @@ private:
   FileAccess() {}
 
 public:
-  static constexpr std::ios::openmode READ_MODE =
-      std::ios::binary;
-  static constexpr std::ios::openmode WRITE_APPEND_MODE =
-      std::ios::app | std::ios::binary;
-  
-  static bool file_delete(std::string &filePath);
-  static bool file_create(std::string &filePath);
-  static bool dir_create(std::string &dirPath);
+  static bool delete_file(std::string &filePath);
+  static bool create_file(std::string &filePath);
   static bool file_exist(std::string &filePath);
+
+  static bool delete_dir(std::string &dirPath);
+  static bool create_dir(std::string &dirPath);
   static bool dir_exist(std::string &dirPath);
+
   static std::uintmax_t get_file_size(std::string &filePath);
   static std::string get_file_folder_path(std::string &path);
   static std::string get_exe_folder_path();
