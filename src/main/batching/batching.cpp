@@ -4,7 +4,7 @@ std::uintmax_t Batching::get_chunk_count_in_file(const std::string &filePath)
 {
   std::uintmax_t fileSize = FileAccess::get_file_size(filePath);
   std::uintmax_t totalChunkCount =
-      fileSize / DataChunk::CHUNK_BYTE_SIZE + (fileSize % DataChunk::CHUNK_BYTE_SIZE != 0);
+      fileSize / DecryptedDataChunk::CHUNK_BYTE_SIZE + (fileSize % DecryptedDataChunk::CHUNK_BYTE_SIZE != 0);
   return totalChunkCount;
 }
 
@@ -27,7 +27,7 @@ bool Batching::save_chunk(
     return false;
   }
 
-  std::vector<BYTE> entireChunk = dataChunk.get_entire_chunk();
+  const std::vector<BYTE> &entireChunk = dataChunk.get_entire_chunk();
   file.write(reinterpret_cast<const char *>(&entireChunk[0]), entireChunk.size());
   file.close();
   return true;
