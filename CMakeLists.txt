@@ -32,7 +32,7 @@ add_subdirectory(dependencies/googletest)
 
 include_directories(
      "${CMAKE_SOURCE_DIR}/dependencies"
-     "${CMAKE_SOURCE_DIR}/src"
+     "${CMAKE_SOURCE_DIR}/src/main"
 )
 
 file(GLOB_RECURSE MainSource

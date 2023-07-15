@@ -29,16 +29,16 @@ private:
   FileAccess() {}
 
 public:
-  static bool delete_file(std::string &filePath);
-  static bool create_file(std::string &filePath);
-  static bool file_exist(std::string &filePath);
+  static bool delete_file(const std::string &filePath);
+  static bool create_file(const std::string &filePath);
+  static bool file_exist(const std::string &filePath);
 
-  static bool delete_dir(std::string &dirPath);
-  static bool create_dir(std::string &dirPath);
-  static bool dir_exist(std::string &dirPath);
+  static bool delete_dir(const std::string &dirPath);
+  static bool create_dir(const std::string &dirPath);
+  static bool dir_exist(const std::string &dirPath);
 
-  static std::uintmax_t get_file_size(std::string &filePath);
-  static std::string get_file_folder_path(std::string &path);
+  static std::uintmax_t get_file_size(const std::string &filePath);
+  static std::string get_file_folder_path(const std::string &path);
   static std::string get_exe_folder_path();
 };
 

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <main/encryption.h>
+#include <encryption.h>
 
 struct EncryptionIT : public ::testing::Test
 {

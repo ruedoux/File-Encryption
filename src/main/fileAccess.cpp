@@ -1,27 +1,27 @@
 #include "fileAccess.h"
 
-bool FileAccess::delete_file(std::string &filePath)
+bool FileAccess::delete_file(const std::string &filePath)
 {
   return std::filesystem::remove(filePath);
 }
 
-bool FileAccess::create_file(std::string &filePath)
+bool FileAccess::create_file(const std::string &filePath)
 {
   std::fstream file(filePath, std::fstream::in | std::fstream::out | std::fstream::trunc);
   return file.is_open();
 }
 
-bool FileAccess::file_exist(std::string &filePath)
+bool FileAccess::file_exist(const std::string &filePath)
 {
   return std::filesystem::is_regular_file(filePath);
 }
 
-bool FileAccess::delete_dir(std::string &dirPath)
+bool FileAccess::delete_dir(const std::string &dirPath)
 {
   return std::filesystem::remove_all(dirPath) > 0;
 }
 
-bool FileAccess::create_dir(std::string &dirPath)
+bool FileAccess::create_dir(const std::string &dirPath)
 {
   if (dir_exist(dirPath))
   {
@@ -31,17 +31,17 @@ bool FileAccess::create_dir(std::string &dirPath)
   return std::filesystem::create_directory(dirPath);
 }
 
-bool FileAccess::dir_exist(std::string &dirPath)
+bool FileAccess::dir_exist(const std::string &dirPath)
 {
   return std::filesystem::is_directory(dirPath);
 }
 
-std::uintmax_t FileAccess::get_file_size(std::string &filePath)
+std::uintmax_t FileAccess::get_file_size(const std::string &filePath)
 {
   return std::filesystem::file_size(filePath);
 }
 
-std::string FileAccess::get_file_folder_path(std::string &filePath)
+std::string FileAccess::get_file_folder_path(const std::string &filePath)
 {
   std::filesystem::path path(filePath);
   return path.parent_path().string();

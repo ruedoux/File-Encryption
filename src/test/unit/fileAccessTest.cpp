@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <main/fileAccess.h>
+#include <fileAccess.h>
 
 namespace
 {

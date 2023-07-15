@@ -7,8 +7,7 @@
 // -------------------------------------------------
 
 #include "global.h"
-
-#include <cstdarg>
+#include <mutex>
 
 // -------------------------------------------------
 // Macros
@@ -22,6 +21,17 @@
 #define _GREEN "\033[32m"
 #define _BLUE "\033[34m"
 #define _ANSI_RESET "\033[0m"
+
+// Error checks
+#define LOGGER_RETURN_IF_NOT_MATCH(is, shouldBe, returnOnFail) \
+  if (is != shouldBe)                                          \
+  {                                                            \
+    Logger::get_instance().log_error(                          \
+        LOGGER_GET_LINE, "Failed to compare: ",                \
+        "Expected: ", std::to_string(shouldBe),                \
+        ", but got: ", std::to_string(is));                    \
+    return returnOnFail;                                       \
+  }
 
 // -------------------------------------------------
 // DECLARATIONS
@@ -38,11 +48,29 @@ namespace
 class Logger
 {
 private:
-  Logger() {}
+  bool supressError;
+  std::mutex mutex;
+
+  Logger() { supressError = false; }
+
+  Logger(const Logger &) = delete;
+  Logger &operator=(const Logger &) = delete;
 
 public:
+  void set_error_supression(bool supress)
+  {
+    std::lock_guard<std::mutex> lock(mutex);
+    supressError = supress;
+  }
+
+  static Logger &get_instance()
+  {
+    static Logger instance;
+    return instance;
+  }
+
   template <typename... Args>
-  static void log(const std::string &msg, Args... args)
+  void log(const std::string &msg, Args... args)
   {
     std::string concatenatedMessage = msg;
     (concatenatedMessage += ... += args);
@@ -50,7 +78,7 @@ public:
   }
 
   template <typename... Args>
-  static void log_info(const std::string &msg, Args... args)
+  void log_info(const std::string &msg, Args... args)
   {
     std::string concatenatedMessage = msg;
     (concatenatedMessage += ... += args);
@@ -58,11 +86,18 @@ public:
   }
 
   template <typename... Args>
-  static void log_error(const std::string &msg, Args... args)
+  void log_error(const std::string &msg, Args... args)
   {
     std::string concatenatedMessage = msg;
     (concatenatedMessage += ... += args);
-    log_stderr(ERROR_MARKER, concatenatedMessage);
+
+    std::lock_guard<std::mutex> lock(mutex);
+    if (!supressError)
+    {
+      log_stderr(ERROR_MARKER, concatenatedMessage);
+      return;
+    }
+    log_stdout(INFO_MARKER, concatenatedMessage);
   }
 
 private:
