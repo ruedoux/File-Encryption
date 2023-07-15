@@ -1,6 +1,6 @@
-#include "global.h"
+#include "tools.h"
 
-std::string GLOBAL::convert_bytes_to_string(const std::vector<BYTE> bytes)
+std::string Tools::convert_bytes_to_string(const std::vector<BYTE> bytes)
 {
   std::string output;
   for (size_t i = 0; i < bytes.size(); i++)
@@ -15,7 +15,7 @@ std::string GLOBAL::convert_bytes_to_string(const std::vector<BYTE> bytes)
   return output;
 }
 
-std::vector<BYTE> GLOBAL::convert_string_to_bytes(const std::string str)
+std::vector<BYTE> Tools::convert_string_to_bytes(const std::string str)
 {
   std::vector<BYTE> bytes;
   for (size_t i = 0; i < str.size(); i++)
@@ -25,7 +25,7 @@ std::vector<BYTE> GLOBAL::convert_string_to_bytes(const std::string str)
   return bytes;
 }
 
-std::string GLOBAL::str_to_lower(std::string str)
+std::string Tools::str_to_lower(std::string str)
 {
   for (size_t i = 0; i < str.length(); i++)
   {
@@ -34,7 +34,7 @@ std::string GLOBAL::str_to_lower(std::string str)
   return str;
 }
 
-void GLOBAL::print_bytes(const std::vector<BYTE> bytes)
+void Tools::print_bytes(const std::vector<BYTE> bytes)
 {
   for (size_t i = 0; i < bytes.size(); i++)
   {
@@ -43,7 +43,7 @@ void GLOBAL::print_bytes(const std::vector<BYTE> bytes)
   PRINT("\n");
 }
 
-f64 GLOBAL::round_up_number(f64 value, u32 places)
+f64 Tools::round_up_number(f64 value, u32 places)
 {
   const f64 multiplier = std::pow(10.0, places);
   return std::ceil(value * multiplier) / multiplier;

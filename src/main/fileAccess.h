@@ -3,7 +3,7 @@
 #define FILEACCESS
 
 // -------------------------------------------------
-// DEPENDENCIES
+// Dependencies
 // -------------------------------------------------
 
 #include <filesystem>
@@ -17,10 +17,10 @@
 #include <limits.h>
 #endif
 
-#include "global/global.h"
+#include <global/global.h>
 
 // --------------------------------------------
-// DECLARATIONS
+// Declarations
 // --------------------------------------------
 
 class FileAccess

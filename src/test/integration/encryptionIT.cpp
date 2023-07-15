@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <encryption.h>
+#include <global/utils/tools.h>
 
 struct EncryptionIT : public ::testing::Test
 {
@@ -14,7 +15,7 @@ TEST_F(EncryptionIT, encrypt_bytes_and_decrypt_back)
 {
   // Given
   std::vector<BYTE> bytes = Encryption::get_random_bytes(
-      GLOBAL::get_random_number(1024, 2056));
+      Tools::get_random_number(1024, 2056));
   std::vector<BYTE> key = Encryption::get_random_bytes(Encryption::KEY_BYTE_SIZE);
   std::vector<BYTE> vi = Encryption::get_random_bytes(Encryption::VI_BYTE_SIZE);
 

@@ -7,16 +7,16 @@
 #define FCCRYPT
 
 // --------------------------------------------
-// DEPENDENCIES
+// Dependencies
 // --------------------------------------------
 
 #include <crypto-algorithms/sha256.h>
 #include <crypto-algorithms/aes.h>
 
-#include "global/global.h"
+#include <global/global.h>
 
 // --------------------------------------------
-// DECLARATIONS
+// Declarations
 // --------------------------------------------
 
 class Encryption

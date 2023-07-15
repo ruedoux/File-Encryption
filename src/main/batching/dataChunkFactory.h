@@ -4,15 +4,15 @@
 #define DATA_CHUNK
 
 // --------------------------------------------
-// DEPENDENCIES
+// Dependencies
 // --------------------------------------------
 
 #include <global/global.h>
-#include <global/logger.h>
+#include <global/utils/logger.h>
 #include <encryption.h>
 
 // --------------------------------------------
-// DECLARATIONS
+// Declarations
 // --------------------------------------------
 
 struct DataChunk
@@ -27,6 +27,16 @@ protected:
 public:
   std::vector<BYTE> get_data() const { return data; }
   virtual std::vector<BYTE> get_entire_chunk() const = 0;
+
+  bool operator==(const DataChunk &other) const
+  {
+    return other.get_entire_chunk() == this->get_entire_chunk();
+  }
+
+  bool operator!=(const DataChunk &other) const
+  {
+    return other.get_entire_chunk() != this->get_entire_chunk();
+  }
 };
 
 struct DecryptedDataChunk : DataChunk

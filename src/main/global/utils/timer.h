@@ -3,15 +3,15 @@
 #define TIMER_GLOBAL
 
 // -------------------------------------------------
-// DEPENDENCIES
+// Dependencies
 // -------------------------------------------------
 
-#include "global.h"
+#include <global/global.h>
 #include <chrono>
 #include <thread>
 
 // -------------------------------------------------
-// DECLARATIONS
+// Declarations
 // -------------------------------------------------
 
 class Timer
