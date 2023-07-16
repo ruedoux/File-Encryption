@@ -1,18 +1,18 @@
 #include "dataChunkFactory.h"
 
-const DecryptedDataChunk DataChunkFactory::ErrorDecryptedDataChunk =
-    DecryptedDataChunk(std::vector<BYTE>());
-const EncryptedDataChunk DataChunkFactory::ErrorEncryptedDataChunk =
+const DataChunk DataChunk::ErrorDataChunk =
+    DataChunk(std::vector<BYTE>());
+const EncryptedDataChunk EncryptedDataChunk::ErrorEncryptedDataChunk =
     EncryptedDataChunk(std::vector<BYTE>(), std::vector<BYTE>());
 
-DecryptedDataChunk DataChunkFactory::get_DecryptedDataChunk(
+DataChunk DataChunkFactory::get_DataChunk(
     const std::vector<BYTE> &data)
 {
   LOGGER_RETURN_IF_NOT_MATCH(
       data.size(),
-      DecryptedDataChunk::CHUNK_BYTE_SIZE,
-      ErrorDecryptedDataChunk)
-  return DecryptedDataChunk(data);
+      DataChunk::CHUNK_BYTE_SIZE,
+      DataChunk::ErrorDataChunk)
+  return DataChunk(data);
 }
 
 EncryptedDataChunk DataChunkFactory::get_EncryptedDataChunk(
@@ -22,25 +22,25 @@ EncryptedDataChunk DataChunkFactory::get_EncryptedDataChunk(
   LOGGER_RETURN_IF_NOT_MATCH(
       data.size(),
       EncryptedDataChunk::DATA_BYTE_SIZE,
-      ErrorEncryptedDataChunk)
+      EncryptedDataChunk::ErrorEncryptedDataChunk)
   LOGGER_RETURN_IF_NOT_MATCH(
       vi.size(),
       EncryptedDataChunk::VI_BYTE_SIZE,
-      ErrorEncryptedDataChunk)
+      EncryptedDataChunk::ErrorEncryptedDataChunk)
   return EncryptedDataChunk(data, vi);
 }
 
-DecryptedDataChunk DataChunkFactory::map_EncryptedDataChunk_to_DecryptedDataChunk(
+DataChunk DataChunkFactory::map_EncryptedDataChunk_to_DataChunk(
     const EncryptedDataChunk &encryptedDataChunk)
 {
   const std::vector<BYTE> &entireChunk = encryptedDataChunk.get_entire_chunk();
-  return get_DecryptedDataChunk(entireChunk);
+  return get_DataChunk(entireChunk);
 }
 
-EncryptedDataChunk DataChunkFactory::map_DecryptedDataChunk_to_EncryptedDataChunk(
-    const DecryptedDataChunk &decryptedDataChunk)
+EncryptedDataChunk DataChunkFactory::map_DataChunk_to_EncryptedDataChunk(
+    const DataChunk &dataChunk)
 {
-  const std::vector<BYTE> &entireChunk = decryptedDataChunk.get_entire_chunk();
+  const std::vector<BYTE> &entireChunk = dataChunk.get_entire_chunk();
 
   const std::vector<BYTE> vi(
       entireChunk.begin(),

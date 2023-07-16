@@ -2,9 +2,16 @@
 
 std::uintmax_t Batching::get_chunk_count_in_file(const std::string &filePath)
 {
+  if (!FileAccess::file_exist(filePath))
+  {
+    Logger::get_instance().log_error(
+        LOGGER_GET_LINE, "File is missing: ", filePath);
+    return false;
+  }
+
   std::uintmax_t fileSize = FileAccess::get_file_size(filePath);
   std::uintmax_t totalChunkCount =
-      fileSize / DecryptedDataChunk::CHUNK_BYTE_SIZE + (fileSize % DecryptedDataChunk::CHUNK_BYTE_SIZE != 0);
+      fileSize / DataChunk::CHUNK_BYTE_SIZE + (fileSize % DataChunk::CHUNK_BYTE_SIZE != 0);
   return totalChunkCount;
 }
 
@@ -35,34 +42,44 @@ bool Batching::write_append_chunk(
   return true;
 }
 
-std::vector<BYTE> Batching::read_data(
+DataChunk Batching::read_data(
     const std::string &filePath,
-    const size_t chunkIndex,
-    const size_t chunkSize)
+    const size_t chunkIndex)
 {
   std::ifstream file(filePath, READ_OPEN_MODE);
-  LOGGER_RETURN_IF_FILE_NOT_OPEN(file, filePath, std::vector<BYTE>());
+  LOGGER_RETURN_IF_FILE_NOT_OPEN(file, filePath, DataChunk::ErrorDataChunk);
 
-  std::vector<BYTE> data(chunkSize);
-  const size_t chunkStartPos = chunkIndex * chunkSize;
+  const std::uintmax_t chunkCountInFile = get_chunk_count_in_file(filePath);
+  if (chunkCountInFile < chunkIndex)
+  {
+    Logger::get_instance().log_error(
+        "Failed to read data from file: ", filePath,
+        ", because chunk index is larger than chunk count in file.",
+        "Chunk count in file:", std::to_string(chunkCountInFile),
+        "Chunk index:", std::to_string(chunkIndex));
+    return DataChunk::ErrorDataChunk;
+  }
+
+  std::vector<BYTE> data(DataChunk::CHUNK_BYTE_SIZE);
+  const size_t chunkStartPos = chunkIndex * DataChunk::CHUNK_BYTE_SIZE;
   file.seekg(chunkStartPos);
   if (!file)
   {
     Logger::get_instance().log_error(
         "Failed to seekg in file: ", filePath,
         ", on position: ", std::to_string(chunkStartPos));
-    return std::vector<BYTE>();
+    return DataChunk::ErrorDataChunk;
   }
 
-  file.read(reinterpret_cast<char *>(data.data()), chunkSize);
+  file.read(reinterpret_cast<char *>(data.data()), DataChunk::CHUNK_BYTE_SIZE);
   if (!file)
   {
     Logger::get_instance().log_error(
         "Failed to read from file: ", filePath,
         ", on position: ", std::to_string(chunkStartPos),
-        ", chunk size:: ", std::to_string(chunkSize));
-    return std::vector<BYTE>();
+        ", chunk size:: ", std::to_string(DataChunk::CHUNK_BYTE_SIZE));
+    return DataChunk::ErrorDataChunk;
   }
 
-  return data;
+  return DataChunkFactory::get_DataChunk(data);
 }

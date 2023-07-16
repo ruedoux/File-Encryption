@@ -17,6 +17,8 @@
 
 struct DataChunk
 {
+  friend class DataChunkFactory;
+
   static constexpr std::uintmax_t CHUNK_BYTE_SIZE =
       static_cast<std::uintmax_t>(MiB(1));
 
@@ -25,8 +27,11 @@ protected:
   DataChunk(const std::vector<BYTE> data) : data(data) {}
 
 public:
+  static const DataChunk ErrorDataChunk;
+
   std::vector<BYTE> get_data() const { return data; }
-  virtual std::vector<BYTE> get_entire_chunk() const = 0;
+
+  virtual std::vector<BYTE> get_entire_chunk() const { return data; }
 
   bool operator==(const DataChunk &other) const
   {
@@ -37,17 +42,6 @@ public:
   {
     return other.get_entire_chunk() != this->get_entire_chunk();
   }
-};
-
-struct DecryptedDataChunk : DataChunk
-{
-  friend class DataChunkFactory;
-
-private:
-  DecryptedDataChunk(const std::vector<BYTE> data) : DataChunk(data) {}
-
-public:
-  std::vector<BYTE> get_entire_chunk() const override { return data; }
 };
 
 struct EncryptedDataChunk : DataChunk
@@ -65,6 +59,8 @@ private:
       : DataChunk(data), vi(vi) {}
 
 public:
+  static const EncryptedDataChunk ErrorEncryptedDataChunk;
+
   std::vector<BYTE> get_vi() const { return vi; }
 
   std::vector<BYTE> get_entire_chunk() const override
@@ -81,19 +77,16 @@ public:
 class DataChunkFactory
 {
 public:
-  static const DecryptedDataChunk ErrorDecryptedDataChunk;
-  static const EncryptedDataChunk ErrorEncryptedDataChunk;
-
-  static DecryptedDataChunk get_DecryptedDataChunk(
-      const std::vector<BYTE>& data);
+  static DataChunk get_DataChunk(
+      const std::vector<BYTE> &data);
   static EncryptedDataChunk get_EncryptedDataChunk(
-      const std::vector<BYTE>& data,
-      const std::vector<BYTE>& vi);
+      const std::vector<BYTE> &data,
+      const std::vector<BYTE> &vi);
 
-  static DecryptedDataChunk map_EncryptedDataChunk_to_DecryptedDataChunk(
-      const EncryptedDataChunk& encryptedDataChunk);
-  static EncryptedDataChunk map_DecryptedDataChunk_to_EncryptedDataChunk(
-      const DecryptedDataChunk& decryptedDataChunk);
+  static DataChunk map_EncryptedDataChunk_to_DataChunk(
+      const EncryptedDataChunk &encryptedDataChunk);
+  static EncryptedDataChunk map_DataChunk_to_EncryptedDataChunk(
+      const DataChunk &dataChunk);
 };
 
 #endif

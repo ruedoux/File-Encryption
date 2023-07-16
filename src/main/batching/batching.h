@@ -28,14 +28,13 @@ public:
   static constexpr std::ios::openmode WRITE_APPEND_OPEN_MODE =
       std::ios::app | std::ios::binary;
 
-  std::uintmax_t get_chunk_count_in_file(const std::string &filePath);
+  static std::uintmax_t get_chunk_count_in_file(const std::string &filePath);
   static bool write_append_chunk(
       const std::string &filePath,
       const DataChunk &dataChunk);
-  static std::vector<BYTE> read_data(
+  static DataChunk read_data(
       const std::string &filePath,
-      const size_t chunkIndex,
-      const size_t chunkSize);
+      const size_t chunkIndex);
 };
 
 #endif

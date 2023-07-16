@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <batching/dataChunkFactory.h>
-#include <global/utils/tools.h>
 
 struct DataChunkFactoryTest : public ::testing::Test
 {
@@ -15,30 +14,30 @@ struct DataChunkFactoryTest : public ::testing::Test
   }
 };
 
-TEST_F(DataChunkFactoryTest, should_create_decrypted_chunk_when_correct)
+TEST_F(DataChunkFactoryTest, should_create_data_chunk_when_correct)
 {
   // Given
   std::vector<BYTE> data(DataChunk::CHUNK_BYTE_SIZE);
 
   // When
-  DecryptedDataChunk decryptedDataChunk =
-      DataChunkFactory::get_DecryptedDataChunk(data);
+  DataChunk dataChunk =
+      DataChunkFactory::get_DataChunk(data);
 
   // Then
-  ASSERT_NE(decryptedDataChunk, DataChunkFactory::ErrorDecryptedDataChunk);
+  ASSERT_NE(dataChunk, DataChunk::ErrorDataChunk);
 }
 
-TEST_F(DataChunkFactoryTest, should_not_create_decrypted_chunk_when_incorrect)
+TEST_F(DataChunkFactoryTest, should_not_create_data_chunk_when_incorrect)
 {
   // Given
   std::vector<BYTE> data(123);
 
   // When
-  DecryptedDataChunk decryptedDataChunk =
-      DataChunkFactory::get_DecryptedDataChunk(data);
+  DataChunk dataChunk =
+      DataChunkFactory::get_DataChunk(data);
 
   // Then
-  ASSERT_EQ(decryptedDataChunk, DataChunkFactory::ErrorDecryptedDataChunk);
+  ASSERT_EQ(dataChunk, DataChunk::ErrorDataChunk);
 }
 
 TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_correct)
@@ -52,7 +51,7 @@ TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_correct)
       DataChunkFactory::get_EncryptedDataChunk(data, vi);
 
   // Then
-  ASSERT_NE(encryptedDataChunk, DataChunkFactory::ErrorEncryptedDataChunk);
+  ASSERT_NE(encryptedDataChunk, EncryptedDataChunk::ErrorEncryptedDataChunk);
 }
 
 TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_incorrect)
@@ -66,10 +65,10 @@ TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_incorrect)
       DataChunkFactory::get_EncryptedDataChunk(data, vi);
 
   // Then
-  ASSERT_EQ(encryptedDataChunk, DataChunkFactory::ErrorEncryptedDataChunk);
+  ASSERT_EQ(encryptedDataChunk, EncryptedDataChunk::ErrorEncryptedDataChunk);
 }
 
-TEST_F(DataChunkFactoryTest, should_map_from_encrypted_to_decrypted)
+TEST_F(DataChunkFactoryTest, should_map_from_encrypted_to_data_chunk)
 {
   // Given
   std::vector<BYTE> data(EncryptedDataChunk::DATA_BYTE_SIZE);
@@ -78,28 +77,28 @@ TEST_F(DataChunkFactoryTest, should_map_from_encrypted_to_decrypted)
       DataChunkFactory::get_EncryptedDataChunk(data, vi);
 
   // When
-  DecryptedDataChunk decryptedDataChunk =
-      DataChunkFactory::map_EncryptedDataChunk_to_DecryptedDataChunk(
+  DataChunk dataChunk =
+      DataChunkFactory::map_EncryptedDataChunk_to_DataChunk(
           encryptedDataChunk);
 
   // Then
-  ASSERT_EQ(encryptedDataChunk, decryptedDataChunk);
+  ASSERT_EQ(encryptedDataChunk, dataChunk);
 }
 
-TEST_F(DataChunkFactoryTest, should_map_from_decrypted_to_encrypted)
+TEST_F(DataChunkFactoryTest, should_map_from_data_chunk_to_encrypted)
 {
   Logger::get_instance().set_error_supression(false);
 
   // Given
   std::vector<BYTE> data(DataChunk::CHUNK_BYTE_SIZE);
-  DecryptedDataChunk decryptedDataChunk =
-      DataChunkFactory::get_DecryptedDataChunk(data);
+  DataChunk dataChunk =
+      DataChunkFactory::get_DataChunk(data);
 
   // When
   EncryptedDataChunk encryptedDataChunk =
-      DataChunkFactory::map_DecryptedDataChunk_to_EncryptedDataChunk(
-          decryptedDataChunk);
+      DataChunkFactory::map_DataChunk_to_EncryptedDataChunk(
+          dataChunk);
 
   // Then
-  ASSERT_EQ(decryptedDataChunk, encryptedDataChunk);
+  ASSERT_EQ(dataChunk, encryptedDataChunk);
 }
