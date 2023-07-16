@@ -42,6 +42,15 @@
     return returnOnFail;                                             \
   }
 
+#define LOGGER_RETURN_IF_FILE_NOT_EXIST(filepath, returnOnFail) \
+  if (!std::filesystem::is_regular_file(filePath))              \
+  {                                                             \
+    Logger::get_instance().log_error(                           \
+        LOGGER_GET_LINE,                                        \
+        "File does not exist: ", filePath);                     \
+    return returnOnFail;                                        \
+  }
+
 // -------------------------------------------------
 // Declarations
 // -------------------------------------------------
