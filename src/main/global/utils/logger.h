@@ -33,6 +33,15 @@
     return returnOnFail;                                       \
   }
 
+#define LOGGER_RETURN_IF_FILE_NOT_OPEN(file, filePath, returnOnFail) \
+  if (!file.is_open())                                               \
+  {                                                                  \
+    Logger::get_instance().log_error(                                \
+        LOGGER_GET_LINE,                                             \
+        "File is not open: ", filePath);                             \
+    return returnOnFail;                                             \
+  }
+
 // -------------------------------------------------
 // Declarations
 // -------------------------------------------------
@@ -95,9 +104,7 @@ public:
     if (!supressError)
     {
       log_stderr(ERROR_MARKER, concatenatedMessage);
-      return;
     }
-    log_stdout(INFO_MARKER, concatenatedMessage);
   }
 
 private:

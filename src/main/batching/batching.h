@@ -32,9 +32,10 @@ public:
   static bool write_append_chunk(
       const std::string &filePath,
       const DataChunk &dataChunk);
-  static std::vector<BYTE> read_chunk(
+  static std::vector<BYTE> read_data(
       const std::string &filePath,
-      const size_t chunkIndex);
+      const size_t chunkIndex,
+      const size_t chunkSize);
 };
 
 #endif

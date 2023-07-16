@@ -22,7 +22,7 @@ struct DataChunk
 
 protected:
   std::vector<BYTE> data;
-  DataChunk(std::vector<BYTE> data) : data(data) {}
+  DataChunk(const std::vector<BYTE> data) : data(data) {}
 
 public:
   std::vector<BYTE> get_data() const { return data; }
@@ -44,7 +44,7 @@ struct DecryptedDataChunk : DataChunk
   friend class DataChunkFactory;
 
 private:
-  DecryptedDataChunk(std::vector<BYTE> data) : DataChunk(data) {}
+  DecryptedDataChunk(const std::vector<BYTE> data) : DataChunk(data) {}
 
 public:
   std::vector<BYTE> get_entire_chunk() const override { return data; }
@@ -61,7 +61,7 @@ struct EncryptedDataChunk : DataChunk
 
 private:
   std::vector<BYTE> vi;
-  EncryptedDataChunk(std::vector<BYTE> data, std::vector<BYTE> vi)
+  EncryptedDataChunk(const std::vector<BYTE> data, const std::vector<BYTE> vi)
       : DataChunk(data), vi(vi) {}
 
 public:
@@ -69,7 +69,7 @@ public:
 
   std::vector<BYTE> get_entire_chunk() const override
   {
-    std::vector<BYTE> entireChunk(vi.size() + data.size());
+    std::vector<BYTE> entireChunk;
 
     entireChunk.insert(entireChunk.end(), vi.begin(), vi.end());
     entireChunk.insert(entireChunk.end(), data.begin(), data.end());
@@ -85,15 +85,15 @@ public:
   static const EncryptedDataChunk ErrorEncryptedDataChunk;
 
   static DecryptedDataChunk get_DecryptedDataChunk(
-      std::vector<BYTE> &data);
+      const std::vector<BYTE>& data);
   static EncryptedDataChunk get_EncryptedDataChunk(
-      std::vector<BYTE> &data,
-      std::vector<BYTE> &vi);
+      const std::vector<BYTE>& data,
+      const std::vector<BYTE>& vi);
 
   static DecryptedDataChunk map_EncryptedDataChunk_to_DecryptedDataChunk(
-      const EncryptedDataChunk &encryptedDataChunk);
+      const EncryptedDataChunk& encryptedDataChunk);
   static EncryptedDataChunk map_DecryptedDataChunk_to_EncryptedDataChunk(
-      const DecryptedDataChunk &decryptedDataChunk);
+      const DecryptedDataChunk& decryptedDataChunk);
 };
 
 #endif

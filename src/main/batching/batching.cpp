@@ -20,51 +20,49 @@ bool Batching::write_append_chunk(
   }
 
   std::ofstream file(filePath, WRITE_APPEND_OPEN_MODE);
-  if (!file.is_open())
+  LOGGER_RETURN_IF_FILE_NOT_OPEN(file, filePath, false);
+
+  const std::vector<BYTE> &entireChunk = dataChunk.get_entire_chunk();
+  file.write(reinterpret_cast<const char *>(entireChunk.data()), entireChunk.size());
+  if (!file)
   {
     Logger::get_instance().log_error(
-        LOGGER_GET_LINE, "Failed to open file: ", filePath);
+        "Failed to write append to file: ", filePath,
+        ", data size: ", std::to_string(entireChunk.size()));
     return false;
   }
 
-  const std::vector<BYTE> &entireChunk = dataChunk.get_entire_chunk();
-  file.write(reinterpret_cast<const char *>(&entireChunk[0]), entireChunk.size());
-  file.close();
   return true;
 }
-/*
-std::vector<BYTE> Batching::read_chunk(
+
+std::vector<BYTE> Batching::read_data(
     const std::string &filePath,
-    const size_t chunkIndex)
+    const size_t chunkIndex,
+    const size_t chunkSize)
 {
-  std::vector<unsigned char> data(chunkBytes);
+  std::ifstream file(filePath, READ_OPEN_MODE);
+  LOGGER_RETURN_IF_FILE_NOT_OPEN(file, filePath, std::vector<BYTE>());
 
-  if (!(GLOBAL::check_multiplication_overflow(chunkBytes, dataIndex)))
-  {
-    
-  }
-  size_t startPos = chunkBytes * dataIndex;
-
-  std::ifstream file(filePath, Chunk::readMode);
+  std::vector<BYTE> data(chunkSize);
+  const size_t chunkStartPos = chunkIndex * chunkSize;
+  file.seekg(chunkStartPos);
   if (!file)
   {
-    cpprintn("File called: " + std::string(filePath) + ", doesn't exist.\n Aborting program.");
-    exit(0);
+    Logger::get_instance().log_error(
+        "Failed to seekg in file: ", filePath,
+        ", on position: ", std::to_string(chunkStartPos));
+    return std::vector<BYTE>();
   }
 
-  // Assert whether the next data of data is 1MB or less, if less only allocate the size needed.
-  size_t dataToRead = chunkBytes;
-  size_t fileSize = FileManager::get_file_size(filePath);
-  size_t fileRemaining = fileSize - chunkBytes * dataIndex;
-  if (chunkBytes > fileRemaining)
+  file.read(reinterpret_cast<char *>(data.data()), chunkSize);
+  if (!file)
   {
-    dataToRead = fileRemaining;
-    data.resize(dataToRead);
+    Logger::get_instance().log_error(
+        "Failed to read from file: ", filePath,
+        ", on position: ", std::to_string(chunkStartPos),
+        ", chunk size:: ", std::to_string(chunkSize));
+    return std::vector<BYTE>();
   }
 
-  file.seekg(startPos);                      // Go to the current data
-  file.read((char *)(&data[0]), dataToRead); // Read data
-
-  file.close();
   return data;
-}*/
+}
