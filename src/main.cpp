@@ -7,5 +7,8 @@ int main(int argc, char *argv[])
   logger.log_info("This is a message");
   logger.log_error("Exceptional");
   logger.log("This is normal");
+
+  logger.log(std::to_string(RANDOM_NUMBER(0, 100)));
+
   return 0;
 }

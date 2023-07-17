@@ -11,18 +11,16 @@
 // -------------------------------------------------
 
 // C libs
-#include <time.h>
 #include <cmath>
 
 // C++ STD
+#include <random>
 #include <iostream>
 #include <string>
 #include <memory>
 #include <tuple>
-#include <functional> // Function pointers
-#include <limits>     // Overflow management
-
-// C++ STL
+#include <functional>
+#include <limits>
 #include <unordered_map>
 #include <vector>
 
@@ -30,8 +28,10 @@
 // Macros
 // -------------------------------------------------
 
-#define PRINTLN(x) std::cout << x << "\n"
-#define PRINT(x) std::cout << x
+#define RANDOM_NUMBER(min, max) [](auto from, auto to) \
+{ std::random_device rd;                                      \
+  std::uniform_int_distribution<BYTE> distribution(from, to); \
+  return distribution(rd); }(min, max)
 
 #define KiB(x) ((size_t)(x) << 10) // Binary kilobyte
 #define MiB(x) ((size_t)(x) << 20) // Binary megabyte

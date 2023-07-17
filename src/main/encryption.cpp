@@ -29,10 +29,13 @@ std::vector<BYTE> Encryption::decrypt(
 
 std::vector<BYTE> Encryption::get_random_bytes(u64 size)
 {
+  static std::random_device rd;
+  std::uniform_int_distribution<BYTE> distribution(0, BYTE_MAX_VALUE);
+
   std::vector<BYTE> bytes;
   for (u64 i = 0; i < size; i++)
   {
-    bytes.push_back(static_cast<BYTE>(rand() % BYTE_MAX_VALUE));
+    bytes.push_back(distribution(rd));
   }
   return bytes;
 }
