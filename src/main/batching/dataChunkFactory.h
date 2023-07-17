@@ -8,7 +8,7 @@
 // --------------------------------------------
 
 #include <global/global.h>
-#include <global/utils/logger.h>
+#include <global/logging/errorHandling.h>
 #include <encryption.h>
 
 // --------------------------------------------

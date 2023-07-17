@@ -22,35 +22,6 @@
 #define _BLUE "\033[34m"
 #define _ANSI_RESET "\033[0m"
 
-// Error checks
-#define LOGGER_RETURN_IF_NOT_MATCH(is, shouldBe, returnOnFail) \
-  if (is != shouldBe)                                          \
-  {                                                            \
-    Logger::get_instance().log_error(                          \
-        LOGGER_GET_LINE, "Failed to compare: ",                \
-        "Expected: ", std::to_string(shouldBe),                \
-        ", but got: ", std::to_string(is));                    \
-    return returnOnFail;                                       \
-  }
-
-#define LOGGER_RETURN_IF_FILE_NOT_OPEN(file, filePath, returnOnFail) \
-  if (!file.is_open())                                               \
-  {                                                                  \
-    Logger::get_instance().log_error(                                \
-        LOGGER_GET_LINE,                                             \
-        "File is not open: ", filePath);                             \
-    return returnOnFail;                                             \
-  }
-
-#define LOGGER_RETURN_IF_FILE_NOT_EXIST(filepath, returnOnFail) \
-  if (!std::filesystem::is_regular_file(filePath))              \
-  {                                                             \
-    Logger::get_instance().log_error(                           \
-        LOGGER_GET_LINE,                                        \
-        "File does not exist: ", filePath);                     \
-    return returnOnFail;                                        \
-  }
-
 // -------------------------------------------------
 // Declarations
 // -------------------------------------------------

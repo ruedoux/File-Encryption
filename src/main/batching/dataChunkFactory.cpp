@@ -8,7 +8,7 @@ const EncryptedDataChunk EncryptedDataChunk::ErrorEncryptedDataChunk =
 DataChunk DataChunkFactory::get_DataChunk(
     const std::vector<BYTE> &data)
 {
-  LOGGER_RETURN_IF_NOT_MATCH(
+  ERROR_RETURN_IF_NOT_MATCH(
       data.size(),
       DataChunk::CHUNK_BYTE_SIZE,
       DataChunk::ErrorDataChunk)
@@ -19,11 +19,11 @@ EncryptedDataChunk DataChunkFactory::get_EncryptedDataChunk(
     const std::vector<BYTE> &data,
     const std::vector<BYTE> &vi)
 {
-  LOGGER_RETURN_IF_NOT_MATCH(
+  ERROR_RETURN_IF_NOT_MATCH(
       data.size(),
       EncryptedDataChunk::DATA_BYTE_SIZE,
       EncryptedDataChunk::ErrorEncryptedDataChunk)
-  LOGGER_RETURN_IF_NOT_MATCH(
+  ERROR_RETURN_IF_NOT_MATCH(
       vi.size(),
       EncryptedDataChunk::VI_BYTE_SIZE,
       EncryptedDataChunk::ErrorEncryptedDataChunk)
