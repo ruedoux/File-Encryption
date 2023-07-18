@@ -10,9 +10,6 @@
 // Dependencies
 // -------------------------------------------------
 
-// C libs
-#include <cmath>
-
 // C++ STD
 #include <random>
 #include <iostream>
@@ -38,8 +35,9 @@
 #define GiB(x) ((size_t)(x) << 30) // Binary gigabyte
 
 #define BYTE u8
-#define BYTE_SIZE sizeof(u8)
+#define BYTE_SIZE std::sizeof(u8)
 #define BYTE_MAX_VALUE 255
+#define BYTE_MIN_VALUE 0
 
 // -------------------------------------------------
 // GLOBAL TYPEDEFS

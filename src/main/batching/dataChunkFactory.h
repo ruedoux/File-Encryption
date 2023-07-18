@@ -9,7 +9,8 @@
 
 #include <global/global.h>
 #include <global/logging/errorHandling.h>
-#include <encryption.h>
+
+#include "encryption/encryption.h"
 
 // --------------------------------------------
 // Declarations

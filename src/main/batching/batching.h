@@ -9,9 +9,9 @@
 
 #include <global/global.h>
 #include <global/logging/errorHandling.h>
-#include <encryption.h>
 #include <fileAccess.h>
 
+#include "encryption/encryption.h"
 #include "dataChunkFactory.h"
 
 // --------------------------------------------
