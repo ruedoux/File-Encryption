@@ -11,7 +11,6 @@
 #include <global/logging/errorHandling.h>
 #include <fileAccess.h>
 
-#include "encryption/encryption.h"
 #include "dataChunkFactory.h"
 
 // --------------------------------------------
@@ -28,7 +27,7 @@ public:
   static constexpr std::ios::openmode WRITE_APPEND_OPEN_MODE =
       std::ios::app | std::ios::binary;
 
-  static std::uintmax_t get_chunk_count_in_file(const std::string &filePath);
+  static u64 get_chunk_count_in_file(const std::string &filePath);
   static bool write_append_chunk(
       const std::string &filePath,
       const DataChunk &dataChunk);

@@ -1,13 +1,13 @@
 #include "batching.h"
 
-std::uintmax_t Batching::get_chunk_count_in_file(const std::string &filePath)
+u64 Batching::get_chunk_count_in_file(const std::string &filePath)
 {
   ERROR_RETURN_IF_FILE_NOT_EXIST(filePath, -1);
 
   std::uintmax_t fileSize = FileAccess::get_file_size(filePath);
   std::uintmax_t totalChunkCount =
       fileSize / DataChunk::CHUNK_BYTE_SIZE + (fileSize % DataChunk::CHUNK_BYTE_SIZE != 0);
-  return totalChunkCount;
+  return static_cast<u64>(totalChunkCount);
 }
 
 bool Batching::write_append_chunk(
