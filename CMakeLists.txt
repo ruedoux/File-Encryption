@@ -31,26 +31,26 @@ add_subdirectory(dependencies/googletest)
 ## ---------------------------
 
 include_directories(
-     "${CMAKE_SOURCE_DIR}/dependencies"
-     "${CMAKE_SOURCE_DIR}/src/main"
+  "${CMAKE_SOURCE_DIR}/dependencies"
+  "${CMAKE_SOURCE_DIR}/src/main"
 )
 
 file(GLOB_RECURSE MainSource
-     "${CMAKE_SOURCE_DIR}/src/main/*.cpp"
-     "${CMAKE_SOURCE_DIR}/src/main/*.h"
+  "${CMAKE_SOURCE_DIR}/src/main/*.cpp"
+  "${CMAKE_SOURCE_DIR}/src/main/*.h"
 )
 
 file(GLOB AlgorithmsSource
-     "${CMAKE_SOURCE_DIR}/dependencies/crypto-algorithms/*.cpp"
-     "${CMAKE_SOURCE_DIR}/dependencies/crypto-algorithms/*.h"
+  "${CMAKE_SOURCE_DIR}/dependencies/crypto-algorithms/*.cpp"
+  "${CMAKE_SOURCE_DIR}/dependencies/crypto-algorithms/*.h"
 )
 
 file(GLOB_RECURSE UTSource
-     "${CMAKE_SOURCE_DIR}/src/test/unit/*.cpp"
+  "${CMAKE_SOURCE_DIR}/src/test/unit/*.cpp"
 )
 
 file(GLOB_RECURSE ITSource
-     "${CMAKE_SOURCE_DIR}/src/test/integration/*.cpp"
+  "${CMAKE_SOURCE_DIR}/src/test/integration/*.cpp"
 )
 
 ## ---------------------------
