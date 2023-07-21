@@ -20,6 +20,7 @@
 #include <limits>
 #include <unordered_map>
 #include <vector>
+#include <sstream>
 
 // -------------------------------------------------
 // Macros

@@ -15,6 +15,8 @@
 
 #define LOGGER_GET_LINE "(" + std::string(__FILE__) + ":" + std::to_string(__LINE__) + ") "
 
+namespace
+{
 // Ansi colors
 #define _BOLD "\033[1m"
 #define _RED "\033[31m"
@@ -22,16 +24,25 @@
 #define _BLUE "\033[34m"
 #define _ANSI_RESET "\033[0m"
 
+#define VARARGS_FORMAT_STRING(stringName, varArgs) \
+  std::stringstream ss;                            \
+  ((ss << varArgs << '\n'), ...);                  \
+  std::string stringName = ss.str()
+}
+
 // -------------------------------------------------
 // Declarations
 // -------------------------------------------------
 
 namespace
 {
-  static const std::string INFO_MARKER =
-      std::string(_BOLD) + std::string(_BLUE) + "[INFO] ";
-  static const std::string ERROR_MARKER =
-      std::string(_BOLD) + std::string(_RED) + "[ERROR] ";
+  static const std::string INFO_MARKER = "[INFO] ";
+  static const std::string ERROR_MARKER = "[ERROR] ";
+
+  static const std::string INFO_MARKER_ANSI =
+      std::string(_BOLD) + std::string(_BLUE) + INFO_MARKER;
+  static const std::string ERROR_MARKER_ANSI =
+      std::string(_BOLD) + std::string(_RED) + ERROR_MARKER;
 }
 
 class Logger
@@ -59,41 +70,37 @@ public:
   }
 
   template <typename... Args>
-  void log(const std::string &msg, Args... args)
+  void log(Args... args)
   {
-    std::string concatenatedMessage = msg;
-    (concatenatedMessage += ... += args);
-    log_stdout("", concatenatedMessage);
+    VARARGS_FORMAT_STRING(msg, args);
+    log_stdout(format_log(msg, ""));
   }
 
   template <typename... Args>
-  void log_info(const std::string &msg, Args... args)
+  void log_info(Args... args)
   {
-    std::string concatenatedMessage = msg;
-    (concatenatedMessage += ... += args);
-    log_stdout(INFO_MARKER, concatenatedMessage);
+    VARARGS_FORMAT_STRING(msg, args);
+    log_stdout(format_log(INFO_MARKER_ANSI + msg, INFO_MARKER));
   }
 
   template <typename... Args>
-  void log_error(const std::string &msg, Args... args)
+  void log_error(Args... args)
   {
-    std::string concatenatedMessage = msg;
-    (concatenatedMessage += ... += args);
+    VARARGS_FORMAT_STRING(msg, args);
 
     std::lock_guard<std::mutex> lock(mutex);
     if (!supressError)
     {
-      log_stderr(ERROR_MARKER, concatenatedMessage);
+      log_stderr(format_log(ERROR_MARKER_ANSI + msg, ERROR_MARKER));
     }
   }
 
 private:
-  static void log_stdout(
-      const std::string &marker,
-      const std::string &concatenatedMessage);
-  static void log_stderr(
-      const std::string &marker,
-      const std::string &concatenatedMessage);
+  static void log_stdout(const std::string &concatenatedMessage);
+  static void log_stderr(const std::string &concatenatedMessage);
+  static std::string format_log(
+      const std::string &src,
+      const std::string &marker);
 };
 
 #endif

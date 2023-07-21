@@ -3,12 +3,8 @@
 int main(int argc, char *argv[])
 {
   Logger& logger = Logger::get_instance();
-  logger.log_info(LOGGER_GET_LINE, "This is a message");
-  logger.log_info("This is a message");
-  logger.log_error("Exceptional");
-  logger.log("This is normal");
-
-  logger.log(std::to_string(RANDOM_NUMBER(0, 100)));
-
+  logger.log_info("This is multi line", "Should be next line", "And next");
+  logger.log_error(LOGGER_GET_LINE, "Error test!", "This is content");
+  logger.log("This is normal message", "Should be new line");
   return 0;
 }

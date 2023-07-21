@@ -43,25 +43,25 @@ DataChunk Batching::read_data(
   ERROR_RETURN_IF_CONDITION_TRUE(
       chunkCountInFile < chunkIndex,
       DataChunk::ErrorDataChunk,
-      "Failed to read data from file: ", filePath,
-      ", because chunk index is larger than chunk count in file.",
-      " Chunk count in file:", std::to_string(chunkCountInFile),
-      " Chunk index:", std::to_string(chunkIndex));
+      "Failed to read data from file: " + filePath,
+      "Because chunk index is larger than chunk count in file.",
+      "Chunk count in file:" + std::to_string(chunkCountInFile),
+      "Chunk index:" + std::to_string(chunkIndex));
 
   std::vector<BYTE> data(DataChunk::CHUNK_BYTE_SIZE);
   const size_t chunkStartPos = chunkIndex * DataChunk::CHUNK_BYTE_SIZE;
   ERROR_RETURN_IF_FILE_OPERATION_FAILED(
       file.seekg(chunkStartPos),
       DataChunk::ErrorDataChunk,
-      "Failed to seekg in file: ", filePath,
-      ", on position: ", std::to_string(chunkStartPos));
+      "Failed to seekg in file: " + filePath,
+      "On position: " + std::to_string(chunkStartPos));
 
   ERROR_RETURN_IF_FILE_OPERATION_FAILED(
       file.read(reinterpret_cast<char *>(data.data()), DataChunk::CHUNK_BYTE_SIZE),
       DataChunk::ErrorDataChunk,
-      "Failed to read from file: ", filePath,
-      ", on position: ", std::to_string(chunkStartPos),
-      ", chunk size:: ", std::to_string(DataChunk::CHUNK_BYTE_SIZE));
+      "Failed to read from file: " + filePath,
+      "On position: " + std::to_string(chunkStartPos),
+      "Chunk size:: " + std::to_string(DataChunk::CHUNK_BYTE_SIZE));
 
   return DataChunkFactory::get_DataChunk(data);
 }

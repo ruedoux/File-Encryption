@@ -16,9 +16,9 @@
   if (is != shouldBe)                                         \
   {                                                           \
     Logger::get_instance().log_error(                         \
-        LOGGER_GET_LINE, "Failed to compare: ",               \
-        "Expected: ", std::to_string(shouldBe),               \
-        ", but got: ", std::to_string(is));                   \
+        LOGGER_GET_LINE + "Failed to compare: ",              \
+        "Expected: " + std::to_string(shouldBe),              \
+        "But got: " + std::to_string(is));                    \
     return returnOnFail;                                      \
   }
 
@@ -26,7 +26,7 @@
   if (condition)                                                     \
   {                                                                  \
     Logger::get_instance().log_error(                                \
-        LOGGER_GET_LINE, __VA_ARGS__);                               \
+        LOGGER_GET_LINE + __VA_ARGS__);                              \
     return returnOnFail;                                             \
   }
 
@@ -34,8 +34,7 @@
   if (!file.is_open())                                              \
   {                                                                 \
     Logger::get_instance().log_error(                               \
-        LOGGER_GET_LINE,                                            \
-        "File is not open: ", filePath);                            \
+        LOGGER_GET_LINE + "File is not open: ", filePath);          \
     return returnOnFail;                                            \
   }
 
@@ -43,8 +42,7 @@
   if (!std::filesystem::is_regular_file(filePath))             \
   {                                                            \
     Logger::get_instance().log_error(                          \
-        LOGGER_GET_LINE,                                       \
-        "File does not exist: ", filePath);                    \
+        LOGGER_GET_LINE + "File does not exist: ", filePath);  \
     return returnOnFail;                                       \
   }
 
@@ -52,7 +50,7 @@
   if (!(fileOperation))                                                         \
   {                                                                             \
     Logger::get_instance().log_error(                                           \
-        LOGGER_GET_LINE, __VA_ARGS__);                                          \
+        LOGGER_GET_LINE + __VA_ARGS__);                                         \
     return returnOnFail;                                                        \
   }
 
