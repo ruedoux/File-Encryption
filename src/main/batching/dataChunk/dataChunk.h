@@ -13,9 +13,13 @@
 // Declarations
 // --------------------------------------------
 
+template <class T>
+struct ChunkContainer;
+
 struct DataChunk
 {
-  friend class DataChunkFactory;
+  friend class chunkFactory;
+  friend class ChunkContainer<DataChunk>;
 
   static constexpr std::uintmax_t DATA_BYTE_SIZE =
       static_cast<std::uintmax_t>(MiB(1));
@@ -23,10 +27,9 @@ struct DataChunk
 protected:
   std::vector<BYTE> data;
   DataChunk(const std::vector<BYTE> data) : data(data) {}
+  DataChunk() {}
 
 public:
-  static const DataChunk ErrorDataChunk;
-
   std::vector<BYTE> get_data() const { return data; }
   virtual std::vector<BYTE> get_entire_chunk() const { return data; }
   virtual u64 get_entire_chunk_size() const { return data.size(); }

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <batching/dataChunk/dataChunkFactory.h>
+#include <batching/dataChunk/chunkFactory.h>
 
 struct DataChunkFactoryTest : public ::testing::Test
 {
@@ -20,11 +20,11 @@ TEST_F(DataChunkFactoryTest, should_create_data_chunk_when_exact)
   std::vector<BYTE> data(DataChunk::DATA_BYTE_SIZE);
 
   // When
-  DataChunk dataChunk =
-      DataChunkFactory::get_DataChunk(data);
+  ChunkContainer chunkContainer = chunkFactory::get_chunk(data);
 
   // Then
-  ASSERT_NE(dataChunk, DataChunk::ErrorDataChunk);
+  ASSERT_TRUE(!chunkContainer.is_error());
+  ASSERT_EQ(chunkContainer.get_result().get_data(), data);
 }
 
 TEST_F(DataChunkFactoryTest, should_create_data_chunk_when_less)
@@ -33,11 +33,11 @@ TEST_F(DataChunkFactoryTest, should_create_data_chunk_when_less)
   std::vector<BYTE> data(RANDOM_NUMBER(1, DataChunk::DATA_BYTE_SIZE));
 
   // When
-  DataChunk dataChunk =
-      DataChunkFactory::get_DataChunk(data);
+  ChunkContainer chunkContainer = chunkFactory::get_chunk(data);
 
   // Then
-  ASSERT_NE(dataChunk, DataChunk::ErrorDataChunk);
+  ASSERT_TRUE(!chunkContainer.is_error());
+  ASSERT_EQ(chunkContainer.get_result().get_data(), data);
 }
 
 TEST_F(DataChunkFactoryTest, should_not_create_data_chunk_when_incorrect)
@@ -46,11 +46,11 @@ TEST_F(DataChunkFactoryTest, should_not_create_data_chunk_when_incorrect)
   std::vector<BYTE> data(DataChunk::DATA_BYTE_SIZE + 123);
 
   // When
-  DataChunk dataChunk =
-      DataChunkFactory::get_DataChunk(data);
+  ChunkContainer chunkContainer = chunkFactory::get_chunk(data);
 
   // Then
-  ASSERT_EQ(dataChunk, DataChunk::ErrorDataChunk);
+  ASSERT_TRUE(chunkContainer.is_error());
+  ASSERT_NE(chunkContainer.get_result().get_data(), data);
 }
 
 TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_exact)
@@ -60,11 +60,12 @@ TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_exact)
   std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
-  EncryptedDataChunk encryptedDataChunk =
-      DataChunkFactory::get_EncryptedDataChunk(data, vi);
+  ChunkContainer chunkContainer = chunkFactory::get_chunk(data, vi);
 
   // Then
-  ASSERT_NE(encryptedDataChunk, EncryptedDataChunk::ErrorEncryptedDataChunk);
+  ASSERT_TRUE(!chunkContainer.is_error());
+  ASSERT_EQ(chunkContainer.get_result().get_data(), data);
+  ASSERT_EQ(chunkContainer.get_result().get_vi(), vi);
 }
 
 TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_less)
@@ -74,11 +75,12 @@ TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_less)
   std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
-  EncryptedDataChunk encryptedDataChunk =
-      DataChunkFactory::get_EncryptedDataChunk(data, vi);
+  ChunkContainer chunkContainer = chunkFactory::get_chunk(data, vi);
 
   // Then
-  ASSERT_NE(encryptedDataChunk, EncryptedDataChunk::ErrorEncryptedDataChunk);
+  ASSERT_TRUE(!chunkContainer.is_error());
+  ASSERT_EQ(chunkContainer.get_result().get_data(), data);
+  ASSERT_EQ(chunkContainer.get_result().get_vi(), vi);
 }
 
 TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_incorrect_vi)
@@ -88,11 +90,12 @@ TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_incorrect_vi
   std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE + 123);
 
   // When
-  EncryptedDataChunk encryptedDataChunk =
-      DataChunkFactory::get_EncryptedDataChunk(data, vi);
+  ChunkContainer chunkContainer = chunkFactory::get_chunk(data, vi);
 
   // Then
-  ASSERT_EQ(encryptedDataChunk, EncryptedDataChunk::ErrorEncryptedDataChunk);
+  ASSERT_TRUE(chunkContainer.is_error());
+  ASSERT_NE(chunkContainer.get_result().get_data(), data);
+  ASSERT_NE(chunkContainer.get_result().get_vi(), vi);
 }
 
 TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_incorrect_data)
@@ -102,9 +105,10 @@ TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_incorrect_da
   std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
-  EncryptedDataChunk encryptedDataChunk =
-      DataChunkFactory::get_EncryptedDataChunk(data, vi);
+  ChunkContainer chunkContainer = chunkFactory::get_chunk(data, vi);
 
   // Then
-  ASSERT_EQ(encryptedDataChunk, EncryptedDataChunk::ErrorEncryptedDataChunk);
+  ASSERT_TRUE(chunkContainer.is_error());
+  ASSERT_NE(chunkContainer.get_result().get_data(), data);
+  ASSERT_NE(chunkContainer.get_result().get_vi(), vi);
 }

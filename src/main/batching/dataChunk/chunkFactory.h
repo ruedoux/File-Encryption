@@ -7,9 +7,7 @@
 // Dependencies
 // --------------------------------------------
 
-#include <global/global.h>
-#include <global/logging/errorHandling.h>
-#include <encryption/encryption.h>
+#include <global/logger.h>
 
 #include "encryptedDataChunk.h"
 
@@ -17,22 +15,33 @@
 // Declarations
 // --------------------------------------------
 
+template <class T>
 struct ChunkContainer
 {
+  friend class chunkFactory;
+
 private:
-  DataChunk result;
+  T result;
+
+  ChunkContainer() {}
+  ChunkContainer(T chunk) : result(chunk) {}
 
 public:
-  bool is_error() { return result.get_entire_chunk_size() == 0; }
-  DataChunk get_result() { return result; }
+  static ChunkContainer get_error() { return ChunkContainer(); }
+  bool is_error() const { return result.get_entire_chunk_size() == 0; }
+
+  T get_result() const
+  {
+    return result;
+  }
 };
 
-class DataChunkFactory
+class chunkFactory
 {
 public:
-  static DataChunk get_DataChunk(
+  static ChunkContainer<DataChunk> get_chunk(
       const std::vector<BYTE> &data);
-  static EncryptedDataChunk get_EncryptedDataChunk(
+  static ChunkContainer<EncryptedDataChunk> get_chunk(
       const std::vector<BYTE> &data,
       const std::vector<BYTE> &vi);
 };

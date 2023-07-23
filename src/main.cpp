@@ -1,4 +1,4 @@
-#include <global/logging/logger.h>
+#include <global/logger.h>
 
 int main(int argc, char *argv[])
 {

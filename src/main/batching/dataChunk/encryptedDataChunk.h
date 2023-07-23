@@ -16,9 +16,13 @@
 // Declarations
 // --------------------------------------------
 
+template <class T>
+struct ChunkContainer;
+
 struct EncryptedDataChunk : DataChunk
 {
-  friend class DataChunkFactory;
+  friend class chunkFactory;
+  friend class ChunkContainer<EncryptedDataChunk>;
 
   static constexpr std::uintmax_t VI_BYTE_SIZE =
       static_cast<std::uintmax_t>(Encryption::VI_BYTE_SIZE);
@@ -27,10 +31,9 @@ private:
   std::vector<BYTE> vi;
   EncryptedDataChunk(const std::vector<BYTE> data, const std::vector<BYTE> vi)
       : DataChunk(data), vi(vi) {}
+  EncryptedDataChunk() {}
 
 public:
-  static const EncryptedDataChunk ErrorEncryptedDataChunk;
-
   std::vector<BYTE> get_vi() const { return vi; }
   virtual u64 get_entire_chunk_size() const { return data.size() + vi.size(); }
 

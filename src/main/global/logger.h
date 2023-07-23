@@ -6,14 +6,34 @@
 // Dependencies
 // -------------------------------------------------
 
-#include <global/global.h>
-#include <mutex>
+#include "global.h"
 
 // -------------------------------------------------
 // Macros
 // -------------------------------------------------
 
 #define LOGGER_GET_LINE "(" + std::string(__FILE__) + ":" + std::to_string(__LINE__) + ") "
+#define LOGGER_LOG_ERROR(...) Logger::get_instance()::log_error(LOGGER_GET_LINE + __VA_ARGS__)
+
+#define ERROR_RETURN_IF_NOT_MATCH(is, shouldBe, returnOnFail) \
+  if (is != shouldBe)                                         \
+  {                                                           \
+    Logger::get_instance().log_error(                         \
+        LOGGER_GET_LINE + "Failed to compare!",               \
+        "Expected: " + std::to_string(shouldBe),              \
+        "But got: " + std::to_string(is));                    \
+    return returnOnFail;                                      \
+  }
+
+#define ERROR_RETURN_IF_MORE(is, shouldBeLessOrEqual, returnOnFail)   \
+  if (is > shouldBeLessOrEqual)                                       \
+  {                                                                   \
+    Logger::get_instance().log_error(                                 \
+        LOGGER_GET_LINE + "Failed to compare!",                       \
+        "Expected less than: " + std::to_string(shouldBeLessOrEqual), \
+        "But got: " + std::to_string(is));                            \
+    return returnOnFail;                                              \
+  }
 
 namespace
 {

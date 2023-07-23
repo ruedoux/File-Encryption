@@ -36,8 +36,25 @@ bool FileAccess::dir_exist(const std::string &dirPath)
   return std::filesystem::is_directory(dirPath);
 }
 
+FileAccess::ErrorCode FileAccess::write_append_bytes_to_file(
+    const std::string &filePath,
+    const std::vector<BYTE> &bytes)
+{
+  if(!file_exist(filePath)) { return ErrorCode::FILE_NOT_EXIST; }
+
+  std::ofstream file(filePath, static_cast<std::ios::openmode>(OpenMode::WRITE_APPEND_OPEN_MODE));
+  if(!file.is_open()) { return ErrorCode::FILE_FAILED_OPEN; }
+
+  file.write(reinterpret_cast<const char *>(bytes.data()), bytes.size());
+  if(!file) { return ErrorCode::FILE_FAILED_WRITE; }
+
+  return ErrorCode::OK;
+}
+
 std::uintmax_t FileAccess::get_file_size(const std::string &filePath)
 {
+  if(!file_exist(filePath)) { return 0; }
+  
   return std::filesystem::file_size(filePath);
 }
 
