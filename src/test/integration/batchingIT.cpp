@@ -32,7 +32,7 @@ TEST_F(BatchingIT, write_and_read_single_chunk_from_file)
 
   // When
   bool createdFile = FileAccess::create_file(TEST_FILE_PATH);
-  bool writtenToFile = Batching::write_append_chunk(TEST_FILE_PATH, dataChunk);
+  bool writtenToFile = Batching::append_chunk_to_file(TEST_FILE_PATH, dataChunk);
   DataChunk readDataChunk = Batching::read_data(TEST_FILE_PATH, 0);
 
   // Then
@@ -62,7 +62,7 @@ TEST_F(BatchingIT, write_and_read_multiple_chunks_from_file)
   {
     writtenToFile =
         writtenToFile &&
-        Batching::write_append_chunk(TEST_FILE_PATH, dataChunks.at(i));
+        Batching::append_chunk_to_file(TEST_FILE_PATH, dataChunks.at(i));
   }
 
   for (u64 i = 0; i < repeats; i++)

@@ -35,6 +35,16 @@
     return returnOnFail;                                              \
   }
 
+#define ERROR_RETURN_IF_LESS(is, shouldBeMoreOrEqual, returnOnFail)   \
+  if (is < shouldBeMoreOrEqual)                                       \
+  {                                                                   \
+    Logger::get_instance().log_error(                                 \
+        LOGGER_GET_LINE + "Failed to compare!",                       \
+        "Expected less than: " + std::to_string(shouldBeMoreOrEqual), \
+        "But got: " + std::to_string(is));                            \
+    return returnOnFail;                                              \
+  }
+
 namespace
 {
 // Ansi colors

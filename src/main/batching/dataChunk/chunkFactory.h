@@ -44,6 +44,9 @@ public:
   static ChunkContainer<EncryptedDataChunk> get_chunk(
       const std::vector<BYTE> &data,
       const std::vector<BYTE> &vi);
+
+  static ChunkContainer<EncryptedDataChunk> map_bytes_to_encrypted_chunk(
+    const std::vector<BYTE> &bytes);
 };
 
 #endif

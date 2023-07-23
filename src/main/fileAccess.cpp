@@ -36,25 +36,91 @@ bool FileAccess::dir_exist(const std::string &dirPath)
   return std::filesystem::is_directory(dirPath);
 }
 
-FileAccess::ErrorCode FileAccess::write_append_bytes_to_file(
+FileAccess::ErrorCode FileAccess::append_bytes_to_file(
     const std::string &filePath,
     const std::vector<BYTE> &bytes)
 {
-  if(!file_exist(filePath)) { return ErrorCode::FILE_NOT_EXIST; }
+  if (!file_exist(filePath))
+  {
+    return ErrorCode::FILE_NOT_EXIST;
+  }
 
-  std::ofstream file(filePath, static_cast<std::ios::openmode>(OpenMode::WRITE_APPEND_OPEN_MODE));
-  if(!file.is_open()) { return ErrorCode::FILE_FAILED_OPEN; }
+  std::ofstream file(filePath, static_cast<std::ios::openmode>(OpenMode::APPEND));
+  if (!file.is_open())
+  {
+    return ErrorCode::FILE_FAILED_OPEN;
+  }
 
   file.write(reinterpret_cast<const char *>(bytes.data()), bytes.size());
-  if(!file) { return ErrorCode::FILE_FAILED_WRITE; }
+  if (!file)
+  {
+    return ErrorCode::FILE_FAILED_WRITE;
+  }
 
   return ErrorCode::OK;
 }
 
+FileAccess::ErrorCode FileAccess::read_bytes_from_file(
+    const std::string &filePath,
+    std::vector<BYTE> &bytesByRef,
+    const std::uintmax_t fromIndex,
+    const u64 byteCount)
+{
+  if (!file_exist(filePath))
+  {
+    return ErrorCode::FILE_NOT_EXIST;
+  }
+
+  if (get_file_size(filePath) < fromIndex + byteCount)
+  {
+    return ErrorCode::FILE_INDEX_OVER_SIZE;
+  }
+
+  std::ifstream file(filePath, static_cast<std::ios::openmode>(OpenMode::READ));
+  if (!file.is_open())
+  {
+    return ErrorCode::FILE_FAILED_OPEN;
+  }
+
+  file.seekg(fromIndex);
+  if (!file)
+  {
+    return ErrorCode::FILE_FAILED_SEEK;
+  }
+
+  bytesByRef.resize(byteCount);
+  file.read(
+      reinterpret_cast<char *>(bytesByRef.data()),
+      static_cast<std::streamsize>(byteCount));
+  if (!file)
+  {
+    bytesByRef.clear();
+    return ErrorCode::FILE_FAILED_READ;
+  }
+
+  return ErrorCode::OK;
+}
+
+std::uintmax_t FileAccess::get_byte_count_left_in_file(
+    const std::string &filePath,
+    const std::uintmax_t fromIndex)
+{
+  const std::uintmax_t fileSize = get_file_size(filePath);
+  if(fromIndex > fileSize)
+  {
+    return 0;
+  }
+
+  return fileSize - fromIndex;
+}
+
 std::uintmax_t FileAccess::get_file_size(const std::string &filePath)
 {
-  if(!file_exist(filePath)) { return 0; }
-  
+  if (!file_exist(filePath))
+  {
+    return 0;
+  }
+
   return std::filesystem::file_size(filePath);
 }
 

@@ -35,15 +35,15 @@ TEST_F(BatchingTest, should_correctly_count_chunks_in_file)
   bool createdFileMore = FileAccess::create_file(filePathMore);
 
   FileAccess::ErrorCode writtenFileLess =
-      FileAccess::write_append_bytes_to_file(
+      FileAccess::append_bytes_to_file(
           filePathLess,
           Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE - 1));
   FileAccess::ErrorCode writtenFileExactly =
-      FileAccess::write_append_bytes_to_file(
+      FileAccess::append_bytes_to_file(
           filePathExactly,
           Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE));
   FileAccess::ErrorCode writtenFileMore =
-      FileAccess::write_append_bytes_to_file(
+      FileAccess::append_bytes_to_file(
           filePathMore,
           Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE + 1));
 

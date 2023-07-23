@@ -24,7 +24,7 @@ public:
       const u64 chunkSize);
 
   template <class T>
-  bool write_append_chunk(
+  bool append_chunk_to_file(
       const std::string &filePath,
       const ChunkContainer<T> &chunkContainer)
   {
@@ -39,7 +39,7 @@ public:
     std::vector<BYTE> entireChunk = chunkContainer.get_result().get_entire_chunk();
 
     FileAccess::ErrorCode errorCode =
-        FileAccess::write_append_bytes_to_file(filePath, entireChunk);
+        FileAccess::append_bytes_to_file(filePath, entireChunk);
 
     if (errorCode != FileAccess::ErrorCode::OK)
     {
@@ -51,6 +51,21 @@ public:
 
     return true;
   }
+
+  /*
+  template <class T>
+  ChunkContainer<T> read_chunk_from_file(
+      const std::string &filePath,
+      const u64 chunkIndex)
+  {
+    std::vector<BYTE> readBytes;
+
+    FileAccess::ErrorCode errorCode =
+        FileAccess::read_bytes_from_file(filePath, readBytes);
+    
+    return ChunkContainer<T>;
+  }
+  */
 };
 
 #endif

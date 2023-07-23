@@ -33,15 +33,16 @@ public:
     FILE_FAILED_OPEN = 2,
     FILE_FAILED_WRITE = 3,
     FILE_FAILED_READ = 4,
-    FILE_FAILED_SEEK = 5
+    FILE_FAILED_SEEK = 5,
+    FILE_INDEX_OVER_SIZE = 6
   };
 
 private:
   enum OpenMode
   {
-    READ_OPEN_MODE = std::ios::binary,
-    WRITE_OPEN_MODE = std::ios::binary,
-    WRITE_APPEND_OPEN_MODE = std::ios::app | std::ios::binary
+    READ = std::ios::binary,
+    WRITE = std::ios::binary,
+    APPEND = std::ios::app | std::ios::binary
   };
   FileAccess() {}
 
@@ -54,9 +55,18 @@ public:
   static bool create_dir(const std::string &dirPath);
   static bool dir_exist(const std::string &dirPath);
 
-  static ErrorCode write_append_bytes_to_file(
+  static ErrorCode append_bytes_to_file(
       const std::string &filePath,
       const std::vector<BYTE> &bytes);
+  static ErrorCode read_bytes_from_file(
+      const std::string &filePath,
+      std::vector<BYTE> &bytesByRef,
+      const std::uintmax_t fromIndex,
+      const u64 byteCount);
+
+  static std::uintmax_t get_byte_count_left_in_file(
+      const std::string &filePath,
+      const std::uintmax_t fromIndex);
 
   static std::uintmax_t get_file_size(const std::string &filePath);
   static std::string get_file_folder_path(const std::string &path);
