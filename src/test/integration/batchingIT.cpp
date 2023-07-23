@@ -43,7 +43,7 @@ TEST_F(BatchingIT, write_and_read_single_chunk_from_file)
   // Given
   DataChunk dataChunk =
       DataChunkFactory::get_DataChunk(
-          Encryption::get_random_bytes(DataChunk::CHUNK_BYTE_SIZE));
+          Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE));
 
   // When
   bool createdFile = FileAccess::create_file(TEST_FILE_PATH);
@@ -66,7 +66,7 @@ TEST_F(BatchingIT, write_and_read_multiple_chunks_from_file)
   for (u64 i = 0; i < repeats; i++)
   {
     dataChunks.push_back(DataChunkFactory::get_DataChunk(
-        Encryption::get_random_bytes(DataChunk::CHUNK_BYTE_SIZE)));
+        Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE)));
   }
 
   // When
@@ -105,17 +105,20 @@ TEST_F(BatchingIT, should_correctly_count_chunks_in_file)
 
   bool writtenFileLess = write_bytes_to_file(
       filePathLess,
-      Encryption::get_random_bytes(DataChunk::CHUNK_BYTE_SIZE - 1));
+      Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE - 1));
   bool writtenFileExactly = write_bytes_to_file(
       filePathExactly,
-      Encryption::get_random_bytes(DataChunk::CHUNK_BYTE_SIZE));
+      Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE));
   bool writtenFileMore = write_bytes_to_file(
       filePathMore,
-      Encryption::get_random_bytes(DataChunk::CHUNK_BYTE_SIZE + 1));
+      Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE + 1));
   
-  u64 chunkCountLess = Batching::get_chunk_count_in_file(filePathLess);
-  u64 chunkCountExactly = Batching::get_chunk_count_in_file(filePathExactly);
-  u64 chunkCountMore = Batching::get_chunk_count_in_file(filePathMore);
+  u64 chunkCountLess = Batching::get_chunk_count_in_file(
+    filePathLess, DataChunk::DATA_BYTE_SIZE);
+  u64 chunkCountExactly = Batching::get_chunk_count_in_file(
+    filePathExactly, DataChunk::DATA_BYTE_SIZE);
+  u64 chunkCountMore = Batching::get_chunk_count_in_file(
+    filePathMore, DataChunk::DATA_BYTE_SIZE);
 
   // Then
   ASSERT_TRUE(createdFileLess);

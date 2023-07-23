@@ -6,7 +6,6 @@ bool EncryptionInterface::encrypt_file(
 {
   ERROR_RETURN_IF_FILE_NOT_EXIST(filePath, false);
 
-  uintmax_t chunkCount = Batching::get_chunk_count_in_file(filePath);
   return true;
 }
 
