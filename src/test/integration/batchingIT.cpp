@@ -26,31 +26,37 @@ struct BatchingIT : public ::testing::Test
 TEST_F(BatchingIT, write_and_read_single_chunk_from_file)
 {
   // Given
-  DataChunk dataChunk =
-      chunkFactory::get_DataChunk(
+  ChunkContainer<DataChunk> chunkContainer =
+      ChunkFactory::get_chunk(
           Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE));
+  u64 fromIndex = 0;
 
   // When
   bool createdFile = FileAccess::create_file(TEST_FILE_PATH);
-  bool writtenToFile = Batching::append_chunk_to_file(TEST_FILE_PATH, dataChunk);
-  DataChunk readDataChunk = Batching::read_data(TEST_FILE_PATH, 0);
+  bool writtenToFile = Batching::append_chunk_to_file(
+      TEST_FILE_PATH, chunkContainer);
+  ChunkContainer<DataChunk> readChunkContainer =
+      Batching::read_chunk_from_file<DataChunk>(TEST_FILE_PATH, fromIndex);
 
   // Then
   ASSERT_TRUE(createdFile);
   ASSERT_TRUE(writtenToFile);
-  ASSERT_EQ(dataChunk, readDataChunk);
+  ASSERT_TRUE(!readChunkContainer.is_error());
+  ASSERT_EQ(
+      chunkContainer.get_result().get_entire_chunk(),
+      readChunkContainer.get_result().get_entire_chunk());
 }
 
 TEST_F(BatchingIT, write_and_read_multiple_chunks_from_file)
 {
   // Given
   const u64 repeats = RANDOM_NUMBER(5, 10);
-  std::vector<DataChunk> dataChunks;
-  std::vector<DataChunk> readDataChunks;
+  std::vector<ChunkContainer<DataChunk>> chunkContainers;
+  std::vector<ChunkContainer<DataChunk>> readChunkContainers;
 
   for (u64 i = 0; i < repeats; i++)
   {
-    dataChunks.push_back(chunkFactory::get_DataChunk(
+    chunkContainers.push_back(ChunkFactory::get_chunk(
         Encryption::get_random_bytes(DataChunk::DATA_BYTE_SIZE)));
   }
 
@@ -62,17 +68,23 @@ TEST_F(BatchingIT, write_and_read_multiple_chunks_from_file)
   {
     writtenToFile =
         writtenToFile &&
-        Batching::append_chunk_to_file(TEST_FILE_PATH, dataChunks.at(i));
+        Batching::append_chunk_to_file(TEST_FILE_PATH, chunkContainers.at(i));
   }
 
   for (u64 i = 0; i < repeats; i++)
   {
-    readDataChunks.push_back(Batching::read_data(TEST_FILE_PATH, i));
+    readChunkContainers.push_back(
+        Batching::read_chunk_from_file<DataChunk>(TEST_FILE_PATH, i));
   }
 
   // Then
   ASSERT_TRUE(createdFile);
   ASSERT_TRUE(writtenToFile);
-  ASSERT_EQ(dataChunks, readDataChunks);
+  for (size_t i = 0; i < chunkContainers.size(); i++)
+  {
+    ASSERT_EQ(
+        chunkContainers[i].get_result().get_entire_chunk(),
+        readChunkContainers[i].get_result().get_entire_chunk());
+  }
 }
 */

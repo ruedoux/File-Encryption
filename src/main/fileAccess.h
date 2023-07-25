@@ -47,30 +47,30 @@ private:
   FileAccess() {}
 
 public:
-  static bool delete_file(const std::string &filePath);
-  static bool create_file(const std::string &filePath);
-  static bool file_exist(const std::string &filePath);
+  static bool delete_file(const std::string &filePath) noexcept;
+  static bool create_file(const std::string &filePath) noexcept;
+  static bool file_exist(const std::string &filePath) noexcept;
 
-  static bool delete_dir(const std::string &dirPath);
-  static bool create_dir(const std::string &dirPath);
-  static bool dir_exist(const std::string &dirPath);
+  static bool delete_dir(const std::string &dirPath) noexcept;
+  static bool create_dir(const std::string &dirPath) noexcept;
+  static bool dir_exist(const std::string &dirPath) noexcept;
 
   static ErrorCode append_bytes_to_file(
       const std::string &filePath,
-      const std::vector<BYTE> &bytes);
+      const std::vector<BYTE> &bytes) noexcept;
   static ErrorCode read_bytes_from_file(
       const std::string &filePath,
       std::vector<BYTE> &bytesByRef,
       const std::uintmax_t fromIndex,
-      const u64 byteCount);
+      const u64 byteCount) noexcept;
 
   static std::uintmax_t get_byte_count_left_in_file(
       const std::string &filePath,
-      const std::uintmax_t fromIndex);
+      const std::uintmax_t fromIndex) noexcept;
 
-  static std::uintmax_t get_file_size(const std::string &filePath);
-  static std::string get_file_folder_path(const std::string &path);
-  static std::string get_exe_folder_path();
+  static std::uintmax_t get_file_size(const std::string &filePath) noexcept;
+  static std::string get_file_folder_path(const std::string &path) noexcept;
+  static std::string get_exe_folder_path() noexcept;
 };
 
 #endif

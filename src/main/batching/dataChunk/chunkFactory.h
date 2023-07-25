@@ -7,7 +7,7 @@
 // Dependencies
 // --------------------------------------------
 
-#include <global/logger.h>
+#include <global/exceptionHandling.h>
 
 #include "encryptedDataChunk.h"
 
@@ -18,25 +18,22 @@
 template <class T>
 struct ChunkContainer
 {
-  friend class chunkFactory;
+  friend class ChunkFactory;
 
 private:
-  T result;
-
-  ChunkContainer() {}
-  ChunkContainer(T chunk) : result(chunk) {}
+  const T result;
 
 public:
-  static ChunkContainer get_error() { return ChunkContainer(); }
-  bool is_error() const { return result.get_entire_chunk_size() == 0; }
+  ChunkContainer() noexcept {}
+  ChunkContainer(T chunk) noexcept : result(chunk) {}
 
-  T get_result() const
+  T get_result() const noexcept
   {
     return result;
   }
 };
 
-class chunkFactory
+class ChunkFactory
 {
 public:
   static ChunkContainer<DataChunk> get_chunk(
@@ -45,8 +42,11 @@ public:
       const std::vector<BYTE> &data,
       const std::vector<BYTE> &vi);
 
-  static ChunkContainer<EncryptedDataChunk> map_bytes_to_encrypted_chunk(
-    const std::vector<BYTE> &bytes);
+  template <class T>
+  static ChunkContainer<T> get_empty_chunk() noexcept
+  {
+    return ChunkContainer<T>();
+  }
 };
 
 #endif

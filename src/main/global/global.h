@@ -41,8 +41,14 @@
 #define BYTE_MAX_VALUE 255
 #define BYTE_MIN_VALUE 0
 
+#ifdef _MSC_VER
+#define THIS_FUNCTION __FUNCSIG__
+#else
+#define THIS_FUNCTION __PRETTY_FUNCTION__
+#endif
+
 // -------------------------------------------------
-// GLOBAL TYPEDEFS
+// Typedefs
 // -------------------------------------------------
 
 typedef uint8_t u8;

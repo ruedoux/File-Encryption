@@ -21,44 +21,50 @@ struct ChunkContainer;
 
 struct EncryptedDataChunk : DataChunk
 {
-  friend class chunkFactory;
+  friend class ChunkFactory;
   friend class ChunkContainer<EncryptedDataChunk>;
 
   static constexpr u64 VI_BYTE_SIZE = Encryption::VI_BYTE_SIZE;
 
 protected:
   std::vector<BYTE> vi;
-  
-  EncryptedDataChunk(const std::vector<BYTE> data, const std::vector<BYTE> vi)
+
+  EncryptedDataChunk(const std::vector<BYTE> data, const std::vector<BYTE> vi) noexcept
       : DataChunk(data), vi(vi) {}
 
-  EncryptedDataChunk() {}
+  EncryptedDataChunk() noexcept {}
 
-  bool set_vi(std::vector<BYTE> newVi)
+  void set_vi(const std::vector<BYTE> &newVi)
   {
-    if (newVi.size() != VI_BYTE_SIZE)
-    {
-      return false;
-    }
-
+    THROW_EXCEPTION_IF_NOT_MATCH(newVi.size(), VI_BYTE_SIZE);
     vi = newVi;
-    return true;
   }
 
 public:
-  std::vector<BYTE> get_vi() const { return vi; }
+  std::vector<BYTE> get_vi() const noexcept { return vi; }
 
-  virtual u64 get_entire_chunk_size() const override
+  virtual u64 get_entire_chunk_size() const noexcept override
   {
     return data.size() + vi.size();
   }
 
-  static u64 get_desired_chunk_size()
+  static u64 get_desired_chunk_size() noexcept
   {
     return DATA_BYTE_SIZE + VI_BYTE_SIZE;
   }
 
-  std::vector<BYTE> get_entire_chunk() const override
+  virtual void map_from_bytes(const std::vector<BYTE> &bytes) override
+  {
+    std::vector<BYTE> newVi(
+        bytes.begin(), bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE);
+    std::vector<BYTE> newData(
+        bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE, bytes.end());
+
+    set_data(newData);
+    set_vi(newVi);
+  }
+
+  virtual std::vector<BYTE> get_entire_chunk() const override
   {
     std::vector<BYTE> entireChunk;
 

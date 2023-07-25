@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <batching/dataChunk/chunkFactory.h>
+#include <batching/dataChunk/ChunkFactory.h>
 
 struct DataChunkFactoryTest : public ::testing::Test
 {
@@ -20,10 +20,10 @@ TEST_F(DataChunkFactoryTest, should_create_data_chunk_when_exact)
   const std::vector<BYTE> data(DataChunk::DATA_BYTE_SIZE);
 
   // When
-  const ChunkContainer chunkContainer = chunkFactory::get_chunk(data);
+  ChunkContainer<DataChunk> chunkContainer =
+      ChunkFactory::get_chunk(data);
 
   // Then
-  ASSERT_TRUE(!chunkContainer.is_error());
   ASSERT_EQ(chunkContainer.get_result().get_data(), data);
 }
 
@@ -33,24 +33,30 @@ TEST_F(DataChunkFactoryTest, should_create_data_chunk_when_less)
   const std::vector<BYTE> data(RANDOM_NUMBER(1, DataChunk::DATA_BYTE_SIZE));
 
   // When
-  const ChunkContainer chunkContainer = chunkFactory::get_chunk(data);
+  ChunkContainer chunkContainer = ChunkFactory::get_chunk(data);
 
   // Then
-  ASSERT_TRUE(!chunkContainer.is_error());
   ASSERT_EQ(chunkContainer.get_result().get_data(), data);
 }
 
-TEST_F(DataChunkFactoryTest, should_not_create_data_chunk_when_incorrect)
+TEST_F(DataChunkFactoryTest, should_not_create_data_chunk_when_more)
 {
   // Given
-  const std::vector<BYTE> data(DataChunk::DATA_BYTE_SIZE + 123);
+  const std::vector<BYTE> data(DataChunk::DATA_BYTE_SIZE + 1);
 
   // When
-  const ChunkContainer chunkContainer = chunkFactory::get_chunk(data);
+  bool thrownException = false;
+  try
+  {
+    ChunkContainer<DataChunk> chunkContainer = ChunkFactory::get_chunk(data);
+  }
+  catch (const std::exception &e)
+  {
+    thrownException = true;
+  }
 
   // Then
-  ASSERT_TRUE(chunkContainer.is_error());
-  ASSERT_NE(chunkContainer.get_result().get_data(), data);
+  ASSERT_TRUE(thrownException);
 }
 
 TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_exact)
@@ -60,10 +66,9 @@ TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_exact)
   const std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
-  const ChunkContainer chunkContainer = chunkFactory::get_chunk(data, vi);
+  ChunkContainer chunkContainer = ChunkFactory::get_chunk(data, vi);
 
   // Then
-  ASSERT_TRUE(!chunkContainer.is_error());
   ASSERT_EQ(chunkContainer.get_result().get_data(), data);
   ASSERT_EQ(chunkContainer.get_result().get_vi(), vi);
 }
@@ -75,102 +80,195 @@ TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_less)
   const std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
-  const ChunkContainer chunkContainer = chunkFactory::get_chunk(data, vi);
+  ChunkContainer chunkContainer = ChunkFactory::get_chunk(data, vi);
 
   // Then
-  ASSERT_TRUE(!chunkContainer.is_error());
   ASSERT_EQ(chunkContainer.get_result().get_data(), data);
   ASSERT_EQ(chunkContainer.get_result().get_vi(), vi);
 }
 
-TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_incorrect_vi)
+TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_more_vi)
 {
   // Given
   const std::vector<BYTE> data(EncryptedDataChunk::DATA_BYTE_SIZE);
-  const std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE + 123);
+  const std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE + 1);
 
   // When
-  const ChunkContainer chunkContainer = chunkFactory::get_chunk(data, vi);
+  bool thrownException = false;
+  try
+  {
+    ChunkContainer<EncryptedDataChunk> chunkContainer =
+        ChunkFactory::get_chunk(data, vi);
+  }
+  catch (const std::exception &e)
+  {
+    thrownException = true;
+  }
 
   // Then
-  ASSERT_TRUE(chunkContainer.is_error());
-  ASSERT_NE(chunkContainer.get_result().get_data(), data);
-  ASSERT_NE(chunkContainer.get_result().get_vi(), vi);
+  ASSERT_TRUE(thrownException);
 }
 
-TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_incorrect_data)
+TEST_F(DataChunkFactoryTest, should_not_create_encrypted_chunk_when_more_data)
 {
   // Given
-  const std::vector<BYTE> data(EncryptedDataChunk::DATA_BYTE_SIZE + 123);
+  const std::vector<BYTE> data(EncryptedDataChunk::DATA_BYTE_SIZE + 1);
   const std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
-  const ChunkContainer chunkContainer = chunkFactory::get_chunk(data, vi);
+  bool thrownException = false;
+  try
+  {
+    ChunkContainer<EncryptedDataChunk> chunkContainer =
+        ChunkFactory::get_chunk(data, vi);
+  }
+  catch (const std::exception &e)
+  {
+    thrownException = true;
+  }
 
   // Then
-  ASSERT_TRUE(chunkContainer.is_error());
-  ASSERT_NE(chunkContainer.get_result().get_data(), data);
-  ASSERT_NE(chunkContainer.get_result().get_vi(), vi);
+  ASSERT_TRUE(thrownException);
 }
 
-TEST_F(DataChunkFactoryTest, should_map_exact_bytes_to_encrypted_chunk)
+TEST_F(DataChunkFactoryTest, should_map_from_bytes_to_chunk_when_exact)
 {
-  Logger::get_instance().set_error_supression(false);
   // Given
-  const std::vector<BYTE> bytes = Encryption::get_random_bytes(
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(
+      DataChunk::DATA_BYTE_SIZE);
+
+  // When
+  DataChunk chunk = ChunkFactory::get_empty_chunk<DataChunk>().get_result();
+  chunk.map_from_bytes(bytes);
+
+  // Then
+  ASSERT_EQ(bytes, chunk.get_data());
+}
+
+TEST_F(DataChunkFactoryTest, should_map_from_bytes_to_chunk_when_less)
+{
+  // Given
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(
+      DataChunk::DATA_BYTE_SIZE - RANDOM_NUMBER(1, DataChunk::DATA_BYTE_SIZE));
+
+  // When
+  DataChunk chunk = ChunkFactory::get_empty_chunk<DataChunk>().get_result();
+  chunk.map_from_bytes(bytes);
+
+  // Then
+  ASSERT_EQ(bytes, chunk.get_data());
+}
+
+TEST_F(DataChunkFactoryTest, should_not_map_from_bytes_to_chunk_when_more)
+{
+  // Given
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(
+      DataChunk::DATA_BYTE_SIZE + RANDOM_NUMBER(1, DataChunk::DATA_BYTE_SIZE));
+
+  // When
+  DataChunk chunk = ChunkFactory::get_empty_chunk<DataChunk>().get_result();
+  bool thrownException = false;
+
+  try
+  {
+    chunk.map_from_bytes(bytes);
+  }
+  catch (const std::exception &e)
+  {
+    thrownException = true;
+  }
+
+  // Then
+  ASSERT_TRUE(thrownException);
+}
+
+TEST_F(DataChunkFactoryTest, should_map_from_bytes_to_encrypted_chunk_when_exact)
+{
+  // Given
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(
       EncryptedDataChunk::DATA_BYTE_SIZE + EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
-  const ChunkContainer chunkContainer =
-      chunkFactory::map_bytes_to_encrypted_chunk(bytes);
+  EncryptedDataChunk chunk =
+      ChunkFactory::get_empty_chunk<EncryptedDataChunk>().get_result();
+  chunk.map_from_bytes(bytes);
+
+  std::vector<BYTE> data(
+      bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE, bytes.end());
+  std::vector<BYTE> vi(
+      bytes.begin(), bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE);
 
   // Then
-  ASSERT_TRUE(!chunkContainer.is_error());
-  ASSERT_EQ(bytes, chunkContainer.get_result().get_entire_chunk());
-  Logger::get_instance().set_error_supression(true);
+  ASSERT_EQ(data, chunk.get_data());
+  ASSERT_EQ(vi, chunk.get_vi());
 }
 
-TEST_F(DataChunkFactoryTest, should_map_less_with_vi_bytes_to_encrypted_chunk)
+TEST_F(DataChunkFactoryTest, should_map_from_bytes_to_encrypted_chunk_when_less)
 {
   // Given
-  const std::vector<BYTE> bytes = Encryption::get_random_bytes(
-      EncryptedDataChunk::VI_BYTE_SIZE + RANDOM_NUMBER(0, EncryptedDataChunk::DATA_BYTE_SIZE - 1));
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(
+      RANDOM_NUMBER(1, EncryptedDataChunk::DATA_BYTE_SIZE) +
+      EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
-  const ChunkContainer chunkContainer =
-      chunkFactory::map_bytes_to_encrypted_chunk(bytes);
+  EncryptedDataChunk chunk =
+      ChunkFactory::get_empty_chunk<EncryptedDataChunk>().get_result();
+  chunk.map_from_bytes(bytes);
+
+  std::vector<BYTE> data(
+      bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE, bytes.end());
+  std::vector<BYTE> vi(
+      bytes.begin(), bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE);
 
   // Then
-  ASSERT_TRUE(!chunkContainer.is_error());
-  ASSERT_EQ(bytes, chunkContainer.get_result().get_entire_chunk());
+  ASSERT_EQ(data, chunk.get_data());
+  ASSERT_EQ(vi, chunk.get_vi());
 }
 
-TEST_F(DataChunkFactoryTest, should_not_map_less_without_vi_bytes_to_encrypted_chunk)
+TEST_F(DataChunkFactoryTest, should_not_map_from_bytes_to_encrypted_chunk_when_less_than_vi)
 {
   // Given
-  const std::vector<BYTE> bytes = Encryption::get_random_bytes(
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(
       RANDOM_NUMBER(0, EncryptedDataChunk::VI_BYTE_SIZE - 1));
 
   // When
-  const ChunkContainer chunkContainer =
-      chunkFactory::map_bytes_to_encrypted_chunk(bytes);
+  EncryptedDataChunk chunk =
+      ChunkFactory::get_empty_chunk<EncryptedDataChunk>().get_result();
+
+  bool thrownException;
+  try
+  {
+    chunk.map_from_bytes(bytes);
+  }
+  catch (const std::exception &e)
+  {
+    thrownException = true;
+  }
 
   // Then
-  ASSERT_TRUE(chunkContainer.is_error());
-  ASSERT_NE(bytes, chunkContainer.get_result().get_entire_chunk());
+  ASSERT_TRUE(thrownException);
 }
 
-TEST_F(DataChunkFactoryTest, should_not_map_more_bytes_to_encrypted_chunk)
+TEST_F(DataChunkFactoryTest, should_not_map_from_bytes_to_encrypted_chunk_when_more)
 {
   // Given
-  const std::vector<BYTE> bytes = Encryption::get_random_bytes(
-      EncryptedDataChunk::DATA_BYTE_SIZE + EncryptedDataChunk::VI_BYTE_SIZE + 1);
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(
+      EncryptedDataChunk::DATA_BYTE_SIZE + 1);
 
   // When
-  const ChunkContainer chunkContainer =
-      chunkFactory::map_bytes_to_encrypted_chunk(bytes);
+  EncryptedDataChunk chunk =
+      ChunkFactory::get_empty_chunk<EncryptedDataChunk>().get_result();
+
+  bool thrownException;
+  try
+  {
+    chunk.map_from_bytes(bytes);
+  }
+  catch (const std::exception &e)
+  {
+    thrownException = true;
+  }
 
   // Then
-  ASSERT_TRUE(chunkContainer.is_error());
-  ASSERT_NE(bytes, chunkContainer.get_result().get_entire_chunk());
+  ASSERT_TRUE(thrownException);
 }

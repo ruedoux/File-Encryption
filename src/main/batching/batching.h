@@ -10,7 +10,7 @@
 #include <global/logger.h>
 #include <fileAccess.h>
 
-#include "dataChunk/chunkFactory.h"
+#include "dataChunk/ChunkFactory.h"
 
 // --------------------------------------------
 // Declarations
@@ -24,48 +24,51 @@ public:
       const u64 chunkSize);
 
   template <class T>
-  bool append_chunk_to_file(
+  static void append_chunk_to_file(
       const std::string &filePath,
       const ChunkContainer<T> &chunkContainer)
   {
+    THROW_EXCEPTION_IF_FILE_MISSING(filePath);
+
     if (chunkContainer.is_error())
     {
-      Logger::get_instance().log_error(
-          "Failed to write append to file: " + filePath,
-          "Because chunk container has empty chunk.");
-      return false;
+      THROW_FILE_EXCEPTION("Chunk container has empty chunk.", filePath);
     }
 
     std::vector<BYTE> entireChunk = chunkContainer.get_result().get_entire_chunk();
 
-    FileAccess::ErrorCode errorCode =
-        FileAccess::append_bytes_to_file(filePath, entireChunk);
+    FileAccess::ErrorCode errorCode = FileAccess::append_bytes_to_file(
+        filePath, entireChunk);
 
     if (errorCode != FileAccess::ErrorCode::OK)
     {
-      Logger::get_instance().log_error(
-          "Failed to write append to file: " + filePath,
-          "Write error code: " + std::to_string(errorCode));
-      return false;
+      THROW_FILE_EXCEPTION_WRITE(filePath, errorCode);
     }
-
-    return true;
   }
 
-  /*
   template <class T>
-  ChunkContainer<T> read_chunk_from_file(
+  static ChunkContainer<T> read_chunk_from_file(
       const std::string &filePath,
       const u64 chunkIndex)
   {
-    std::vector<BYTE> readBytes;
+    THROW_EXCEPTION_IF_FILE_MISSING(filePath);
 
-    FileAccess::ErrorCode errorCode =
-        FileAccess::read_bytes_from_file(filePath, readBytes);
-    
-    return ChunkContainer<T>;
+    std::vector<BYTE> readBytes;
+    const std::uintmax_t chunkSize = T::get_desired_chunk_size();
+    const std::uintmax_t fromIndex = chunkSize * chunkIndex;
+
+    FileAccess::ErrorCode errorCode = FileAccess::read_bytes_from_file(
+        filePath, readBytes, fromIndex, chunkSize);
+
+    if (errorCode != FileAccess::ErrorCode::OK)
+    {
+      THROW_FILE_EXCEPTION_READ(filePath, fromIndex, chunkSize, errorCode);
+    }
+
+    ChunkContainer<T> chunkContainer = ChunkFactory::get_empty_chunk<T>();
+    chunkContainer.get_result().map_from_bytes(readBytes);
+    return chunkContainer;
   }
-  */
 };
 
 #endif

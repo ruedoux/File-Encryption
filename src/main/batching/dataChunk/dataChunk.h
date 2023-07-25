@@ -18,7 +18,7 @@ struct ChunkContainer;
 
 struct DataChunk
 {
-  friend class chunkFactory;
+  friend class ChunkFactory;
   friend class ChunkContainer<DataChunk>;
 
   static constexpr u64 DATA_BYTE_SIZE = static_cast<u64>(MiB(1));
@@ -26,28 +26,28 @@ struct DataChunk
 protected:
   std::vector<BYTE> data;
 
-  DataChunk(const std::vector<BYTE> data) : data(data) {}
-  DataChunk() {}
+  DataChunk(const std::vector<BYTE> data) noexcept : data(data) {}
+  DataChunk() noexcept {}
 
-  bool set_data(std::vector<BYTE> newData)
+  void set_data(const std::vector<BYTE> &newData)
   {
-    if (newData.size() > DATA_BYTE_SIZE)
-    {
-      return false;
-    }
-
+    THROW_EXCEPTION_IF_MORE(newData.size(), DATA_BYTE_SIZE);
     data = newData;
-    return true;
   }
 
 public:
-  std::vector<BYTE> get_data() const { return data; }
+  std::vector<BYTE> get_data() const noexcept { return data; }
 
   virtual std::vector<BYTE> get_entire_chunk() const { return data; }
 
-  virtual u64 get_entire_chunk_size() const { return data.size(); }
+  virtual u64 get_entire_chunk_size() const noexcept { return data.size(); }
 
-  static u64 get_desired_chunk_size() { return DATA_BYTE_SIZE; }
+  static u64 get_desired_chunk_size() noexcept { return DATA_BYTE_SIZE; }
+
+  virtual void map_from_bytes(const std::vector<BYTE> &bytes)
+  {
+    set_data(bytes);
+  }
 
   bool operator==(const DataChunk &other) const
   {
