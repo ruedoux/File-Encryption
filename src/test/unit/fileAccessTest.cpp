@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <fileAccess.h>
+#include <encryption/encryption.h>
 
 namespace
 {
@@ -23,7 +24,7 @@ struct FileAccessTest : public ::testing::Test
 TEST_F(FileAccessTest, create_file)
 {
   // Given
-  std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::string filePath = TEST_FOLDER + "/test.txt";
 
   // When
   bool createdFile = FileAccess::create_file(filePath);
@@ -36,7 +37,7 @@ TEST_F(FileAccessTest, create_file)
 TEST_F(FileAccessTest, create_dir)
 {
   // Given
-  std::string folderPath = TEST_FOLDER + "/test";
+  const std::string folderPath = TEST_FOLDER + "/test";
 
   // When
   bool createdFolder = FileAccess::create_dir(folderPath);
@@ -49,7 +50,7 @@ TEST_F(FileAccessTest, create_dir)
 TEST_F(FileAccessTest, delete_file)
 {
   // Given
-  std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::string filePath = TEST_FOLDER + "/test.txt";
 
   // When
   std::fstream file(filePath, std::fstream::out);
@@ -65,7 +66,7 @@ TEST_F(FileAccessTest, delete_file)
 TEST_F(FileAccessTest, delete_dir)
 {
   // Given
-  std::string folderPath = TEST_FOLDER + "/test";
+  const std::string folderPath = TEST_FOLDER + "/test";
 
   // When
   std::filesystem::create_directory(folderPath);
@@ -79,8 +80,8 @@ TEST_F(FileAccessTest, delete_dir)
 TEST_F(FileAccessTest, file_exist)
 {
   // Given
-  std::string filePath = TEST_FOLDER + "/test.txt";
-  std::string wrongFilePath = "doesntexist";
+  const std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::string wrongFilePath = "doesntexist";
 
   // When
   std::fstream file(filePath, std::fstream::out);
@@ -94,8 +95,8 @@ TEST_F(FileAccessTest, file_exist)
 TEST_F(FileAccessTest, dir_exist)
 {
   // Given
-  std::string folderPath = TEST_FOLDER + "/test";
-  std::string wrongfolderPath = "doesntexist";
+  const std::string folderPath = TEST_FOLDER + "/test";
+  const std::string wrongfolderPath = "doesntexist";
 
   // When
   std::filesystem::create_directory(folderPath);
@@ -103,4 +104,25 @@ TEST_F(FileAccessTest, dir_exist)
   // Then
   ASSERT_TRUE(FileAccess::dir_exist(folderPath));
   ASSERT_FALSE(FileAccess::dir_exist(wrongfolderPath));
+}
+
+TEST_F(FileAccessTest, get_byte_count_left_in_file)
+{
+  // Given
+  static constexpr u64 baseFileSize = 123;
+  const std::string filePath = TEST_FOLDER + "/test.txt";
+  u64 bytesLeft = RANDOM_NUMBER(0, 1000);
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(
+      baseFileSize + bytesLeft);
+
+  // When
+  bool createdFile = FileAccess::create_file(filePath);
+  FileAccess::ErrorCode appended = FileAccess::append_bytes_to_file(
+      filePath, bytes);
+
+  u64 bytesLeftResult = FileAccess::get_byte_count_left_in_file(
+      filePath, baseFileSize);
+
+  // Then
+  ASSERT_EQ(bytesLeft, bytesLeftResult);
 }

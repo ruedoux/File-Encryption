@@ -16,12 +16,15 @@
 
 class EncryptionInterface
 {
+public:
   static bool encrypt_file(
-    const std::string& filePath,
-    const std::vector<BYTE> key);
+      const std::string &filePathSource,
+      const std::string &filePathDestination,
+      const std::vector<BYTE> key);
   static bool decrypt_file(
-    const std::string& filePath,
-    const std::vector<BYTE> key);
+      const std::string &filePathSource,
+      const std::string &filePathDestination,
+      const std::vector<BYTE> key);
 };
 
 #endif

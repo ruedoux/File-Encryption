@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <fileAccess.h>
+#include <encryption/encryption.h>
 
 namespace
 {
@@ -23,7 +24,7 @@ struct FileAccessIT : public ::testing::Test
 TEST_F(FileAccessIT, create_delete_and_check_file_exist)
 {
   // Given
-  std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::string filePath = TEST_FOLDER + "/test.txt";
 
   // When
   bool fileExistsBeforeCreation = FileAccess::file_exist(filePath);
@@ -43,7 +44,7 @@ TEST_F(FileAccessIT, create_delete_and_check_file_exist)
 TEST_F(FileAccessIT, create_delete_and_check_folder_exist)
 {
   // Given
-  std::string dirPath = TEST_FOLDER + "/test";
+  const std::string dirPath = TEST_FOLDER + "/test";
 
   // When
   bool dirExistsBeforeCreation = FileAccess::dir_exist(dirPath);
@@ -58,4 +59,35 @@ TEST_F(FileAccessIT, create_delete_and_check_folder_exist)
   ASSERT_TRUE(dirExisitsWhenCreated);
   ASSERT_TRUE(dirDeleted);
   ASSERT_FALSE(dirExistsAfterDeletion);
+}
+
+TEST_F(FileAccessIT, read_and_write_to_file)
+{
+  // Given
+  const std::string filePath = TEST_FOLDER + "/test.txt";
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(64);
+  u64 repeats = RANDOM_NUMBER(2, 10);
+
+  // When
+  bool createdFile = FileAccess::create_file(filePath);
+
+  for (u64 i = 0; i < repeats; i++)
+  {
+    ASSERT_EQ(
+        FileAccess::ErrorCode::OK,
+        FileAccess::append_bytes_to_file(filePath, bytes));
+  }
+
+  // Then
+  for (u64 i = 0; i < repeats; i++)
+  {
+    std::vector<BYTE> readBytes;
+    ASSERT_EQ(
+        FileAccess::ErrorCode::OK,
+        FileAccess::read_bytes_from_file(
+            filePath, readBytes, i * bytes.size(), bytes.size()));
+    ASSERT_EQ(bytes, readBytes);
+  }
+
+  ASSERT_TRUE(createdFile);
 }

@@ -22,8 +22,7 @@ struct BatchingIT : public ::testing::Test
   }
 };
 
-/*
-TEST_F(BatchingIT, write_and_read_single_chunk_from_file)
+TEST_F(BatchingIT, write_and_read_single_exact_chunk_from_file)
 {
   // Given
   ChunkContainer<DataChunk> chunkContainer =
@@ -33,15 +32,14 @@ TEST_F(BatchingIT, write_and_read_single_chunk_from_file)
 
   // When
   bool createdFile = FileAccess::create_file(TEST_FILE_PATH);
-  bool writtenToFile = Batching::append_chunk_to_file(
+  Batching::append_chunk_to_file(
       TEST_FILE_PATH, chunkContainer);
   ChunkContainer<DataChunk> readChunkContainer =
-      Batching::read_chunk_from_file<DataChunk>(TEST_FILE_PATH, fromIndex);
+      Batching::read_chunk_from_file<DataChunk>(
+          TEST_FILE_PATH, fromIndex, DataChunk::DATA_BYTE_SIZE);
 
   // Then
   ASSERT_TRUE(createdFile);
-  ASSERT_TRUE(writtenToFile);
-  ASSERT_TRUE(!readChunkContainer.is_error());
   ASSERT_EQ(
       chunkContainer.get_result().get_entire_chunk(),
       readChunkContainer.get_result().get_entire_chunk());
@@ -63,23 +61,20 @@ TEST_F(BatchingIT, write_and_read_multiple_chunks_from_file)
   // When
   bool createdFile = FileAccess::create_file(TEST_FILE_PATH);
 
-  bool writtenToFile = true;
   for (u64 i = 0; i < repeats; i++)
   {
-    writtenToFile =
-        writtenToFile &&
-        Batching::append_chunk_to_file(TEST_FILE_PATH, chunkContainers.at(i));
+    Batching::append_chunk_to_file(TEST_FILE_PATH, chunkContainers.at(i));
   }
 
   for (u64 i = 0; i < repeats; i++)
   {
     readChunkContainers.push_back(
-        Batching::read_chunk_from_file<DataChunk>(TEST_FILE_PATH, i));
+        Batching::read_chunk_from_file<DataChunk>(
+            TEST_FILE_PATH, i, DataChunk::DATA_BYTE_SIZE));
   }
 
   // Then
   ASSERT_TRUE(createdFile);
-  ASSERT_TRUE(writtenToFile);
   for (size_t i = 0; i < chunkContainers.size(); i++)
   {
     ASSERT_EQ(
@@ -87,4 +82,3 @@ TEST_F(BatchingIT, write_and_read_multiple_chunks_from_file)
         readChunkContainers[i].get_result().get_entire_chunk());
   }
 }
-*/
