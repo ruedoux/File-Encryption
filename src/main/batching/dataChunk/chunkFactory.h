@@ -24,10 +24,10 @@ public:
       const std::vector<BYTE> &data,
       const std::vector<BYTE> &vi);
 
-  template <class T>
-  static T get_empty_chunk() noexcept
+  template <class ChunkType>
+  static ChunkType get_empty_chunk() noexcept
   {
-    return T();
+    return ChunkType();
   }
 };
 

@@ -23,10 +23,10 @@ public:
       const std::string &filePath,
       const u64 bytesToRead);
 
-  template <class T>
+  template <class ChunkType>
   static void append_chunk_to_file(
       const std::string &filePath,
-      const T &chunk)
+      const ChunkType &chunk)
   {
     THROW_EXCEPTION_IF_FILE_MISSING(filePath);
 
@@ -46,8 +46,8 @@ public:
     }
   }
 
-  template <class T>
-  static T read_chunk_from_file(
+  template <class ChunkType>
+  static ChunkType read_chunk_from_file(
       const std::string &filePath,
       const u64 chunkIndex,
       const u64 bytesToRead)
@@ -65,7 +65,7 @@ public:
       THROW_FILE_EXCEPTION_READ(filePath, fromIndex, bytesToRead, errorCode);
     }
 
-    T chunk = ChunkFactory::get_empty_chunk<T>();
+    ChunkType chunk = ChunkFactory::get_empty_chunk<ChunkType>();
     chunk.map_from_bytes(readBytes);
     return chunk;
   }

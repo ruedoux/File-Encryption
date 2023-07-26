@@ -27,11 +27,6 @@
 // Macros
 // -------------------------------------------------
 
-#define RANDOM_NUMBER(min, max) [](auto from, auto to) \
-{ std::random_device rd;                                      \
-  std::uniform_int_distribution<BYTE> distribution(from, to); \
-  return distribution(rd); }(min, max)
-
 #define KiB(x) ((size_t)(x) << 10) // Binary kilobyte
 #define MiB(x) ((size_t)(x) << 20) // Binary megabyte
 #define GiB(x) ((size_t)(x) << 30) // Binary gigabyte
@@ -63,5 +58,16 @@ typedef int64_t i64;
 
 typedef float f32;
 typedef double f64;
+
+namespace GLOBAL
+{
+  template <typename T>
+  static T get_random_number(T from, T to)
+  {
+    std::random_device rd;
+    std::uniform_int_distribution<T> distribution(from, to);
+    return distribution(rd);
+  }
+}
 
 #endif

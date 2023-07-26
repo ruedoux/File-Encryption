@@ -13,8 +13,7 @@ struct BatchingTest : public ::testing::Test
   virtual void SetUp() override
   {
     std::filesystem::create_directory(TEST_FOLDER);
-    srand(time(NULL));
-  }
+    }
 
   virtual void TearDown() override
   {

@@ -12,8 +12,7 @@ struct FileAccessIT : public ::testing::Test
   virtual void SetUp() override
   {
     std::filesystem::create_directory(TEST_FOLDER);
-    srand(time(NULL));
-  }
+    }
 
   virtual void TearDown() override
   {
@@ -66,7 +65,7 @@ TEST_F(FileAccessIT, read_and_write_to_file)
   // Given
   const std::string filePath = TEST_FOLDER + "/test.txt";
   std::vector<BYTE> bytes = Encryption::get_random_bytes(64);
-  u64 repeats = RANDOM_NUMBER(2, 10);
+  u64 repeats = GLOBAL::get_random_number(2, 10);
 
   // When
   bool createdFile = FileAccess::create_file(filePath);

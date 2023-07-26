@@ -13,7 +13,6 @@ struct BatchingIT : public ::testing::Test
   virtual void SetUp() override
   {
     std::filesystem::create_directory(TEST_FOLDER);
-    srand(time(NULL));
   }
 
   virtual void TearDown() override
@@ -46,7 +45,7 @@ TEST_F(BatchingIT, write_and_read_single_exact_chunk_from_file)
 TEST_F(BatchingIT, write_and_read_multiple_chunks_from_file)
 {
   // Given
-  const u64 repeats = RANDOM_NUMBER(5, 10);
+  const u64 repeats = GLOBAL::get_random_number(5, 10);
   std::vector<DataChunk> chunks;
   std::vector<DataChunk> readChunks;
 

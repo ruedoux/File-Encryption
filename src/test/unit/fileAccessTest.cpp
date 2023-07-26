@@ -12,8 +12,7 @@ struct FileAccessTest : public ::testing::Test
   virtual void SetUp() override
   {
     std::filesystem::create_directory(TEST_FOLDER);
-    srand(time(NULL));
-  }
+    }
 
   virtual void TearDown() override
   {
@@ -111,7 +110,7 @@ TEST_F(FileAccessTest, get_byte_count_left_in_file)
   // Given
   static constexpr u64 baseFileSize = 123;
   const std::string filePath = TEST_FOLDER + "/test.txt";
-  u64 bytesLeft = RANDOM_NUMBER(0, 1000);
+  u64 bytesLeft = GLOBAL::get_random_number(0, 1000);
   std::vector<BYTE> bytes = Encryption::get_random_bytes(
       baseFileSize + bytesLeft);
 

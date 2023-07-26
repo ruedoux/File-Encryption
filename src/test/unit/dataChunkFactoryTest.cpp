@@ -29,7 +29,8 @@ TEST_F(DataChunkFactoryTest, should_create_data_chunk_when_exact)
 TEST_F(DataChunkFactoryTest, should_create_data_chunk_when_less)
 {
   // Given
-  const std::vector<BYTE> data(RANDOM_NUMBER(1, DataChunk::DATA_BYTE_SIZE));
+  const std::vector<BYTE> data(
+      GLOBAL::get_random_number((u64)1, DataChunk::DATA_BYTE_SIZE));
 
   // When
   DataChunk chunk = ChunkFactory::get_chunk(data);
@@ -75,7 +76,8 @@ TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_exact)
 TEST_F(DataChunkFactoryTest, should_create_encrypted_chunk_when_less)
 {
   // Given
-  const std::vector<BYTE> data(RANDOM_NUMBER(1, EncryptedDataChunk::DATA_BYTE_SIZE));
+  const std::vector<BYTE> data(
+      GLOBAL::get_random_number((u64)1, EncryptedDataChunk::DATA_BYTE_SIZE));
   const std::vector<BYTE> vi(EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
@@ -148,7 +150,8 @@ TEST_F(DataChunkFactoryTest, should_map_from_bytes_to_chunk_when_less)
 {
   // Given
   std::vector<BYTE> bytes = Encryption::get_random_bytes(
-      DataChunk::DATA_BYTE_SIZE - RANDOM_NUMBER(1, DataChunk::DATA_BYTE_SIZE));
+      DataChunk::DATA_BYTE_SIZE -
+      GLOBAL::get_random_number((u64)1, DataChunk::DATA_BYTE_SIZE));
 
   // When
   DataChunk chunk = ChunkFactory::get_empty_chunk<DataChunk>();
@@ -162,7 +165,8 @@ TEST_F(DataChunkFactoryTest, should_not_map_from_bytes_to_chunk_when_more)
 {
   // Given
   std::vector<BYTE> bytes = Encryption::get_random_bytes(
-      DataChunk::DATA_BYTE_SIZE + RANDOM_NUMBER(1, DataChunk::DATA_BYTE_SIZE));
+      DataChunk::DATA_BYTE_SIZE +
+      GLOBAL::get_random_number((u64)1, DataChunk::DATA_BYTE_SIZE));
 
   // When
   DataChunk chunk = ChunkFactory::get_empty_chunk<DataChunk>();
@@ -206,7 +210,7 @@ TEST_F(DataChunkFactoryTest, should_map_from_bytes_to_encrypted_chunk_when_less)
 {
   // Given
   std::vector<BYTE> bytes = Encryption::get_random_bytes(
-      RANDOM_NUMBER(1, EncryptedDataChunk::DATA_BYTE_SIZE) +
+      GLOBAL::get_random_number((u64)1, EncryptedDataChunk::DATA_BYTE_SIZE) +
       EncryptedDataChunk::VI_BYTE_SIZE);
 
   // When
@@ -228,7 +232,7 @@ TEST_F(DataChunkFactoryTest, should_not_map_from_bytes_to_encrypted_chunk_when_l
 {
   // Given
   std::vector<BYTE> bytes = Encryption::get_random_bytes(
-      RANDOM_NUMBER(0, EncryptedDataChunk::VI_BYTE_SIZE - 1));
+      GLOBAL::get_random_number((u64)0, EncryptedDataChunk::VI_BYTE_SIZE - 1));
 
   // When
   EncryptedDataChunk chunk =
