@@ -15,37 +15,19 @@
 // Declarations
 // --------------------------------------------
 
-template <class T>
-struct ChunkContainer
-{
-  friend class ChunkFactory;
-
-private:
-  const T result;
-
-public:
-  ChunkContainer() noexcept {}
-  ChunkContainer(T chunk) noexcept : result(chunk) {}
-
-  T get_result() const noexcept
-  {
-    return result;
-  }
-};
-
 class ChunkFactory
 {
 public:
-  static ChunkContainer<DataChunk> get_chunk(
+  static DataChunk get_chunk(
       const std::vector<BYTE> &data);
-  static ChunkContainer<EncryptedDataChunk> get_chunk(
+  static EncryptedDataChunk get_chunk(
       const std::vector<BYTE> &data,
       const std::vector<BYTE> &vi);
 
   template <class T>
-  static ChunkContainer<T> get_empty_chunk() noexcept
+  static T get_empty_chunk() noexcept
   {
-    return ChunkContainer<T>();
+    return T();
   }
 };
 

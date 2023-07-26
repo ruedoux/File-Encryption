@@ -14,12 +14,12 @@
 // --------------------------------------------
 
 template <class T>
-struct ChunkContainer;
+struct chunk;
 
 struct DataChunk
 {
   friend class ChunkFactory;
-  friend class ChunkContainer<DataChunk>;
+  friend class chunk<DataChunk>;
 
   static constexpr u64 DATA_BYTE_SIZE = static_cast<u64>(MiB(1));
 

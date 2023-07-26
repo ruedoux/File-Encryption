@@ -26,16 +26,16 @@ public:
   template <class T>
   static void append_chunk_to_file(
       const std::string &filePath,
-      const ChunkContainer<T> &chunkContainer)
+      const T &chunk)
   {
     THROW_EXCEPTION_IF_FILE_MISSING(filePath);
 
-    if (chunkContainer.get_result().get_entire_chunk().empty())
+    if (chunk.get_entire_chunk().empty())
     {
       THROW_FILE_EXCEPTION("Chunk container has empty chunk.", filePath);
     }
 
-    std::vector<BYTE> entireChunk = chunkContainer.get_result().get_entire_chunk();
+    std::vector<BYTE> entireChunk = chunk.get_entire_chunk();
 
     FileAccess::ErrorCode errorCode = FileAccess::append_bytes_to_file(
         filePath, entireChunk);
@@ -47,7 +47,7 @@ public:
   }
 
   template <class T>
-  static ChunkContainer<T> read_chunk_from_file(
+  static T read_chunk_from_file(
       const std::string &filePath,
       const u64 chunkIndex,
       const u64 bytesToRead)
@@ -65,9 +65,9 @@ public:
       THROW_FILE_EXCEPTION_READ(filePath, fromIndex, bytesToRead, errorCode);
     }
 
-    T chunk = ChunkFactory::get_empty_chunk<T>().get_result();;
+    T chunk = ChunkFactory::get_empty_chunk<T>();
     chunk.map_from_bytes(readBytes);
-    return ChunkContainer<T>(chunk);
+    return chunk;
   }
 };
 

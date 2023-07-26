@@ -17,12 +17,12 @@
 // --------------------------------------------
 
 template <class T>
-struct ChunkContainer;
+struct chunk;
 
 struct EncryptedDataChunk : DataChunk
 {
   friend class ChunkFactory;
-  friend class ChunkContainer<EncryptedDataChunk>;
+  friend class chunk<EncryptedDataChunk>;
 
   static constexpr u64 VI_BYTE_SIZE = Encryption::VI_BYTE_SIZE;
 
