@@ -32,12 +32,17 @@ public:
   {
     THROW_EXCEPTION_IF_FILE_MISSING(filePathSource);
 
+    const u64 chunkSize = ChunkTypeFrom::get_desired_chunk_size();
     const u64 chunkCount = Batching::get_chunk_count_in_file(
-        filePathSource, ChunkTypeFrom::get_desired_chunk_size());
-    const u64 lastChunkIndex =
-        chunkCount * ChunkTypeFrom::get_desired_chunk_size();
+        filePathSource, chunkSize);
+    const u64 lastChunkIndex = chunkCount * chunkSize;
     const std::uintmax_t bytesLeftInLastChunk =
-        FileAccess::get_byte_count_left_in_file(filePathSource, lastChunkIndex);
+        get_bytes_left_in_last_chunk(filePathSource, chunkSize);
+
+    Logger::get_instance().log_error(
+        std::to_string(chunkCount),
+        std::to_string(lastChunkIndex),
+        std::to_string(bytesLeftInLastChunk));
 
     if (!FileAccess::create_file(filePathDestination))
     {
@@ -46,12 +51,11 @@ public:
 
     for (u64 i = 0; i < chunkCount; i++)
     {
-      u64 chunkSize =
+      u64 bytesToAppend =
           (i == chunkCount - 1) ? bytesLeftInLastChunk : ChunkTypeFrom::get_desired_chunk_size();
 
       ChunkTypeFrom chunk = Batching::read_chunk_from_file<ChunkTypeFrom>(
-          filePathSource, i, chunkSize);
-
+          filePathSource, i, bytesToAppend);
       Batching::append_chunk_to_file(
           filePathDestination, functionBind(chunk, key));
     }
@@ -64,6 +68,9 @@ private:
   static EncryptedDataChunk encrypt_chunk(
       const DataChunk &chunk,
       const std::vector<BYTE> &key);
+  static std::uintmax_t get_bytes_left_in_last_chunk(
+      const std::string &filePath,
+      const u64 chunkSize);
 };
 
 #endif

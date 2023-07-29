@@ -11,6 +11,7 @@
 // -------------------------------------------------
 
 // C++ STD
+#include <atomic>
 #include <mutex>
 #include <random>
 #include <iostream>

@@ -1,11 +1,11 @@
 #include "encryptionInterface.h"
 
 const EncryptionInterface::EncryptionFunction EncryptionInterface::ENCRYPT_BIND =
-      std::bind(&EncryptionInterface::encrypt_chunk,
-                std::placeholders::_1, std::placeholders::_2);
+    std::bind(&EncryptionInterface::encrypt_chunk,
+              std::placeholders::_1, std::placeholders::_2);
 const EncryptionInterface::DecryptionFunction EncryptionInterface::DECRYPT_BIND =
-      std::bind(&EncryptionInterface::encrypt_chunk,
-                std::placeholders::_1, std::placeholders::_2);
+    std::bind(&EncryptionInterface::decrypt_chunk,
+              std::placeholders::_1, std::placeholders::_2);
 
 DataChunk EncryptionInterface::decrypt_chunk(
     const EncryptedDataChunk &encryptedChunk,
@@ -32,4 +32,17 @@ EncryptedDataChunk EncryptionInterface::encrypt_chunk(
       ChunkFactory::get_chunk(Encryption::encrypt(data, key, vi), vi);
 
   return encryptedChunk;
+}
+
+std::uintmax_t EncryptionInterface::get_bytes_left_in_last_chunk(
+    const std::string &filePath,
+    const u64 chunkSize)
+{
+  const std::uintmax_t fileSize = FileAccess::get_file_size(filePath);
+  std::uintmax_t bytesLeft = fileSize % chunkSize;
+  if ((fileSize > 0) && (bytesLeft == 0))
+  {
+    bytesLeft = chunkSize;
+  }
+  return bytesLeft;
 }

@@ -20,6 +20,13 @@
 
 #define THROW_EXCEPTION(message) throw BaseException(message, LOGGER_GET_LINE)
 
+#define THROW_EXCEPTION_IF_TRUE(shouldNotBeTrue) \
+  if (shouldNotBeTrue)                           \
+  {                                              \
+    THROW_EXCEPTION(Logger::varargs_to_string(   \
+        "Flag is true!"));                       \
+  }
+
 #define THROW_EXCEPTION_IF_NOT_MATCH(is, shouldBe) \
   if (is != shouldBe)                              \
   {                                                \

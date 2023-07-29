@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <global/logger.h>
 #include <fileAccess.h>
 #include <encryption/encryption.h>
 
@@ -64,7 +65,7 @@ TEST_F(FileAccessIT, read_and_write_to_file)
 {
   // Given
   const std::string filePath = TEST_FOLDER + "/test.txt";
-  std::vector<BYTE> bytes = Encryption::get_random_bytes(64);
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(MiB(2));
   u64 repeats = GLOBAL::get_random_number(2, 10);
 
   // When
@@ -89,4 +90,5 @@ TEST_F(FileAccessIT, read_and_write_to_file)
   }
 
   ASSERT_TRUE(createdFile);
+  ASSERT_EQ(bytes.size()*repeats, FileAccess::get_file_size(filePath));
 }

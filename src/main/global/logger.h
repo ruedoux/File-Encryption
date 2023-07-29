@@ -48,8 +48,8 @@ namespace
 class Logger
 {
 private:
-  bool supressError;
-  std::mutex mutex;
+
+  std::atomic<bool> supressError;
 
   Logger() { supressError = false; }
 
@@ -59,7 +59,6 @@ private:
 public:
   void set_error_supression(bool supress)
   {
-    std::lock_guard<std::mutex> lock(mutex);
     supressError = supress;
   }
 
@@ -70,14 +69,14 @@ public:
   }
 
   template <typename... Args>
-  void log(Args... args)
+  static void log(Args... args)
   {
     VARARGS_FORMAT_STRING(msg, args);
     log_stdout(format_log(msg, ""));
   }
 
   template <typename... Args>
-  void log_info(Args... args)
+  static void log_info(Args... args)
   {
     VARARGS_FORMAT_STRING(msg, args);
     log_stdout(format_log(INFO_MARKER_ANSI + msg, INFO_MARKER));
@@ -87,8 +86,6 @@ public:
   void log_error(Args... args)
   {
     VARARGS_FORMAT_STRING(msg, args);
-
-    std::lock_guard<std::mutex> lock(mutex);
     if (!supressError)
     {
       log_stderr(format_log(ERROR_MARKER_ANSI + msg, ERROR_MARKER));

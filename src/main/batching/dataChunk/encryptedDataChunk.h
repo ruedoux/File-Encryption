@@ -55,6 +55,8 @@ public:
 
   virtual void map_from_bytes(const std::vector<BYTE> &bytes) override
   {
+    THROW_EXCEPTION_IF_TRUE(bytes.empty());
+    
     std::vector<BYTE> newVi(
         bytes.begin(), bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE);
     std::vector<BYTE> newData(

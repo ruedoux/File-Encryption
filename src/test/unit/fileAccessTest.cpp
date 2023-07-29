@@ -12,7 +12,7 @@ struct FileAccessTest : public ::testing::Test
   virtual void SetUp() override
   {
     std::filesystem::create_directory(TEST_FOLDER);
-    }
+  }
 
   virtual void TearDown() override
   {
@@ -124,4 +124,22 @@ TEST_F(FileAccessTest, get_byte_count_left_in_file)
 
   // Then
   ASSERT_EQ(bytesLeft, bytesLeftResult);
+}
+
+TEST_F(FileAccessTest, append_bytes_to_file)
+{
+  // Given
+  const std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::vector<BYTE> bytesInFile = Encryption::get_random_bytes(
+      GLOBAL::get_random_number(MiB(1), MiB(3)));
+
+  // When
+  bool createdFile = FileAccess::create_file(filePath);
+  FileAccess::ErrorCode appendedToFile = FileAccess::append_bytes_to_file(
+      filePath, bytesInFile);
+
+  // Then
+  ASSERT_TRUE(createdFile);
+  ASSERT_EQ(FileAccess::ErrorCode::OK, appendedToFile);
+  ASSERT_EQ(bytesInFile.size(), std::filesystem::file_size(filePath));
 }
