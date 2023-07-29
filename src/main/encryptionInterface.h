@@ -35,13 +35,11 @@ public:
     const u64 chunkSize = ChunkTypeFrom::get_desired_chunk_size();
     const u64 chunkCount = Batching::get_chunk_count_in_file(
         filePathSource, chunkSize);
-    const u64 lastChunkIndex = chunkCount * chunkSize;
     const std::uintmax_t bytesLeftInLastChunk =
         get_bytes_left_in_last_chunk(filePathSource, chunkSize);
 
     Logger::get_instance().log_error(
         std::to_string(chunkCount),
-        std::to_string(lastChunkIndex),
         std::to_string(bytesLeftInLastChunk));
 
     if (!FileAccess::create_file(filePathDestination))

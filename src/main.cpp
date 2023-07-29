@@ -5,7 +5,6 @@ int main(int argc, char *argv[])
 {
   ExceptionHandling::init();
 
-  /*
   std::string exeFolder = FileAccess::get_exe_folder_path();
   EncryptionInterface::process_file(
       EncryptionInterface::ENCRYPT_BIND,
@@ -13,16 +12,11 @@ int main(int argc, char *argv[])
       exeFolder + "/encrypted.txt",
       std::vector<BYTE>({10,0,2,3,4,5,12,3}));
 
-  EncryptionInterface::process_file(
-      EncryptionInterface::DECRYPT_BIND,
-      exeFolder + "/encrypted.txt",
-      exeFolder + "/decrypted.txt",
-      std::vector<BYTE>({10,0,2,3,4,5,12,3}));
-  */
-
-  const u64 chunkSize = 1048576;
-  Logger::get_instance().log_info(std::to_string(
-    GLOBAL::get_random_number(chunkSize * 4, chunkSize * 32)));
+  //EncryptionInterface::process_file(
+  //    EncryptionInterface::DECRYPT_BIND,
+  //    exeFolder + "/encrypted.txt",
+  //    exeFolder + "/decrypted.txt",
+  //    std::vector<BYTE>({10,0,2,3,4,5,12,3}));
 
   return 0;
 }
