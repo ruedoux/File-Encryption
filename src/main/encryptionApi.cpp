@@ -1,14 +1,50 @@
 #include "encryptionApi.h"
 
-std::uintmax_t EncryptionApi::get_bytes_left_in_last_chunk(
-    const std::string &filePath,
-    const u64 chunkSize)
+const EncryptionApi::EncryptionFunction EncryptionApi::ENCRYPT_BIND =
+    std::bind(&ChunkEncryption::encrypt_chunk,
+              std::placeholders::_1, std::placeholders::_2);
+const EncryptionApi::DecryptionFunction EncryptionApi::DECRYPT_BIND =
+    std::bind(&ChunkEncryption::decrypt_chunk,
+              std::placeholders::_1, std::placeholders::_2);
+
+void EncryptionApi::encrypt_file(
+    const std::string &filePathSource,
+    const std::string &filePathDestination,
+    const std::vector<BYTE> &key)
 {
-  const std::uintmax_t fileSize = FileAccess::get_file_size(filePath);
-  std::uintmax_t bytesLeft = fileSize % chunkSize;
-  if ((fileSize > 0) && (bytesLeft == 0))
+  THROW_EXCEPTION_IF_FILE_MISSING(filePathSource);
+
+  if (!FileAccess::create_file(filePathDestination))
   {
-    bytesLeft = chunkSize;
+    THROW_FILE_EXCEPTION("Unable to create file!", filePathDestination);
   }
-  return bytesLeft;
+
+  const u64 chunkCount = Batching::get_chunk_count_in_file(
+      filePathSource, DataChunk::get_desired_chunk_size());
+  for (u64 chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++)
+  {
+    process_and_append_chunk_to_file<DataChunk, EncryptedDataChunk>(
+        ENCRYPT_BIND, filePathSource, filePathDestination, key, chunkIndex);
+  }
+}
+
+void EncryptionApi::decrypt_file(
+    const std::string &filePathSource,
+    const std::string &filePathDestination,
+    const std::vector<BYTE> &key)
+{
+  THROW_EXCEPTION_IF_FILE_MISSING(filePathSource);
+
+  if (!FileAccess::create_file(filePathDestination))
+  {
+    THROW_FILE_EXCEPTION("Unable to create file!", filePathDestination);
+  }
+
+  const u64 chunkCount = Batching::get_chunk_count_in_file(
+      filePathSource, EncryptedDataChunk::get_desired_chunk_size());
+  for (u64 chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++)
+  {
+    process_and_append_chunk_to_file<EncryptedDataChunk, DataChunk>(
+        DECRYPT_BIND, filePathSource, filePathDestination, key, chunkIndex);
+  }
 }

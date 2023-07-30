@@ -65,7 +65,7 @@ TEST_F(FileAccessIT, read_and_write_to_file)
   // Given
   const std::string filePath = TEST_FOLDER + "/test.txt";
   std::vector<BYTE> bytes = Encryption::get_random_bytes(MiB(2));
-  u64 repeats = GLOBAL::get_random_number(2, 10);
+  u64 repeats = GLOBAL::get_random_u64(2, 10);
 
   // When
   bool createdFile = FileAccess::create_file(filePath);

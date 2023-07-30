@@ -11,6 +11,7 @@
 // -------------------------------------------------
 
 // C++ STD
+#include <algorithm>
 #include <atomic>
 #include <mutex>
 #include <random>
@@ -62,11 +63,17 @@ typedef double f64;
 
 namespace GLOBAL
 {
-  template <typename T>
-  static T get_random_number(T from, T to)
+  static u64 get_random_u64(u64 from, u64 to)
   {
     std::random_device rd;
-    std::uniform_int_distribution<T> distribution(from, to);
+    std::uniform_int_distribution<u64> distribution(from, to);
+    return distribution(rd);
+  }
+
+  static i64 get_random_i64(i64 from, i64 to)
+  {
+    std::random_device rd;
+    std::uniform_int_distribution<i64> distribution(from, to);
     return distribution(rd);
   }
 }

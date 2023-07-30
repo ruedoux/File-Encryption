@@ -110,7 +110,7 @@ TEST_F(FileAccessTest, get_byte_count_left_in_file)
   // Given
   static constexpr u64 baseFileSize = 123;
   const std::string filePath = TEST_FOLDER + "/test.txt";
-  u64 bytesLeft = GLOBAL::get_random_number(0, 1000);
+  u64 bytesLeft = GLOBAL::get_random_u64(0, 1000);
   std::vector<BYTE> bytes = Encryption::get_random_bytes(
       baseFileSize + bytesLeft);
 
@@ -131,7 +131,7 @@ TEST_F(FileAccessTest, append_bytes_to_file)
   // Given
   const std::string filePath = TEST_FOLDER + "/test.txt";
   const std::vector<BYTE> bytesInFile = Encryption::get_random_bytes(
-      GLOBAL::get_random_number(MiB(1), MiB(3)));
+      GLOBAL::get_random_u64(MiB(1), MiB(3)));
 
   // When
   bool createdFile = FileAccess::create_file(filePath);

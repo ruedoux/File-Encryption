@@ -3,16 +3,14 @@
 
 struct EncryptionTest : public ::testing::Test
 {
-  virtual void SetUp() override
-  {
-  }
+  virtual void SetUp() override {}
   virtual void TearDown() override {}
 };
 
 TEST_F(EncryptionTest, encrypt_bytes_and_decrypt_back)
 {
   // Given
-  std::vector<BYTE> bytes = Encryption::get_random_bytes(GLOBAL::get_random_number(1024, 2056));
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(GLOBAL::get_random_u64(1024, 2056));
   std::vector<BYTE> key = Encryption::get_random_bytes(Encryption::KEY_BYTE_SIZE);
   std::vector<BYTE> vi = Encryption::get_random_bytes(Encryption::VI_BYTE_SIZE);
 
@@ -27,7 +25,7 @@ TEST_F(EncryptionTest, encrypt_bytes_and_decrypt_back)
 TEST_F(EncryptionTest, encrypt_bytes_and_decrypt_back_small)
 {
   // Given
-  std::vector<BYTE> bytes = Encryption::get_random_bytes(GLOBAL::get_random_number(2, 12));
+  std::vector<BYTE> bytes = Encryption::get_random_bytes(GLOBAL::get_random_u64(2, 12));
   std::vector<BYTE> key = Encryption::get_random_bytes(Encryption::KEY_BYTE_SIZE);
   std::vector<BYTE> vi = Encryption::get_random_bytes(Encryption::VI_BYTE_SIZE);
 

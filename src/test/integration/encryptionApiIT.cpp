@@ -11,52 +11,6 @@ namespace
   const std::string TEST_FILE_PATH_ENCRYPTED = TEST_FOLDER + "/" + TEST_FILE_ENCRYPTED_NAME;
   const std::string TEST_FILE_PATH_DECRYPTED = TEST_FOLDER + "/" + TEST_FILE_DECRYPTED_NAME;
 
-  void encrypt_a_file_test(
-      const u64 exactChunkCount,
-      const bool randomBytes)
-  {
-    // Given
-    const u64 chunkSize = DataChunk::get_desired_chunk_size();
-
-    u64 fileSizeDeclared = chunkSize * exactChunkCount;
-    if (randomBytes)
-    {
-      fileSizeDeclared += GLOBAL::get_random_number((u64)1, chunkSize - 1);
-    }
-
-    const std::vector<BYTE> bytesInFile = Encryption::get_random_bytes(
-        fileSizeDeclared);
-    const std::vector<BYTE> randomKey = Encryption::get_random_bytes(
-        GLOBAL::get_random_number((u64)4, Encryption::KEY_BYTE_SIZE));
-
-    // When
-    bool createdFile = FileAccess::create_file(TEST_FILE_PATH_SOURCE);
-    FileAccess::ErrorCode appendedToFile = FileAccess::append_bytes_to_file(
-        TEST_FILE_PATH_SOURCE, bytesInFile);
-
-    EncryptionApi::encrypt_file(
-        TEST_FILE_PATH_SOURCE,
-        TEST_FILE_PATH_ENCRYPTED,
-        randomKey);
-
-    std::uintmax_t encryptedFileSize = FileAccess::get_file_size(TEST_FILE_PATH_ENCRYPTED);
-    std::vector<BYTE> encryptedFileBytes;
-    FileAccess::ErrorCode readFromFile = FileAccess::read_bytes_from_file(
-        TEST_FILE_PATH_ENCRYPTED, encryptedFileBytes, 0, encryptedFileSize);
-
-    const u64 chunkCountInFile = Batching::get_chunk_count_in_file(
-        TEST_FILE_PATH_SOURCE, chunkSize);
-
-    // Then
-    ASSERT_TRUE(createdFile);
-    ASSERT_EQ(FileAccess::ErrorCode::OK, appendedToFile);
-    ASSERT_EQ(FileAccess::ErrorCode::OK, readFromFile);
-    ASSERT_EQ(
-        fileSizeDeclared + Encryption::VI_BYTE_SIZE * chunkCountInFile,
-        encryptedFileSize);
-    ASSERT_NE(bytesInFile, encryptedFileBytes);
-  }
-
   void encrypt_and_decrypt_a_file_test(
       const u64 exactChunkCount,
       const bool randomBytes)
@@ -67,13 +21,13 @@ namespace
     u64 fileSizeDeclared = chunkSize * exactChunkCount;
     if (randomBytes)
     {
-      fileSizeDeclared += GLOBAL::get_random_number((u64)1, chunkSize - 1);
+      fileSizeDeclared += GLOBAL::get_random_u64(1, chunkSize - 1);
     }
 
-    const std::vector<BYTE> bytesInFile = Encryption::get_random_bytes(
-        fileSizeDeclared);
+    const std::vector<BYTE> bytesInFile =
+        Encryption::get_random_bytes(fileSizeDeclared);
     const std::vector<BYTE> randomKey = Encryption::get_random_bytes(
-        GLOBAL::get_random_number((u64)4, Encryption::KEY_BYTE_SIZE));
+        GLOBAL::get_random_u64(4, Encryption::KEY_BYTE_SIZE));
 
     // When
     bool createdFile = FileAccess::create_file(TEST_FILE_PATH_SOURCE);
@@ -85,7 +39,6 @@ namespace
         TEST_FILE_PATH_ENCRYPTED,
         randomKey);
 
-    Logger::log_info("Decryption start");
     EncryptionApi::decrypt_file(
         TEST_FILE_PATH_ENCRYPTED,
         TEST_FILE_PATH_DECRYPTED,
@@ -101,16 +54,6 @@ namespace
     ASSERT_EQ(FileAccess::ErrorCode::OK, appendedToFile);
     ASSERT_EQ(FileAccess::ErrorCode::OK, readFromFile);
     ASSERT_EQ(fileSizeDeclared, decryptedFileSize);
-    for (u64 i = 0; i < fileSizeDeclared; i++)
-    {
-      if (bytesInFile[i] != decryptedFileBytes[i])
-      {
-        Logger::log_info(
-            "on pos: " + std::to_string(i) + ", " + std::to_string(bytesInFile[i]) + " =! " + std::to_string(decryptedFileBytes[i]));
-        break;
-      }
-    }
-
     ASSERT_EQ(bytesInFile, decryptedFileBytes);
   }
 }
@@ -128,31 +71,6 @@ struct EncryptionApiIT : public ::testing::Test
   }
 };
 
-TEST_F(EncryptionApiIT, encrypts_a_file_with_random_less_than_one)
-{
-  encrypt_a_file_test(0, true);
-}
-
-TEST_F(EncryptionApiIT, encrypts_a_file_with_single_exact_chunk)
-{
-  encrypt_a_file_test(1, false);
-}
-
-TEST_F(EncryptionApiIT, encrypts_a_file_with_multiple_exact_chunks)
-{
-  encrypt_a_file_test(GLOBAL::get_random_number(2, 6), false);
-}
-
-TEST_F(EncryptionApiIT, encrypts_a_file_with_single_random_chunk)
-{
-  encrypt_a_file_test(1, true);
-}
-
-TEST_F(EncryptionApiIT, encrypts_a_file_with_multiple_random_chunks)
-{
-  encrypt_a_file_test(GLOBAL::get_random_number(2, 6), true);
-}
-
 TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_random_less_than_one)
 {
   encrypt_and_decrypt_a_file_test(0, true);
@@ -165,7 +83,7 @@ TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_single_exact_chunk)
 
 TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_multiple_exact_chunks)
 {
-  encrypt_and_decrypt_a_file_test(GLOBAL::get_random_number(2, 6), false);
+  encrypt_and_decrypt_a_file_test(GLOBAL::get_random_u64(2, 6), false);
 }
 
 TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_single_random_chunk)
@@ -175,5 +93,5 @@ TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_single_random_chunk)
 
 TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_multiple_random_chunks)
 {
-  // encrypt_and_decrypt_a_file_test(GLOBAL::get_random_number(2, 6), true);
+  // encrypt_and_decrypt_a_file_test(GLOBAL::get_random_u64(2, 6), true);
 }

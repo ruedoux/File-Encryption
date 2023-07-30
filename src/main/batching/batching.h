@@ -21,6 +21,10 @@ public:
       const std::string &filePath,
       const u64 bytesToRead);
 
+  static std::uintmax_t get_bytes_left_in_last_chunk(
+      const std::string &filePath,
+      const u64 chunkSize);
+
   template <class ChunkType>
   static void append_chunk_to_file(
       const std::string &filePath,
@@ -52,9 +56,13 @@ public:
   {
     THROW_EXCEPTION_IF_FILE_MISSING(filePath);
 
-    std::vector<BYTE> readBytes;
-    const std::uintmax_t fromIndex = bytesToRead * chunkIndex;
+    const std::uintmax_t fileSize = FileAccess::get_file_size(filePath);
+    const std::uintmax_t fromIndex =
+        ChunkType::get_desired_chunk_size() * chunkIndex;
+    
+    THROW_EXCEPTION_IF_MORE(fromIndex + bytesToRead, fileSize);
 
+    std::vector<BYTE> readBytes;
     FileAccess::ErrorCode errorCode = FileAccess::read_bytes_from_file(
         filePath, readBytes, fromIndex, bytesToRead);
 
