@@ -35,12 +35,8 @@ public:
     const u64 chunkSize = ChunkTypeFrom::get_desired_chunk_size();
     const u64 chunkCount = Batching::get_chunk_count_in_file(
         filePathSource, chunkSize);
-    const std::uintmax_t bytesLeftInLastChunk =
-        get_bytes_left_in_last_chunk(filePathSource, chunkSize);
 
-    Logger::get_instance().log_error(
-        std::to_string(chunkCount),
-        std::to_string(bytesLeftInLastChunk));
+    THROW_EXCEPTION_IF_TRUE(chunkCount == 0);
 
     if (!FileAccess::create_file(filePathDestination))
     {
@@ -49,11 +45,12 @@ public:
 
     for (u64 i = 0; i < chunkCount; i++)
     {
-      u64 bytesToAppend =
-          (i == chunkCount - 1) ? bytesLeftInLastChunk : ChunkTypeFrom::get_desired_chunk_size();
+      const u64 bytesToRead =
+          (i == (chunkCount - 1)) ? get_bytes_left_in_last_chunk(filePathSource, chunkSize) : ChunkTypeFrom::get_desired_chunk_size();
 
       ChunkTypeFrom chunk = Batching::read_chunk_from_file<ChunkTypeFrom>(
-          filePathSource, i, bytesToAppend);
+          filePathSource, i, bytesToRead);
+      Logger::log_info(std::to_string(i) + ", " + std::to_string(chunk.get_entire_chunk_size()));
       Batching::append_chunk_to_file(
           filePathDestination, functionBind(chunk, key));
     }

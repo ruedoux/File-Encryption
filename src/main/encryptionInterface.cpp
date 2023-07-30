@@ -14,10 +14,7 @@ DataChunk EncryptionInterface::decrypt_chunk(
   const std::vector<BYTE> data = encryptedChunk.get_data();
   const std::vector<BYTE> vi = encryptedChunk.get_vi();
 
-  const DataChunk decryptedChunk =
-      ChunkFactory::get_chunk(Encryption::decrypt(data, key, vi));
-
-  return decryptedChunk;
+  return ChunkFactory::get_chunk(Encryption::decrypt(data, key, vi));
 }
 
 EncryptedDataChunk EncryptionInterface::encrypt_chunk(
@@ -28,10 +25,7 @@ EncryptedDataChunk EncryptionInterface::encrypt_chunk(
   const std::vector<BYTE> vi = Encryption::get_random_bytes(
       Encryption::VI_BYTE_SIZE);
 
-  EncryptedDataChunk encryptedChunk =
-      ChunkFactory::get_chunk(Encryption::encrypt(data, key, vi), vi);
-
-  return encryptedChunk;
+  return ChunkFactory::get_chunk(Encryption::encrypt(data, key, vi), vi);
 }
 
 std::uintmax_t EncryptionInterface::get_bytes_left_in_last_chunk(

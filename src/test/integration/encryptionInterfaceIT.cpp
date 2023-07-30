@@ -40,10 +40,10 @@ namespace
         TEST_FILE_PATH_ENCRYPTED,
         randomKey);
 
-    std::uintmax_t fileSize = FileAccess::get_file_size(TEST_FILE_PATH_ENCRYPTED);
+    std::uintmax_t encryptedFileSize = FileAccess::get_file_size(TEST_FILE_PATH_ENCRYPTED);
     std::vector<BYTE> encryptedFileBytes;
     FileAccess::ErrorCode readFromFile = FileAccess::read_bytes_from_file(
-        TEST_FILE_PATH_ENCRYPTED, encryptedFileBytes, 0, fileSize);
+        TEST_FILE_PATH_ENCRYPTED, encryptedFileBytes, 0, encryptedFileSize);
 
     const u64 chunkCountInFile = Batching::get_chunk_count_in_file(
         TEST_FILE_PATH_SOURCE, chunkSize);
@@ -54,7 +54,7 @@ namespace
     ASSERT_EQ(FileAccess::ErrorCode::OK, readFromFile);
     ASSERT_EQ(
         fileSizeDeclared + Encryption::VI_BYTE_SIZE * chunkCountInFile,
-        fileSize);
+        encryptedFileSize);
     ASSERT_NE(bytesInFile, encryptedFileBytes);
   }
 
@@ -81,28 +81,41 @@ namespace
     FileAccess::ErrorCode appendedToFile = FileAccess::append_bytes_to_file(
         TEST_FILE_PATH_SOURCE, bytesInFile);
 
+  Logger::log_info("Encryption start");
     EncryptionInterface::process_file(
         EncryptionInterface::ENCRYPT_BIND,
         TEST_FILE_PATH_SOURCE,
         TEST_FILE_PATH_ENCRYPTED,
         randomKey);
 
+    Logger::log_info("Decryption start");
     EncryptionInterface::process_file(
         EncryptionInterface::DECRYPT_BIND,
         TEST_FILE_PATH_ENCRYPTED,
         TEST_FILE_PATH_DECRYPTED,
         randomKey);
 
-    std::vector<BYTE> readBytesInDecryptedFile;
+    std::uintmax_t decryptedFileSize = FileAccess::get_file_size(TEST_FILE_PATH_DECRYPTED);
+    std::vector<BYTE> decryptedFileBytes;
     FileAccess::ErrorCode readFromFile = FileAccess::read_bytes_from_file(
-        TEST_FILE_PATH_DECRYPTED, readBytesInDecryptedFile, 0, bytesInFile.size());
+        TEST_FILE_PATH_DECRYPTED, decryptedFileBytes, 0, bytesInFile.size());
 
     // Then
     ASSERT_TRUE(createdFile);
     ASSERT_EQ(FileAccess::ErrorCode::OK, appendedToFile);
     ASSERT_EQ(FileAccess::ErrorCode::OK, readFromFile);
-    ASSERT_EQ(bytesInFile.size(), readBytesInDecryptedFile.size());
-    ASSERT_EQ(bytesInFile, readBytesInDecryptedFile);
+    ASSERT_EQ(fileSizeDeclared, decryptedFileSize);
+    for (u64 i = 0; i < fileSizeDeclared; i++)
+    {
+      if (bytesInFile[i] != decryptedFileBytes[i])
+      {
+        Logger::log_info(
+            "on pos: " + std::to_string(i) + ", " + std::to_string(bytesInFile[i]) + " =! " + std::to_string(decryptedFileBytes[i]));
+        break;
+      }
+    }
+
+    ASSERT_EQ(bytesInFile, decryptedFileBytes);
   }
 }
 
@@ -161,7 +174,7 @@ TEST_F(EncryptionInterfaceIT, encrypts_and_decrypts_a_file_with_multiple_exact_c
 
 TEST_F(EncryptionInterfaceIT, encrypts_and_decrypts_a_file_with_single_random_chunk)
 {
-  //encrypt_and_decrypt_a_file_test(1, true);
+  encrypt_and_decrypt_a_file_test(1, true);
 }
 
 TEST_F(EncryptionInterfaceIT, encrypts_and_decrypts_a_file_with_multiple_random_chunks)

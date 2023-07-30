@@ -196,10 +196,10 @@ TEST_F(DataChunkFactoryTest, should_map_from_bytes_to_encrypted_chunk_when_exact
       ChunkFactory::get_empty_chunk<EncryptedDataChunk>();
   chunk.map_from_bytes(bytes);
 
-  std::vector<BYTE> data(
-      bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE, bytes.end());
   std::vector<BYTE> vi(
       bytes.begin(), bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE);
+  std::vector<BYTE> data(
+      bytes.begin() + EncryptedDataChunk::VI_BYTE_SIZE, bytes.end());
 
   // Then
   ASSERT_EQ(data, chunk.get_data());

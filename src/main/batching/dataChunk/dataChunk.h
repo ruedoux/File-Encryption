@@ -21,7 +21,7 @@ struct DataChunk
   friend class ChunkFactory;
   friend class chunk<DataChunk>;
 
-  static constexpr u64 DATA_BYTE_SIZE = static_cast<u64>(MiB(1));
+  static constexpr u64 DATA_BYTE_SIZE = static_cast<u64>(10);
 
 protected:
   std::vector<BYTE> data;

@@ -12,11 +12,11 @@ int main(int argc, char *argv[])
       exeFolder + "/encrypted.txt",
       std::vector<BYTE>({10,0,2,3,4,5,12,3}));
 
-  //EncryptionInterface::process_file(
-  //    EncryptionInterface::DECRYPT_BIND,
-  //    exeFolder + "/encrypted.txt",
-  //    exeFolder + "/decrypted.txt",
-  //    std::vector<BYTE>({10,0,2,3,4,5,12,3}));
+  EncryptionInterface::process_file(
+      EncryptionInterface::DECRYPT_BIND,
+      exeFolder + "/encrypted.txt",
+      exeFolder + "/decrypted.txt",
+      std::vector<BYTE>({10,0,2,3,4,5,12,3}));
 
   return 0;
 }
