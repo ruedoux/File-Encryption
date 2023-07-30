@@ -7,10 +7,8 @@
 // Dependencies
 // --------------------------------------------
 
-#include <global/logger.h>
-#include <fileAccess.h>
-
-#include "dataChunk/ChunkFactory.h"
+#include "fileAccess/fileAccess.h"
+#include "chunkEncryption/chunkEncryption.h"
 
 // --------------------------------------------
 // Declarations

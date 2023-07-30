@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <fileAccess.h>
-#include <encryption/encryption.h>
+#include <batching/fileAccess/fileAccess.h>
+#include <batching/chunkEncryption/dataChunk/encryption/encryption.h>
 
 namespace
 {

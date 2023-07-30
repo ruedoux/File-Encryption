@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <encryptionInterface.h>
+#include <encryptionApi.h>
 
 namespace
 {
@@ -34,8 +34,7 @@ namespace
     FileAccess::ErrorCode appendedToFile = FileAccess::append_bytes_to_file(
         TEST_FILE_PATH_SOURCE, bytesInFile);
 
-    EncryptionInterface::process_file(
-        EncryptionInterface::ENCRYPT_BIND,
+    EncryptionApi::encrypt_file(
         TEST_FILE_PATH_SOURCE,
         TEST_FILE_PATH_ENCRYPTED,
         randomKey);
@@ -81,16 +80,13 @@ namespace
     FileAccess::ErrorCode appendedToFile = FileAccess::append_bytes_to_file(
         TEST_FILE_PATH_SOURCE, bytesInFile);
 
-  Logger::log_info("Encryption start");
-    EncryptionInterface::process_file(
-        EncryptionInterface::ENCRYPT_BIND,
+    EncryptionApi::encrypt_file(
         TEST_FILE_PATH_SOURCE,
         TEST_FILE_PATH_ENCRYPTED,
         randomKey);
 
     Logger::log_info("Decryption start");
-    EncryptionInterface::process_file(
-        EncryptionInterface::DECRYPT_BIND,
+    EncryptionApi::decrypt_file(
         TEST_FILE_PATH_ENCRYPTED,
         TEST_FILE_PATH_DECRYPTED,
         randomKey);
@@ -119,7 +115,7 @@ namespace
   }
 }
 
-struct EncryptionInterfaceIT : public ::testing::Test
+struct EncryptionApiIT : public ::testing::Test
 {
   virtual void SetUp() override
   {
@@ -132,52 +128,52 @@ struct EncryptionInterfaceIT : public ::testing::Test
   }
 };
 
-TEST_F(EncryptionInterfaceIT, encrypts_a_file_with_random_less_than_one)
+TEST_F(EncryptionApiIT, encrypts_a_file_with_random_less_than_one)
 {
   encrypt_a_file_test(0, true);
 }
 
-TEST_F(EncryptionInterfaceIT, encrypts_a_file_with_single_exact_chunk)
+TEST_F(EncryptionApiIT, encrypts_a_file_with_single_exact_chunk)
 {
   encrypt_a_file_test(1, false);
 }
 
-TEST_F(EncryptionInterfaceIT, encrypts_a_file_with_multiple_exact_chunks)
+TEST_F(EncryptionApiIT, encrypts_a_file_with_multiple_exact_chunks)
 {
   encrypt_a_file_test(GLOBAL::get_random_number(2, 6), false);
 }
 
-TEST_F(EncryptionInterfaceIT, encrypts_a_file_with_single_random_chunk)
+TEST_F(EncryptionApiIT, encrypts_a_file_with_single_random_chunk)
 {
   encrypt_a_file_test(1, true);
 }
 
-TEST_F(EncryptionInterfaceIT, encrypts_a_file_with_multiple_random_chunks)
+TEST_F(EncryptionApiIT, encrypts_a_file_with_multiple_random_chunks)
 {
   encrypt_a_file_test(GLOBAL::get_random_number(2, 6), true);
 }
 
-TEST_F(EncryptionInterfaceIT, encrypts_and_decrypts_a_file_with_random_less_than_one)
+TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_random_less_than_one)
 {
   encrypt_and_decrypt_a_file_test(0, true);
 }
 
-TEST_F(EncryptionInterfaceIT, encrypts_and_decrypts_a_file_with_single_exact_chunk)
+TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_single_exact_chunk)
 {
   encrypt_and_decrypt_a_file_test(1, false);
 }
 
-TEST_F(EncryptionInterfaceIT, encrypts_and_decrypts_a_file_with_multiple_exact_chunks)
+TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_multiple_exact_chunks)
 {
   encrypt_and_decrypt_a_file_test(GLOBAL::get_random_number(2, 6), false);
 }
 
-TEST_F(EncryptionInterfaceIT, encrypts_and_decrypts_a_file_with_single_random_chunk)
+TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_single_random_chunk)
 {
   encrypt_and_decrypt_a_file_test(1, true);
 }
 
-TEST_F(EncryptionInterfaceIT, encrypts_and_decrypts_a_file_with_multiple_random_chunks)
+TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_multiple_random_chunks)
 {
-  //encrypt_and_decrypt_a_file_test(GLOBAL::get_random_number(2, 6), true);
+  // encrypt_and_decrypt_a_file_test(GLOBAL::get_random_number(2, 6), true);
 }

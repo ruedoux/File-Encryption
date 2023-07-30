@@ -7,8 +7,6 @@
 // Dependencies
 // --------------------------------------------
 
-#include <global/exceptionHandling.h>
-
 #include "encryptedDataChunk.h"
 
 // --------------------------------------------

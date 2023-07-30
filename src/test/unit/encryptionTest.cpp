@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <encryption/encryption.h>
+#include <batching/chunkEncryption/dataChunk/encryption/encryption.h>
 
 struct EncryptionTest : public ::testing::Test
 {

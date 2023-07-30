@@ -7,7 +7,7 @@
 // Dependencies
 // --------------------------------------------
 
-#include <global/global.h>
+#include <global/exceptionHandling.h>
 
 // --------------------------------------------
 // Declarations
