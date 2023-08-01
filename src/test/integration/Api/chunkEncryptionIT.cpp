@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <API/batching/chunkEncryption/chunkEncryption.h>
+#include <Api/batching/chunkEncryption/chunkEncryption.h>
 
 namespace
 {

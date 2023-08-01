@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <API/batching/batching.h>
+#include <Api/batching/batching.h>
 
 namespace
 {

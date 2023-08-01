@@ -4,30 +4,34 @@ cmake_minimum_required(VERSION 3.25)
 ## Variables
 ## ---------------------------
 
-set(This "FC")
-set(ThisLib "${This}Lib")
-set(CryptoAlgorithmsLib "CryptoAlgorithmsLib")
+set(ThisName "FileCrypt")
+set(ThisApiLibraryName "${ThisName}ApiLib")
+set(ThisCliLibraryName "${ThisName}CliLib")
+set(EncryptionLibraryName "${ThisName}EncryptionLibraryName")
 
-set(ThisUT "UTests")
-set(ThisIT "ITests")
+set(ThisApiUnitTestName "${ThisName}ApiUnitTests")
+set(ThisCliUnitTestName "${ThisName}CliUnitTests")
+set(ThisApiIntergrationTestName "${ThisName}ApiIntegrationTests")
+set(ThisCliIntergrationTestName "${ThisName}CliIntegrationTests")
 
 ## ---------------------------
 ## Settings
 ## ---------------------------
 
-project(${This} C CXX)
+project(${ThisName} C CXX)
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_BUILD_TYPE Release)
 
 enable_testing()
 
 add_subdirectory(dependencies/googletest)
 
 ## ---------------------------
-## Source files
+## Dependency files
 ## ---------------------------
 
 include_directories(
@@ -35,48 +39,85 @@ include_directories(
   "${CMAKE_SOURCE_DIR}/src/main"
 )
 
-file(GLOB_RECURSE MainSource
-  "${CMAKE_SOURCE_DIR}/src/main/*.cpp"
-  "${CMAKE_SOURCE_DIR}/src/main/*.h"
-)
-
 file(GLOB AlgorithmsSource
   "${CMAKE_SOURCE_DIR}/dependencies/crypto-algorithms/*.cpp"
   "${CMAKE_SOURCE_DIR}/dependencies/crypto-algorithms/*.h"
 )
 
-file(GLOB_RECURSE UTSource
-  "${CMAKE_SOURCE_DIR}/src/test/unit/*.cpp"
+## ---------------------------
+## Source files
+## ---------------------------
+
+file(GLOB_RECURSE ApiSource
+  "${CMAKE_SOURCE_DIR}/src/main/Api/*.cpp"
+  "${CMAKE_SOURCE_DIR}/src/main/Api/*.h"
 )
 
-file(GLOB_RECURSE ITSource
-  "${CMAKE_SOURCE_DIR}/src/test/integration/*.cpp"
+file(GLOB_RECURSE CliSource
+  "${CMAKE_SOURCE_DIR}/src/main/Cli/*.cpp"
+  "${CMAKE_SOURCE_DIR}/src/main/Cli/*.h"
 )
 
+## ---------------------------
+## Test files
+## ---------------------------
+
+file(GLOB_RECURSE UnitTestApiSource
+  "${CMAKE_SOURCE_DIR}/src/test/unit/Api/*.cpp"
+)
+
+file(GLOB_RECURSE UnitTestCliSource
+  "${CMAKE_SOURCE_DIR}/src/test/unit/Cli/*.cpp"
+)
+
+file(GLOB_RECURSE IntegrationTestApiSource
+  "${CMAKE_SOURCE_DIR}/src/test/integration/Api/*.cpp"
+)
+
+file(GLOB_RECURSE IntegrationTestCliSource
+  "${CMAKE_SOURCE_DIR}/src/test/integration/Cli/*.cpp"
+)
 ## ---------------------------
 ## Create static libs
 ## ---------------------------
 
-add_library(${ThisLib} STATIC ${MainSource})
-add_library(${CryptoAlgorithmsLib} STATIC ${AlgorithmsSource})
+add_library(${ThisApiLibraryName} STATIC ${ApiSource} ${AlgorithmsSource})
+add_library(${ThisCliLibraryName} STATIC ${CliSource})
+target_link_libraries(${ThisCliLibraryName} PRIVATE ${ThisApiLibraryName})
 
 ## ---------------------------
-## Tests
+## Unit Tests
 ## ---------------------------
 
-add_executable(${ThisUT} ${UTSource} ${AlgorithmsSource})
-target_link_libraries(${ThisUT} PUBLIC gtest_main ${ThisLib})
+add_executable(${ThisApiUnitTestName} ${UnitTestApiSource})
+add_executable(${ThisCliUnitTestName} ${UnitTestCliSource})
 
-add_test(NAME ${ThisUT} COMMAND ${ThisUT})
+target_link_libraries(${ThisApiUnitTestName} PUBLIC gtest_main ${ThisApiLibraryName})
+target_link_libraries(${ThisCliUnitTestName} PUBLIC gtest_main ${ThisCliLibraryName})
 
-add_executable(${ThisIT} ${ITSource} ${AlgorithmsSource})
-target_link_libraries(${ThisIT} PUBLIC gtest_main ${ThisLib})
+add_test(NAME ${ThisApiUnitTestName} COMMAND ${ThisApiUnitTestName})
+add_test(NAME ${ThisCliUnitTestName} COMMAND ${ThisCliUnitTestName})
 
-add_test(NAME ${ThisIT} COMMAND ${ThisIT})
+## ---------------------------
+## Integration Tests
+## ---------------------------
+
+add_executable(${ThisApiIntergrationTestName} ${IntegrationTestApiSource})
+add_executable(${ThisCliIntergrationTestName} ${IntegrationTestCliSource})
+
+target_link_libraries(${ThisApiIntergrationTestName} PUBLIC gtest_main ${ThisApiLibraryName})
+target_link_libraries(${ThisCliIntergrationTestName} PUBLIC gtest_main ${ThisCliLibraryName})
+
+add_test(NAME ${ThisApiIntergrationTestName} COMMAND ${ThisApiIntergrationTestName})
+add_test(NAME ${ThisCliIntergrationTestName} COMMAND ${ThisCliIntergrationTestName})
+
+## ---------------------------
+## Test Build
+## ---------------------------
 
 add_custom_target(RunTests
     COMMAND ${CMAKE_CTEST_COMMAND} --verbose
-    DEPENDS ${ThisIT} ${ThisUT}
+    DEPENDS ${ThisApiUnitTestName} ${ThisCliUnitTestName} ${ThisApiIntergrationTestName} ${ThisCliIntergrationTestName}
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
@@ -84,8 +125,7 @@ add_custom_target(RunTests
 ## Main build
 ## ---------------------------
 
-set(CMAKE_BUILD_TYPE Release)
-add_executable(${This} "${CMAKE_SOURCE_DIR}/src/main.cpp")
-target_link_libraries(${This} PRIVATE ${ThisLib} ${CryptoAlgorithmsLib})
+add_executable(${ThisName} "${CMAKE_SOURCE_DIR}/src/main.cpp")
+target_link_libraries(${ThisName} PRIVATE ${ThisCliLibraryName})
 
-add_dependencies(${This} RunTests)
+add_dependencies(${ThisName} RunTests)

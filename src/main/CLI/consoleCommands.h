@@ -7,7 +7,9 @@
 // Dependencies
 // --------------------------------------------
 
-#include <API/encryptionApi.h>
+#include <Api/encryptionApi.h>
+
+#include "argumentParser/argumentParser.h"
 
 // --------------------------------------------
 // Declarations
@@ -16,7 +18,7 @@
 class ConsoleCommands
 {
 private:
-  typedef std::function<void(const std::vector<std::string>&)> ConsoleFunction;
+  typedef std::function<void(const std::vector<std::string> &)> ConsoleFunction;
   std::unordered_map<std::string, ConsoleFunction> CLICommands;
 
   ConsoleCommands() { init(); }
@@ -26,6 +28,7 @@ private:
 
   void init();
   void show_help(const std::vector<std::string> &args);
+  void encrypt_file(const std::vector<std::string> &args);
 
 public:
   static ConsoleCommands &get_instance()

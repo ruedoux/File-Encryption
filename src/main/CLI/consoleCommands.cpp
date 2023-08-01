@@ -28,3 +28,7 @@ void ConsoleCommands::show_help(const std::vector<std::string> &args)
       "This is template help message.",
       "Nothing to see here!");
 }
+
+void ConsoleCommands::encrypt_file(const std::vector<std::string> &args)
+{
+}

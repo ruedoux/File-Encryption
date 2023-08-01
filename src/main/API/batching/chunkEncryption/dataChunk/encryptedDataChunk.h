@@ -7,7 +7,7 @@
 // Dependencies
 // --------------------------------------------
 
-#include <global/exceptionHandling.h>
+#include <Api/global/exceptionHandling.h>
 
 #include "encryption/encryption.h"
 #include "dataChunk.h"

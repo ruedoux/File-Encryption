@@ -1,4 +1,4 @@
-#include <CLI/ConsoleCommands.h>
+#include <Cli/ConsoleCommands.h>
 
 int main(int argc, char *argv[])
 {
