@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <encryptionApi.h>
+#include <API/encryptionApi.h>
 
 namespace
 {

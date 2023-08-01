@@ -61,6 +61,10 @@ typedef int64_t i64;
 typedef float f32;
 typedef double f64;
 
+// -------------------------------------------------
+// Global functions
+// -------------------------------------------------
+
 namespace GLOBAL
 {
   static u64 get_random_u64(u64 from, u64 to)
@@ -75,6 +79,16 @@ namespace GLOBAL
     std::random_device rd;
     std::uniform_int_distribution<i64> distribution(from, to);
     return distribution(rd);
+  }
+
+  static std::string str_to_lower(const std::string &str)
+  {
+    std::string lowerCaseStr;
+    for (size_t i = 0; i < str.length(); i++)
+    {
+      lowerCaseStr.push_back(std::tolower(str[i]));
+    }
+    return lowerCaseStr;
   }
 }
 

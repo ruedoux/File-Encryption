@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <batching/chunkEncryption/dataChunk/ChunkFactory.h>
+#include <API/batching/chunkEncryption/dataChunk/ChunkFactory.h>
 
 struct DataChunkFactoryTest : public ::testing::Test
 {

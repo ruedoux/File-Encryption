@@ -1,20 +1,20 @@
-#include <global/exceptionHandling.h>
-#include <encryptionApi.h>
+#include <CLI/ConsoleCommands.h>
 
 int main(int argc, char *argv[])
 {
-  ExceptionHandling::init();
+  std::vector<std::string> args;
+  if (argc < 2)
+  {
+    ConsoleCommands::run_command("help", args);
+  }
 
-  std::string exeFolder = FileAccess::get_exe_folder_path();
-  EncryptionApi::encrypt_file(
-      exeFolder + "/test.txt",
-      exeFolder + "/encrypted.txt",
-      std::vector<BYTE>({10,0,2,3,4,5,12,3}));
+  for (int i = 2; i < argc; i++)
+  {
+    args.push_back(GLOBAL::str_to_lower(static_cast<std::string>(argv[i])));
+  }
 
-  EncryptionApi::decrypt_file(
-      exeFolder + "/encrypted.txt",
-      exeFolder + "/decrypted.txt",
-      std::vector<BYTE>({10,0,2,3,4,5,12,3}));
+  ConsoleCommands::run_command(
+      GLOBAL::str_to_lower(static_cast<std::string>(argv[1])), args);
 
-  return 0;
+  return EXIT_SUCCESS;
 }
