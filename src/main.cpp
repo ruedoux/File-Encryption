@@ -2,7 +2,17 @@
 
 int main(int argc, char *argv[])
 {
-  ConsoleRunner consoleCommands(argc, argv);
-  consoleCommands.run();
+  ExceptionHandling::init();
+
+  try
+  {
+    ConsoleRunner consoleCommands(argc, argv);
+    consoleCommands.run();
+  }
+  catch (const BaseException &ex)
+  {
+    ex.log();
+  }
+
   return EXIT_SUCCESS;
 }

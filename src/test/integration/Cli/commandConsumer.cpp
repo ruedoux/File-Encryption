@@ -77,7 +77,7 @@ TEST_F(CommandConsumerIT, should_throw_error_on_missing_required)
   ASSERT_TRUE(thrownException);
 }
 
-TEST_F(CommandConsumerIT, should_throw_error_on_missing_command)
+TEST_F(CommandConsumerIT, should_return_false_when_missing_command)
 {
   // Given
   int argc = 1;
@@ -85,17 +85,22 @@ TEST_F(CommandConsumerIT, should_throw_error_on_missing_command)
 
   // When
   CommandConsumer commandConsumer;
-  bool thrownException = false;
-
-  try
-  {
-    commandConsumer.parse_input(argc, argv);
-  }
-  catch (const std::exception &e)
-  {
-    thrownException = true;
-  }
+  bool parsedInput = commandConsumer.parse_input(argc, argv);
 
   // Then
-  ASSERT_TRUE(thrownException);
+  ASSERT_TRUE(!parsedInput);
+}
+
+TEST_F(CommandConsumerIT, should_return_true_when_command_present)
+{
+  // Given
+  int argc = 2;
+  char *argv[] = {(char *)"exeFileName", (char *)"exampleCommand"};
+
+  // When
+  CommandConsumer commandConsumer;
+  bool parsedInput = commandConsumer.parse_input(argc, argv);
+
+  // Then
+  ASSERT_TRUE(parsedInput);
 }

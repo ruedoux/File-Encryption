@@ -84,14 +84,14 @@
 // Declarations
 // -------------------------------------------------
 
-namespace ExceptionHandling
+class ExceptionHandling
 {
-  namespace
-  {
-    void terminate_unhandled_exception();
-  }
-  void init();
-}
+private:
+  static void terminate_unhandled_exception();
+
+public:
+  static void init();
+};
 
 class BaseException : public std::runtime_error
 {

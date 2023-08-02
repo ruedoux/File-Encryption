@@ -16,11 +16,7 @@ std::unordered_map<std::string, std::string> ArgumentParser::parse_args_options(
 
   for (const size_t index : optionIndexes)
   {
-    bool isFail = false;
-    isFail = isFail && (index + 1 >= args.size());
-    isFail = isFail && (std::find(optionIndexes.begin(), optionIndexes.end(), index + 1) != optionIndexes.end());
-
-    if (isFail)
+    if ((index + 1 >= args.size()) || (std::find(optionIndexes.begin(), optionIndexes.end(), index + 1) != optionIndexes.end()))
     {
       THROW_EXCEPTION("Option has no valid argument: " + args.at(index));
     }

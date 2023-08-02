@@ -25,11 +25,11 @@ std::string CommandConsumer::get_required_argument(const std::string &arg) const
   return mappedArgs.at(arg);
 }
 
-void CommandConsumer::parse_input(const int argc, char *argv[])
+bool CommandConsumer::parse_input(const int argc, char *argv[])
 {
   if(argc < 2)
   {
-    THROW_EXCEPTION("No command passed!");
+    return false;
   }
 
   commandName = GLOBAL::str_to_lower(static_cast<std::string>(argv[1]));
@@ -41,4 +41,5 @@ void CommandConsumer::parse_input(const int argc, char *argv[])
   }
 
   mappedArgs = ArgumentParser::parse_args_options(args);
+  return true;
 }

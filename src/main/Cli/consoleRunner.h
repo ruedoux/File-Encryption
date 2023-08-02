@@ -19,7 +19,7 @@ class ConsoleRunner
 {
 private:
   typedef std::function<void(void)> ConsoleFunction;
-  std::unordered_map<std::string, ConsoleFunction> CLICommands;
+  std::unordered_map<std::string, ConsoleFunction> commandMap;
   CommandConsumer consoleCommandConsumer;
 
   void init();
@@ -27,15 +27,13 @@ private:
   void encrypt_file();
 
 public:
-
-  ConsoleRunner(const int argc, char *argv[]) 
-  { 
+  ConsoleRunner(const int argc, char *argv[])
+  {
+    init();
     consoleCommandConsumer.parse_input(argc, argv);
-    init(); 
   }
-  
-  void run();
 
+  void run();
 };
 
 #endif

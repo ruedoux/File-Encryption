@@ -24,7 +24,7 @@ private:
 public:
   CommandConsumer() {}
 
-  void parse_input(const int argc, char *argv[]);
+  bool parse_input(const int argc, char *argv[]);
   std::string get_command_name() const;
   std::string get_optional_argument(const std::string &arg) const;
   std::string get_required_argument(const std::string &arg) const;

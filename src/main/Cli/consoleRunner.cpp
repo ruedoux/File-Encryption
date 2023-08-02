@@ -2,7 +2,7 @@
 
 void ConsoleRunner::init()
 {
-  CLICommands["help"] = std::bind(&ConsoleRunner::show_help, this);
+  commandMap["help"] = std::bind(&ConsoleRunner::show_help, this);
 }
 
 void ConsoleRunner::run()
@@ -10,13 +10,19 @@ void ConsoleRunner::run()
   static std::mutex commandMutex;
   std::lock_guard<std::mutex> lock(commandMutex);
 
-  if (CLICommands.count(consoleCommandConsumer.get_command_name()) == 0)
+  if(consoleCommandConsumer.get_command_name().empty())
   {
-    CLICommands["help"]();
+    commandMap["help"]();
+    return;
+  }
+
+  if (commandMap.count(consoleCommandConsumer.get_command_name()) == 0)
+  {
+    THROW_EXCEPTION("No command with name: " + consoleCommandConsumer.get_command_name());
   }
   else
   {
-    CLICommands[consoleCommandConsumer.get_command_name()]();
+    commandMap[consoleCommandConsumer.get_command_name()]();
   }
 }
 
@@ -29,5 +35,6 @@ void ConsoleRunner::show_help()
 
 void ConsoleRunner::encrypt_file()
 {
-  
+  std::string inFilePath = consoleCommandConsumer.get_required_argument("-i");
+  std::string outFilePath = consoleCommandConsumer.get_required_argument("-o");
 }
