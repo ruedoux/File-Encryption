@@ -19,7 +19,7 @@ private:
   static constexpr char OPTION_MARKER = '-';
 
 public:
-  static std::unordered_map<std::string, std::string> parse_args(
+  static std::unordered_map<std::string, std::string> parse_args_options(
       const std::vector<std::string> &args);
 };
 

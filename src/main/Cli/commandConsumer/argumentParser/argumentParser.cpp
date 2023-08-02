@@ -1,6 +1,6 @@
 #include "argumentParser.h"
 
-std::unordered_map<std::string, std::string> ArgumentParser::parse_args(
+std::unordered_map<std::string, std::string> ArgumentParser::parse_args_options(
     const std::vector<std::string> &args)
 {
   std::unordered_map<std::string, std::string> parsedArgs;
