@@ -19,7 +19,7 @@ std::string ArgumentConsumer::get_required_argument(const std::string &arg) cons
 {
   if(mappedArgs.count(arg) == 0)
   {
-    THROW_EXCEPTION("Required argument is missing: " + arg);
+    throw UserViewException("Required argument is missing: " + arg);
   }
 
   return mappedArgs.at(arg);

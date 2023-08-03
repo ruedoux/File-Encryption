@@ -133,4 +133,16 @@ public:
   }
 };
 
+class UserViewException : public BaseException
+{
+public:
+  UserViewException(const std::string &message)
+      : BaseException(message, "") {}
+
+  virtual void log() const override
+  {
+    Logger::get_instance().log_error(what());
+  }
+};
+
 #endif

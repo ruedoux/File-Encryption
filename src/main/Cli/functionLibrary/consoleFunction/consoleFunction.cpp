@@ -12,5 +12,10 @@ void ConsoleFunction::add_description(const std::string &desc)
 
 void ConsoleFunction::run_bound_function(const ArgumentConsumer &argumentConsumer)
 {
+  if(!bindedFunction)
+  {
+    THROW_EXCEPTION("Tried to call not bound console function!");
+  }
+
   bindedFunction(argumentConsumer);
 }

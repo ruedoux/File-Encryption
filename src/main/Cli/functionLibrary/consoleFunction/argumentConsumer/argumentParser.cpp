@@ -18,7 +18,7 @@ std::unordered_map<std::string, std::string> ArgumentParser::parse_args_options(
   {
     if ((index + 1 >= args.size()) || (std::find(optionIndexes.begin(), optionIndexes.end(), index + 1) != optionIndexes.end()))
     {
-      THROW_EXCEPTION("Option has no valid argument: " + args.at(index));
+      throw UserViewException("Option has no valid argument: " + args.at(index));
     }
 
     parsedArgs[args.at(index)] = args.at(index + 1);

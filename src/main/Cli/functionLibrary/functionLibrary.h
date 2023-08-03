@@ -20,10 +20,11 @@ class FunctionLibrary
 {
 private:
   static void show_help(const ArgumentConsumer &argumentConsumer);
+  static std::unordered_map<std::string, ConsoleFunction> get_mapped_functions();
 
 public:
-  static std::unordered_map<std::string, ConsoleFunction> get_mapped_functions();
   static void run_default_function();
+  static void run_function(const ArgumentConsumer &argumentConsumer);
 };
 
 #endif
