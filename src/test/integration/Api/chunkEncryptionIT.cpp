@@ -9,7 +9,7 @@ namespace
     DataChunk chunk = ChunkFactory::get_chunk(
         Encryption::get_random_bytes(chunkSize));
     std::vector<BYTE> key = Encryption::get_random_bytes(
-        GLOBAL::get_random_u64(4, Encryption::KEY_BYTE_SIZE));
+        Global::get_random_u64(4, Encryption::KEY_BYTE_SIZE));
 
     // When
     EncryptedDataChunk encryptedChunk = ChunkEncryption::encrypt_chunk(chunk, key);
@@ -34,5 +34,5 @@ TEST_F(ChunkEncryptionIT, should_encrypt_and_decrypt_exact_chunk)
 TEST_F(ChunkEncryptionIT, should_encrypt_and_decrypt_random_chunk)
 {
   encrypt_and_decrypt_a_chunk_test(
-      GLOBAL::get_random_u64(1, DataChunk::DATA_BYTE_SIZE - 1));
+      Global::get_random_u64(1, DataChunk::DATA_BYTE_SIZE - 1));
 }

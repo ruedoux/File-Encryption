@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <Cli/commandConsumer/argumentParser/argumentParser.h>
+#include <Cli/functionLibrary/consoleFunction/argumentConsumer/argumentParser.h>
 
 namespace
 {

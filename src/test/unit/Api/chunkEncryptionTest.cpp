@@ -49,7 +49,7 @@ TEST_F(ChunkEncryptionTest, should_encrypt_exact_chunk)
 TEST_F(ChunkEncryptionTest, should_encrypt_random_chunk)
 {
   encrypt_a_chunk_test(
-      GLOBAL::get_random_u64(1, DataChunk::get_desired_chunk_size() - 1));
+      Global::get_random_u64(1, DataChunk::get_desired_chunk_size() - 1));
 }
 
 TEST_F(ChunkEncryptionTest, should_decrypt_exact_chunk)
@@ -60,5 +60,5 @@ TEST_F(ChunkEncryptionTest, should_decrypt_exact_chunk)
 TEST_F(ChunkEncryptionTest, should_decrypt_random_chunk)
 {
   decrypt_a_chunk_test(
-      GLOBAL::get_random_u64(1, EncryptedDataChunk::DATA_BYTE_SIZE - 1));
+      Global::get_random_u64(1, EncryptedDataChunk::DATA_BYTE_SIZE - 1));
 }

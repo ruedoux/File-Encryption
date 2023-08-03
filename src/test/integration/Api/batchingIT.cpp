@@ -31,7 +31,7 @@ namespace
       ChunkType chunk = ChunkFactory::get_empty_chunk<ChunkType>();
 
       chunk.map_from_bytes(Encryption::get_random_bytes(
-          GLOBAL::get_random_u64(1, chunkSize - EncryptedDataChunk::VI_BYTE_SIZE) + EncryptedDataChunk::VI_BYTE_SIZE));
+          Global::get_random_u64(1, chunkSize - EncryptedDataChunk::VI_BYTE_SIZE) + EncryptedDataChunk::VI_BYTE_SIZE));
 
       chunks.push_back(chunk);
     }
@@ -97,23 +97,23 @@ TEST_F(BatchingIT, write_and_read_single_random_encrypted_chunk_from_file)
 TEST_F(BatchingIT, write_and_read_multiple_exact_chunks_from_file)
 {
   write_and_read_chunks_from_file<DataChunk>(
-      GLOBAL::get_random_u64(2, 6), false);
+      Global::get_random_u64(2, 6), false);
 }
 
 TEST_F(BatchingIT, write_and_read_multiple_random_chunks_from_file)
 {
   write_and_read_chunks_from_file<DataChunk>(
-      GLOBAL::get_random_u64(2, 6), true);
+      Global::get_random_u64(2, 6), true);
 }
 
 TEST_F(BatchingIT, write_and_read_multiple_exact_encrypted_chunks_from_file)
 {
   write_and_read_chunks_from_file<EncryptedDataChunk>(
-      GLOBAL::get_random_u64(2, 6), false);
+      Global::get_random_u64(2, 6), false);
 }
 
 TEST_F(BatchingIT, write_and_read_multiple_random_encrypted_chunks_from_file)
 {
   write_and_read_chunks_from_file<EncryptedDataChunk>(
-      GLOBAL::get_random_u64(2, 6), true);
+      Global::get_random_u64(2, 6), true);
 }

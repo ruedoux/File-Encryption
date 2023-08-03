@@ -21,13 +21,13 @@ namespace
     u64 fileSizeDeclared = chunkSize * exactChunkCount;
     if (randomBytes)
     {
-      fileSizeDeclared += GLOBAL::get_random_u64(1, chunkSize - 1);
+      fileSizeDeclared += Global::get_random_u64(1, chunkSize - 1);
     }
 
     const std::vector<BYTE> bytesInFile =
         Encryption::get_random_bytes(fileSizeDeclared);
     const std::vector<BYTE> randomKey = Encryption::get_random_bytes(
-        GLOBAL::get_random_u64(4, Encryption::KEY_BYTE_SIZE));
+        Global::get_random_u64(4, Encryption::KEY_BYTE_SIZE));
 
     // When
     bool createdFile = FileAccess::create_file(TEST_FILE_PATH_SOURCE);
@@ -83,7 +83,7 @@ TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_single_exact_chunk)
 
 TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_multiple_exact_chunks)
 {
-  encrypt_and_decrypt_a_file_test(GLOBAL::get_random_u64(2, 6), false);
+  encrypt_and_decrypt_a_file_test(Global::get_random_u64(2, 6), false);
 }
 
 TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_single_random_chunk)
@@ -93,5 +93,5 @@ TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_single_random_chunk)
 
 TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_multiple_random_chunks)
 {
-  // encrypt_and_decrypt_a_file_test(GLOBAL::get_random_u64(2, 6), true);
+  // encrypt_and_decrypt_a_file_test(Global::get_random_u64(2, 6), true);
 }

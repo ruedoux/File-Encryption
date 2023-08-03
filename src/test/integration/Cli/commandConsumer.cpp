@@ -1,19 +1,19 @@
 #include <gtest/gtest.h>
-#include <Cli/commandConsumer/commandConsumer.h>
+#include <Cli/functionLibrary/consoleFunction/argumentConsumer/argumentConsumer.h>
 
 namespace
 {
 
 }
 
-struct CommandConsumerIT : public ::testing::Test
+struct ArgumentConsumerIT : public ::testing::Test
 {
   virtual void SetUp() override {}
 
   virtual void TearDown() override {}
 };
 
-TEST_F(CommandConsumerIT, should_correctly_map_input)
+TEST_F(ArgumentConsumerIT, should_correctly_map_input)
 {
   // Given
   int argc = 7;
@@ -27,7 +27,7 @@ TEST_F(CommandConsumerIT, should_correctly_map_input)
       (char *)"sssss"};
 
   // When
-  CommandConsumer commandConsumer;
+  ArgumentConsumer commandConsumer;
   commandConsumer.parse_input(argc, argv);
 
   // Then
@@ -37,14 +37,14 @@ TEST_F(CommandConsumerIT, should_correctly_map_input)
   ASSERT_EQ("123", commandConsumer.get_optional_argument("-c"));
 }
 
-TEST_F(CommandConsumerIT, should_return_empty_string_on_missing_optional)
+TEST_F(ArgumentConsumerIT, should_return_empty_string_on_missing_optional)
 {
   // Given
   int argc = 2;
   char *argv[] = {(char *)"exeFileName", (char *)"commandName"};
 
   // When
-  CommandConsumer commandConsumer;
+  ArgumentConsumer commandConsumer;
   commandConsumer.parse_input(argc, argv);
 
   // Then
@@ -53,14 +53,14 @@ TEST_F(CommandConsumerIT, should_return_empty_string_on_missing_optional)
   ASSERT_EQ("", commandConsumer.get_optional_argument("-c"));
 }
 
-TEST_F(CommandConsumerIT, should_throw_error_on_missing_required)
+TEST_F(ArgumentConsumerIT, should_throw_error_on_missing_required)
 {
   // Given
   int argc = 2;
   char *argv[] = {(char *)"exeFileName", (char *)"commandName"};
 
   // When
-  CommandConsumer commandConsumer;
+  ArgumentConsumer commandConsumer;
   commandConsumer.parse_input(argc, argv);
   bool thrownException = false;
 
@@ -77,28 +77,28 @@ TEST_F(CommandConsumerIT, should_throw_error_on_missing_required)
   ASSERT_TRUE(thrownException);
 }
 
-TEST_F(CommandConsumerIT, should_return_false_when_missing_command)
+TEST_F(ArgumentConsumerIT, should_return_false_when_missing_command)
 {
   // Given
   int argc = 1;
   char *argv[] = {(char *)"exeFileName"};
 
   // When
-  CommandConsumer commandConsumer;
+  ArgumentConsumer commandConsumer;
   bool parsedInput = commandConsumer.parse_input(argc, argv);
 
   // Then
   ASSERT_TRUE(!parsedInput);
 }
 
-TEST_F(CommandConsumerIT, should_return_true_when_command_present)
+TEST_F(ArgumentConsumerIT, should_return_true_when_command_present)
 {
   // Given
   int argc = 2;
   char *argv[] = {(char *)"exeFileName", (char *)"exampleCommand"};
 
   // When
-  CommandConsumer commandConsumer;
+  ArgumentConsumer commandConsumer;
   bool parsedInput = commandConsumer.parse_input(argc, argv);
 
   // Then

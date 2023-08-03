@@ -65,31 +65,19 @@ typedef double f64;
 // Global functions
 // -------------------------------------------------
 
-namespace GLOBAL
+class Global
 {
-  static u64 get_random_u64(u64 from, u64 to)
-  {
-    std::random_device rd;
-    std::uniform_int_distribution<u64> distribution(from, to);
-    return distribution(rd);
-  }
+public:
+  static u64 get_random_u64(u64 from, u64 to);
+  static i64 get_random_i64(i64 from, i64 to);
 
-  static i64 get_random_i64(i64 from, i64 to)
-  {
-    std::random_device rd;
-    std::uniform_int_distribution<i64> distribution(from, to);
-    return distribution(rd);
-  }
+  static std::string str_to_lower(const std::string &str);
 
-  static std::string str_to_lower(const std::string &str)
+  template <class T, class U>
+  static bool element_is_in_vector(const T &vec, const U &item)
   {
-    std::string lowerCaseStr;
-    for (size_t i = 0; i < str.length(); i++)
-    {
-      lowerCaseStr.push_back(std::tolower(str[i]));
-    }
-    return lowerCaseStr;
+    return std::find(vec.begin(), vec.end(), item) != vec.end();
   }
-}
+};
 
 #endif

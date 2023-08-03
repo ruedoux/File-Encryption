@@ -9,20 +9,20 @@
 
 #include <Api/global/exceptionHandling.h>
 
-#include "argumentParser/argumentParser.h"
+#include "argumentParser.h"
 
 // --------------------------------------------
 // Declarations
 // --------------------------------------------
 
-class CommandConsumer
+class ArgumentConsumer
 {
 private:
   std::string commandName;
   std::unordered_map<std::string, std::string> mappedArgs;
 
 public:
-  CommandConsumer() {}
+  ArgumentConsumer() {}
 
   bool parse_input(const int argc, char *argv[]);
   std::string get_command_name() const;
