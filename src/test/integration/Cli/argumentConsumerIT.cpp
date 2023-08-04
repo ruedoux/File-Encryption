@@ -53,7 +53,7 @@ TEST_F(ArgumentConsumerIT, should_return_empty_string_on_missing_optional)
   ASSERT_EQ("", commandConsumer.get_optional_argument("-c"));
 }
 
-TEST_F(ArgumentConsumerIT, should_throw_error_on_missing_required)
+TEST_F(ArgumentConsumerIT, should_return_empty_string_on_missing_required)
 {
   // Given
   int argc = 2;
@@ -64,17 +64,8 @@ TEST_F(ArgumentConsumerIT, should_throw_error_on_missing_required)
   commandConsumer.parse_input(argc, argv);
   bool thrownException = false;
 
-  try
-  {
-    commandConsumer.get_required_argument("-a");
-  }
-  catch (const std::exception &e)
-  {
-    thrownException = true;
-  }
-
   // Then
-  ASSERT_TRUE(thrownException);
+  ASSERT_TRUE(commandConsumer.get_required_argument("-a").empty());
 }
 
 TEST_F(ArgumentConsumerIT, should_return_false_when_missing_command)

@@ -24,10 +24,14 @@ namespace
       fileSizeDeclared += Global::get_random_u64(1, chunkSize - 1);
     }
 
+    Logger::log_info("File size declared: " + std::to_string(fileSizeDeclared));
+
     const std::vector<BYTE> bytesInFile =
         Encryption::get_random_bytes(fileSizeDeclared);
     const std::vector<BYTE> randomKey = Encryption::get_random_bytes(
         Global::get_random_u64(4, Encryption::KEY_BYTE_SIZE));
+    
+    Logger::log_info("Random key size: " + std::to_string(randomKey.size()));
 
     // When
     bool createdFile = FileAccess::create_file(TEST_FILE_PATH_SOURCE);

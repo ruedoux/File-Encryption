@@ -1,21 +1,47 @@
 #include "consoleFunction.h"
 
-void ConsoleFunction::add_required_option(const std::string &option)
+std::string ConsoleFunction::get_description() const
 {
-  requiredOptions.push_back(option);
+  return _description;
 }
 
-void ConsoleFunction::add_description(const std::string &desc)
+std::string ConsoleFunction::get_command_name() const
 {
-  description = description;
+  return _commandName;
 }
 
-void ConsoleFunction::run_bound_function(const ArgumentConsumer &argumentConsumer)
+std::unordered_map<std::string, std::string> ConsoleFunction::get_required_options() const
 {
-  if(!bindedFunction)
+  return requiredOptions;
+}
+
+std::string ConsoleFunction::get_reqired_option(const std::string &optionName) const
+{
+  if(requiredOptions.count(optionName) == 0)
+  {
+    THROW_EXCEPTION("Tried to access non existing required option in: " + _commandName + "\nOption: " + optionName);
+  }
+
+  return requiredOptions.at(optionName);
+}
+
+void ConsoleFunction::add_required_option(
+    const std::string &option, const std::string &description)
+{
+  requiredOptions[option] = description;
+}
+
+void ConsoleFunction::add_description(const std::string &description)
+{
+  _description = description;
+}
+
+void ConsoleFunction::run_bound_function()
+{
+  if (!bindedFunction)
   {
     THROW_EXCEPTION("Tried to call not bound console function!");
   }
 
-  bindedFunction(argumentConsumer);
+  bindedFunction(*this);
 }
