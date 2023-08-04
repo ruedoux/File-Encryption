@@ -4,7 +4,7 @@
 
 namespace
 {
-  const std::string TEST_FOLDER = "TESTS";
+  const std::filesystem::path TEST_FOLDER = "TESTS";
 }
 
 struct FileAccessIT : public ::testing::Test
@@ -23,7 +23,7 @@ struct FileAccessIT : public ::testing::Test
 TEST_F(FileAccessIT, create_delete_and_check_file_exist)
 {
   // Given
-  const std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::filesystem::path filePath = TEST_FOLDER / "test.txt";
 
   // When
   bool fileExistsBeforeCreation = FileAccess::file_exist(filePath);
@@ -43,7 +43,7 @@ TEST_F(FileAccessIT, create_delete_and_check_file_exist)
 TEST_F(FileAccessIT, create_delete_and_check_folder_exist)
 {
   // Given
-  const std::string dirPath = TEST_FOLDER + "/test";
+  const std::filesystem::path dirPath = TEST_FOLDER / "test";
 
   // When
   bool dirExistsBeforeCreation = FileAccess::dir_exist(dirPath);
@@ -63,7 +63,7 @@ TEST_F(FileAccessIT, create_delete_and_check_folder_exist)
 TEST_F(FileAccessIT, read_and_write_to_file)
 {
   // Given
-  const std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::filesystem::path filePath = TEST_FOLDER / "test.txt";
   std::vector<BYTE> bytes = Encryption::get_random_bytes(MiB(2));
   u64 repeats = Global::get_random_u64(2, 10);
 

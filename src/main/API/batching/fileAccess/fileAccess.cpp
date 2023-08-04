@@ -1,27 +1,27 @@
 #include "fileAccess.h"
 
-bool FileAccess::delete_file(const std::string &filePath) noexcept
+bool FileAccess::delete_file(const std::filesystem::path &filePath) noexcept
 {
   return std::filesystem::remove(filePath);
 }
 
-bool FileAccess::create_file(const std::string &filePath) noexcept
+bool FileAccess::create_file(const std::filesystem::path &filePath) noexcept
 {
   std::fstream file(filePath, std::fstream::in | std::fstream::out | std::fstream::trunc);
   return file.is_open();
 }
 
-bool FileAccess::file_exist(const std::string &filePath) noexcept
+bool FileAccess::file_exist(const std::filesystem::path &filePath) noexcept
 {
   return std::filesystem::is_regular_file(filePath);
 }
 
-bool FileAccess::delete_dir(const std::string &dirPath) noexcept
+bool FileAccess::delete_dir(const std::filesystem::path &dirPath) noexcept
 {
   return std::filesystem::remove_all(dirPath) > 0;
 }
 
-bool FileAccess::create_dir(const std::string &dirPath) noexcept
+bool FileAccess::create_dir(const std::filesystem::path &dirPath) noexcept
 {
   if (dir_exist(dirPath))
   {
@@ -31,13 +31,13 @@ bool FileAccess::create_dir(const std::string &dirPath) noexcept
   return std::filesystem::create_directory(dirPath);
 }
 
-bool FileAccess::dir_exist(const std::string &dirPath) noexcept
+bool FileAccess::dir_exist(const std::filesystem::path &dirPath) noexcept
 {
   return std::filesystem::is_directory(dirPath);
 }
 
 FileAccess::ErrorCode FileAccess::append_bytes_to_file(
-    const std::string &filePath,
+    const std::filesystem::path &filePath,
     const std::vector<BYTE> &bytes) noexcept
 {
   if (!file_exist(filePath))
@@ -61,7 +61,7 @@ FileAccess::ErrorCode FileAccess::append_bytes_to_file(
 }
 
 FileAccess::ErrorCode FileAccess::read_bytes_from_file(
-    const std::string &filePath,
+    const std::filesystem::path &filePath,
     std::vector<BYTE> &bytesByRef,
     const std::uintmax_t fromIndex,
     const u64 byteCount) noexcept
@@ -102,7 +102,7 @@ FileAccess::ErrorCode FileAccess::read_bytes_from_file(
 }
 
 std::uintmax_t FileAccess::get_byte_count_left_in_file(
-    const std::string &filePath,
+    const std::filesystem::path &filePath,
     const std::uintmax_t fromIndex) noexcept
 {
   const std::uintmax_t fileSize = get_file_size(filePath);
@@ -114,7 +114,8 @@ std::uintmax_t FileAccess::get_byte_count_left_in_file(
   return fileSize - fromIndex;
 }
 
-std::uintmax_t FileAccess::get_file_size(const std::string &filePath) noexcept
+std::uintmax_t FileAccess::get_file_size(
+  const std::filesystem::path &filePath) noexcept
 {
   if (!file_exist(filePath))
   {
@@ -124,24 +125,14 @@ std::uintmax_t FileAccess::get_file_size(const std::string &filePath) noexcept
   return std::filesystem::file_size(filePath);
 }
 
-std::string FileAccess::get_file_folder_path(const std::string &filePath) noexcept
+std::string FileAccess::get_file_folder_path(
+  const std::filesystem::path &filePath) noexcept
 {
   std::filesystem::path path(filePath);
   return path.parent_path().string();
 }
 
-std::string FileAccess::get_exe_folder_path() noexcept
+std::filesystem::path FileAccess::get_exe_folder_path() noexcept
 {
-#ifdef _WIN32
-  char selfdirc[MAX_PATH] = {0};
-  GetModuleFileNameA(NULL, selfdirc, MAX_PATH);
-#else
-  char selfdirc[PATH_MAX];
-  ssize_t len = ::readlink("/proc/self/exe", selfdirc, sizeof(selfdirc) - 1);
-  selfdirc[len] = '\0';
-#endif
-  std::string exeFilePath(selfdirc);
-  std::string exeFolderPath = get_file_folder_path(exeFilePath);
-
-  return exeFolderPath;
+  return std::filesystem::current_path().string();
 }

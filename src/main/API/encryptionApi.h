@@ -23,20 +23,20 @@ class EncryptionApi
 
 public:
   static void encrypt_file(
-      const std::string &filePathSource,
-      const std::string &filePathDestination,
+      const std::filesystem::path &filePathSource,
+      const std::filesystem::path &filePathDestination,
       const std::vector<BYTE> &key);
   static void decrypt_file(
-      const std::string &filePathSource,
-      const std::string &filePathDestination,
+      const std::filesystem::path &filePathSource,
+      const std::filesystem::path &filePathDestination,
       const std::vector<BYTE> &key);
 
 private:
   template <class ChunkTypeFrom, class ChunkTypeTo>
   static void process_and_append_chunk_to_file(
       const std::function<ChunkTypeTo(const ChunkTypeFrom &, const std::vector<BYTE> &)> functionBind,
-      const std::string &filePathSource,
-      const std::string &filePathDestination,
+      const std::filesystem::path &filePathSource,
+      const std::filesystem::path &filePathDestination,
       const std::vector<BYTE> &key,
       const u64 chunkIndex)
   {

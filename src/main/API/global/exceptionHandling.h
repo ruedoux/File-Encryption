@@ -61,7 +61,7 @@
   {                                                    \
     THROW_FILE_EXCEPTION(                              \
         Logger::varargs_to_string("File is missing!"), \
-        pathToFile);                                   \
+        pathToFile.string());                                   \
   }
 
 #define THROW_FILE_EXCEPTION_READ(pathToFile, fromIndex, chunkSize, errCode) \
@@ -118,18 +118,18 @@ public:
 class FileException : public BaseException
 {
   const std::string DEFAULT_MSG = "Thrown a runtime file exception: ";
-  const std::string filePath;
+  const std::filesystem::path filePath;
 
 public:
   FileException(
       const std::string &message,
       const std::string &metadata,
-      const std::string &filePath)
+      const std::filesystem::path &filePath)
       : BaseException(message, metadata), filePath(filePath) {}
 
   void log() const
   {
-    Logger::get_instance().log_error(metadata, DEFAULT_MSG + filePath, what());
+    Logger::get_instance().log_error(metadata, DEFAULT_MSG + filePath.string(), what());
   }
 };
 

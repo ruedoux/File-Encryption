@@ -3,13 +3,10 @@
 
 namespace
 {
-  const std::string TEST_FOLDER = "TESTS";
-  const std::string TEST_FILE_SOURCE_NAME = "FileSrc";
-  const std::string TEST_FILE_ENCRYPTED_NAME = "FileEncrypted";
-  const std::string TEST_FILE_DECRYPTED_NAME = "FileDecrypted";
-  const std::string TEST_FILE_PATH_SOURCE = TEST_FOLDER + "/" + TEST_FILE_SOURCE_NAME;
-  const std::string TEST_FILE_PATH_ENCRYPTED = TEST_FOLDER + "/" + TEST_FILE_ENCRYPTED_NAME;
-  const std::string TEST_FILE_PATH_DECRYPTED = TEST_FOLDER + "/" + TEST_FILE_DECRYPTED_NAME;
+  const std::filesystem::path TEST_FOLDER = "TESTS";
+  const std::filesystem::path TEST_FILE_PATH_SOURCE = TEST_FOLDER / "FileSrc";
+  const std::filesystem::path TEST_FILE_PATH_ENCRYPTED = TEST_FOLDER / "FileEncrypted";
+  const std::filesystem::path TEST_FILE_PATH_DECRYPTED = TEST_FOLDER / "FileDecrypted";
 
   void encrypt_and_decrypt_a_file_test(
       const u64 exactChunkCount,
@@ -24,14 +21,10 @@ namespace
       fileSizeDeclared += Global::get_random_u64(1, chunkSize - 1);
     }
 
-    Logger::log_info("File size declared: " + std::to_string(fileSizeDeclared));
-
     const std::vector<BYTE> bytesInFile =
         Encryption::get_random_bytes(fileSizeDeclared);
     const std::vector<BYTE> randomKey = Encryption::get_random_bytes(
         Global::get_random_u64(4, Encryption::KEY_BYTE_SIZE));
-    
-    Logger::log_info("Random key size: " + std::to_string(randomKey.size()));
 
     // When
     bool createdFile = FileAccess::create_file(TEST_FILE_PATH_SOURCE);
@@ -97,5 +90,5 @@ TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_single_random_chunk)
 
 TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_multiple_random_chunks)
 {
-  // encrypt_and_decrypt_a_file_test(Global::get_random_u64(2, 6), true);
+  encrypt_and_decrypt_a_file_test(Global::get_random_u64(2, 6), true);
 }

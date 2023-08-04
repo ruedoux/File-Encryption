@@ -18,16 +18,16 @@ class Batching
 {
 public:
   static u64 get_chunk_count_in_file(
-      const std::string &filePath,
+      const std::filesystem::path &filePath,
       const u64 bytesToRead);
 
   static std::uintmax_t get_bytes_left_in_last_chunk(
-      const std::string &filePath,
+      const std::filesystem::path &filePath,
       const u64 chunkSize);
 
   template <class ChunkType>
   static void append_chunk_to_file(
-      const std::string &filePath,
+      const std::filesystem::path &filePath,
       const ChunkType &chunk)
   {
     THROW_EXCEPTION_IF_FILE_MISSING(filePath);
@@ -50,7 +50,7 @@ public:
 
   template <class ChunkType>
   static ChunkType read_chunk_from_file(
-      const std::string &filePath,
+      const std::filesystem::path &filePath,
       const u64 chunkIndex,
       const u64 bytesToRead)
   {

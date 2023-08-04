@@ -6,9 +6,6 @@
 // Dependencies
 // -------------------------------------------------
 
-#include <filesystem>
-#include <fstream>
-
 #ifdef _WIN32
 #include <Windows.h>
 #include <direct.h>
@@ -47,30 +44,32 @@ private:
   FileAccess() {}
 
 public:
-  static bool delete_file(const std::string &filePath) noexcept;
-  static bool create_file(const std::string &filePath) noexcept;
-  static bool file_exist(const std::string &filePath) noexcept;
+  static bool delete_file(const std::filesystem::path &filePath) noexcept;
+  static bool create_file(const std::filesystem::path &filePath) noexcept;
+  static bool file_exist(const std::filesystem::path &filePath) noexcept;
 
-  static bool delete_dir(const std::string &dirPath) noexcept;
-  static bool create_dir(const std::string &dirPath) noexcept;
-  static bool dir_exist(const std::string &dirPath) noexcept;
+  static bool delete_dir(const std::filesystem::path &dirPath) noexcept;
+  static bool create_dir(const std::filesystem::path &dirPath) noexcept;
+  static bool dir_exist(const std::filesystem::path &dirPath) noexcept;
 
   static ErrorCode append_bytes_to_file(
-      const std::string &filePath,
+      const std::filesystem::path &filePath,
       const std::vector<BYTE> &bytes) noexcept;
   static ErrorCode read_bytes_from_file(
-      const std::string &filePath,
+      const std::filesystem::path &filePath,
       std::vector<BYTE> &bytesByRef,
       const std::uintmax_t fromIndex,
       const u64 byteCount) noexcept;
 
   static std::uintmax_t get_byte_count_left_in_file(
-      const std::string &filePath,
+      const std::filesystem::path &filePath,
       const std::uintmax_t fromIndex) noexcept;
 
-  static std::uintmax_t get_file_size(const std::string &filePath) noexcept;
-  static std::string get_file_folder_path(const std::string &path) noexcept;
-  static std::string get_exe_folder_path() noexcept;
+  static std::uintmax_t get_file_size(
+      const std::filesystem::path &filePath) noexcept;
+  static std::string get_file_folder_path(
+      const std::filesystem::path &filePath) noexcept;
+  static std::filesystem::path get_exe_folder_path() noexcept;
 };
 
 #endif

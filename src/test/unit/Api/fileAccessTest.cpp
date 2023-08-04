@@ -4,7 +4,7 @@
 
 namespace
 {
-  const std::string TEST_FOLDER = "TESTS";
+  const std::filesystem::path TEST_FOLDER = "TESTS";
 }
 
 struct FileAccessTest : public ::testing::Test
@@ -23,7 +23,7 @@ struct FileAccessTest : public ::testing::Test
 TEST_F(FileAccessTest, create_file)
 {
   // Given
-  const std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::filesystem::path filePath = TEST_FOLDER / "test.txt";
 
   // When
   bool createdFile = FileAccess::create_file(filePath);
@@ -36,7 +36,7 @@ TEST_F(FileAccessTest, create_file)
 TEST_F(FileAccessTest, create_dir)
 {
   // Given
-  const std::string folderPath = TEST_FOLDER + "/test";
+  const std::filesystem::path folderPath = TEST_FOLDER / "test";
 
   // When
   bool createdFolder = FileAccess::create_dir(folderPath);
@@ -49,7 +49,7 @@ TEST_F(FileAccessTest, create_dir)
 TEST_F(FileAccessTest, delete_file)
 {
   // Given
-  const std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::filesystem::path filePath = TEST_FOLDER / "test.txt";
 
   // When
   std::fstream file(filePath, std::fstream::out);
@@ -65,7 +65,7 @@ TEST_F(FileAccessTest, delete_file)
 TEST_F(FileAccessTest, delete_dir)
 {
   // Given
-  const std::string folderPath = TEST_FOLDER + "/test";
+  const std::filesystem::path folderPath = TEST_FOLDER / "test";
 
   // When
   std::filesystem::create_directory(folderPath);
@@ -79,7 +79,7 @@ TEST_F(FileAccessTest, delete_dir)
 TEST_F(FileAccessTest, file_exist)
 {
   // Given
-  const std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::filesystem::path filePath = TEST_FOLDER / "test.txt";
   const std::string wrongFilePath = "doesntexist";
 
   // When
@@ -94,7 +94,7 @@ TEST_F(FileAccessTest, file_exist)
 TEST_F(FileAccessTest, dir_exist)
 {
   // Given
-  const std::string folderPath = TEST_FOLDER + "/test";
+  const std::filesystem::path folderPath = TEST_FOLDER / "test";
   const std::string wrongfolderPath = "doesntexist";
 
   // When
@@ -109,7 +109,7 @@ TEST_F(FileAccessTest, get_byte_count_left_in_file)
 {
   // Given
   static constexpr u64 baseFileSize = 123;
-  const std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::filesystem::path filePath = TEST_FOLDER / "test.txt";
   u64 bytesLeft = Global::get_random_u64(0, 1000);
   std::vector<BYTE> bytes = Encryption::get_random_bytes(
       baseFileSize + bytesLeft);
@@ -129,7 +129,7 @@ TEST_F(FileAccessTest, get_byte_count_left_in_file)
 TEST_F(FileAccessTest, append_bytes_to_file)
 {
   // Given
-  const std::string filePath = TEST_FOLDER + "/test.txt";
+  const std::filesystem::path filePath = TEST_FOLDER / "test.txt";
   const std::vector<BYTE> bytesInFile = Encryption::get_random_bytes(
       Global::get_random_u64(MiB(1), MiB(3)));
 

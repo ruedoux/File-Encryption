@@ -2,7 +2,7 @@
 
 void FunctionLibrary::run_default_function()
 {
-  show_help(ConsoleFunction());
+  show_help(ArgumentConsumer());
 }
 
 void FunctionLibrary::run_function(const ArgumentConsumer &argumentConsumer)
@@ -25,7 +25,7 @@ void FunctionLibrary::run_function(const ArgumentConsumer &argumentConsumer)
     }
   }
 
-  consoleFunction.run_bound_function();
+  consoleFunction.run_bound_function(argumentConsumer);
 }
 
 std::unordered_map<std::string, ConsoleFunction> FunctionLibrary::get_mapped_functions()
@@ -53,7 +53,7 @@ std::unordered_map<std::string, ConsoleFunction> FunctionLibrary::get_mapped_fun
   return mappedFunctions;
 }
 
-void FunctionLibrary::show_help(const ConsoleFunction &consoleFunction)
+void FunctionLibrary::show_help(const ArgumentConsumer &argumentConsumer)
 {
   Logger::log("List of possible commands and their options.");
   std::unordered_map<std::string, ConsoleFunction> functions = get_mapped_functions();
@@ -79,8 +79,15 @@ void FunctionLibrary::show_help(const ConsoleFunction &consoleFunction)
   Logger::log("----------------------------------------------------");
 }
 
-void FunctionLibrary::encrypt_file(const ConsoleFunction &consoleFunction)
+void FunctionLibrary::encrypt_file(const ArgumentConsumer &argumentConsumer)
 {
-  const std::string inputFilePath = consoleFunction.get_reqired_option("-i");
-  const std::string outputFilePath = consoleFunction.get_reqired_option("-o");
+  const std::string inputFilePath = argumentConsumer.get_required_argument("-i");
+  const std::string outputFilePath = argumentConsumer.get_required_argument("-o");
+
+  if(!FileAccess::file_exist(inputFilePath))
+  {
+    throw UserViewException("Input file doesnt exist: " + inputFilePath);
+  }
+
+
 }

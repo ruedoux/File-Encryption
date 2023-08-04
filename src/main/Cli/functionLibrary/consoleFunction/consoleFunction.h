@@ -17,14 +17,14 @@ class ConsoleFunction
 {
 private:
   std::string _commandName;
-  std::function<void(const ConsoleFunction &)> bindedFunction;
+  std::function<void(const ArgumentConsumer &)> bindedFunction;
   std::string _description;
   std::unordered_map<std::string, std::string> requiredOptions;
 
 public:
   ConsoleFunction() {}
   ConsoleFunction(
-      const std::function<void(const ConsoleFunction &)> &functionToBind,
+      const std::function<void(const ArgumentConsumer &)> &functionToBind,
       std::string commandName)
       : bindedFunction(functionToBind), _commandName(commandName) {}
 
@@ -34,7 +34,7 @@ public:
   std::unordered_map<std::string, std::string> get_required_options() const;
   void add_required_option(const std::string &option, const std::string &description);
   void add_description(const std::string &description);
-  void run_bound_function();
+  void run_bound_function(const ArgumentConsumer &argumentConsumer);
 };
 
 #endif

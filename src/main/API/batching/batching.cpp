@@ -1,7 +1,7 @@
 #include "batching.h"
 
 u64 Batching::get_chunk_count_in_file(
-    const std::string &filePath,
+    const std::filesystem::path &filePath,
     const u64 chunkSize)
 {
   THROW_EXCEPTION_IF_FILE_MISSING(filePath);
@@ -13,7 +13,7 @@ u64 Batching::get_chunk_count_in_file(
 }
 
 std::uintmax_t Batching::get_bytes_left_in_last_chunk(
-    const std::string &filePath,
+    const std::filesystem::path &filePath,
     const u64 chunkSize)
 {
   const std::uintmax_t fileSize = FileAccess::get_file_size(filePath);

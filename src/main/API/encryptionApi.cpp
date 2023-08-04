@@ -8,8 +8,8 @@ const EncryptionApi::DecryptionFunction EncryptionApi::DECRYPT_BIND =
               std::placeholders::_1, std::placeholders::_2);
 
 void EncryptionApi::encrypt_file(
-    const std::string &filePathSource,
-    const std::string &filePathDestination,
+    const std::filesystem::path &filePathSource,
+    const std::filesystem::path &filePathDestination,
     const std::vector<BYTE> &key)
 {
   THROW_EXCEPTION_IF_FILE_MISSING(filePathSource);
@@ -29,8 +29,8 @@ void EncryptionApi::encrypt_file(
 }
 
 void EncryptionApi::decrypt_file(
-    const std::string &filePathSource,
-    const std::string &filePathDestination,
+    const std::filesystem::path &filePathSource,
+    const std::filesystem::path &filePathDestination,
     const std::vector<BYTE> &key)
 {
   THROW_EXCEPTION_IF_FILE_MISSING(filePathSource);

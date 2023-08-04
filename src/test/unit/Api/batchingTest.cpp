@@ -3,9 +3,7 @@
 
 namespace
 {
-  const std::string TEST_FOLDER = "TESTS";
-  const std::string TEST_FILE_NAME = "File";
-  const std::string TEST_FILE_PATH = TEST_FOLDER + "/" + TEST_FILE_NAME;
+  const std::filesystem::path TEST_FOLDER = "TESTS";
 }
 
 struct BatchingTest : public ::testing::Test
@@ -24,9 +22,9 @@ struct BatchingTest : public ::testing::Test
 TEST_F(BatchingTest, should_correctly_count_chunks_in_file)
 {
   // Given
-  const std::string filePathLess = TEST_FILE_PATH + "1";
-  const std::string filePathExactly = TEST_FILE_PATH + "2";
-  const std::string filePathMore = TEST_FILE_PATH + "3";
+  const std::filesystem::path filePathLess = TEST_FOLDER / "1";
+  const std::filesystem::path filePathExactly = TEST_FOLDER / "2";
+  const std::filesystem::path filePathMore = TEST_FOLDER / "3";
 
   // When
   bool createdFileLess = FileAccess::create_file(filePathLess);
