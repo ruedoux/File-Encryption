@@ -19,14 +19,14 @@
 class FunctionLibrary
 {
 private:
-  static std::unordered_map<std::string, ConsoleFunction> get_mapped_functions();
-
   static void show_help(const ArgumentConsumer &argumentConsumer);
   static void encrypt_file(const ArgumentConsumer &argumentConsumer);
+  static void decrypt_file(const ArgumentConsumer &argumentConsumer);
 
 public:
-  static void run_default_function();
-  static void run_function(const ArgumentConsumer &argumentConsumer);
+  static const std::string DEFAULT_FUNCTION_NAME;
+
+  static std::unordered_map<std::string, ConsoleFunction> get_mapped_functions();
 };
 
 #endif

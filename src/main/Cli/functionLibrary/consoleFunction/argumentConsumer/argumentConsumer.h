@@ -9,8 +9,6 @@
 
 #include <Api/global/exceptionHandling.h>
 
-#include "argumentParser.h"
-
 // --------------------------------------------
 // Declarations
 // --------------------------------------------
@@ -18,8 +16,12 @@
 class ArgumentConsumer
 {
 private:
+  static constexpr char OPTION_MARKER = '-';
   std::string commandName;
   std::unordered_map<std::string, std::string> mappedArgs;
+
+  static std::unordered_map<std::string, std::string> parse_args_options(
+      const std::vector<std::string> &args);
 
 public:
   ArgumentConsumer() {}

@@ -4,9 +4,29 @@ void ConsoleRunner::run()
 {
   if (argumentConsumer.get_command_name().empty())
   {
-    FunctionLibrary::run_default_function();
+    run_default_function();
     return;
   }
 
-  FunctionLibrary::run_function(argumentConsumer);
+  run_function(argumentConsumer);
+}
+
+void ConsoleRunner::run_default_function()
+{
+  FunctionLibrary::get_mapped_functions()[FunctionLibrary::DEFAULT_FUNCTION_NAME]
+      .run_bound_function(argumentConsumer);
+}
+
+void ConsoleRunner::run_function(const ArgumentConsumer &argumentConsumer)
+{
+  auto mappedFunctions = FunctionLibrary::get_mapped_functions();
+  const std::string commandName = argumentConsumer.get_command_name();
+
+  if (mappedFunctions.count(commandName) == 0)
+  {
+    throw UserViewException("No command with name: " + commandName);
+  }
+
+  ConsoleFunction consoleFunction = mappedFunctions[commandName];
+  consoleFunction.run_bound_function(argumentConsumer);
 }

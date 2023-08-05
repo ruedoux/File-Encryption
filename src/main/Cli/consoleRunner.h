@@ -17,6 +17,8 @@ class ConsoleRunner
 {
 private:
   ArgumentConsumer argumentConsumer;
+  void run_default_function();
+  void run_function(const ArgumentConsumer &argumentConsumer);
 
 public:
   ConsoleRunner(const int argc, char *argv[])

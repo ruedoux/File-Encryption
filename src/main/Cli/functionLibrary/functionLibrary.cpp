@@ -1,38 +1,12 @@
 #include "functionLibrary.h"
 
-void FunctionLibrary::run_default_function()
-{
-  show_help(ArgumentConsumer());
-}
-
-void FunctionLibrary::run_function(const ArgumentConsumer &argumentConsumer)
-{
-  auto mappedFunctions = get_mapped_functions();
-  const std::string commandName = argumentConsumer.get_command_name();
-
-  if (mappedFunctions.count(commandName) == 0)
-  {
-    throw UserViewException("No command with name: " + commandName);
-  }
-
-  ConsoleFunction consoleFunction = mappedFunctions[commandName];
-
-  for (auto &[option, description] : consoleFunction.get_required_options())
-  {
-    if (argumentConsumer.get_required_argument(option).empty())
-    {
-      throw UserViewException("Required argument is missing! \nOption: " + option + "\nDescription: " + description);
-    }
-  }
-
-  consoleFunction.run_bound_function(argumentConsumer);
-}
+const std::string FunctionLibrary::DEFAULT_FUNCTION_NAME = "help";
 
 std::unordered_map<std::string, ConsoleFunction> FunctionLibrary::get_mapped_functions()
 {
   ConsoleFunction helpFunction(
       &FunctionLibrary::show_help,
-      "help");
+      DEFAULT_FUNCTION_NAME);
   helpFunction.add_description("Shows list of all possible commands for the application.");
 
   ConsoleFunction encryptionFunction(
@@ -42,7 +16,15 @@ std::unordered_map<std::string, ConsoleFunction> FunctionLibrary::get_mapped_fun
   encryptionFunction.add_required_option("-i", "Input File path.");
   encryptionFunction.add_required_option("-o", "Output File path.");
 
-  std::vector<ConsoleFunction> functions({helpFunction, encryptionFunction});
+  ConsoleFunction decryptionFunction(
+      &FunctionLibrary::decrypt_file,
+      "decryptfile");
+  encryptionFunction.add_description("Decrypts a given file.");
+  encryptionFunction.add_required_option("-i", "Input File path.");
+  encryptionFunction.add_required_option("-o", "Output File path.");
+
+  std::vector<ConsoleFunction> functions(
+      {helpFunction, encryptionFunction, decryptionFunction});
 
   std::unordered_map<std::string, ConsoleFunction> mappedFunctions;
   for (ConsoleFunction &consoleFunction : functions)
@@ -81,14 +63,38 @@ void FunctionLibrary::show_help(const ArgumentConsumer &argumentConsumer)
 
 void FunctionLibrary::encrypt_file(const ArgumentConsumer &argumentConsumer)
 {
-  const std::string inputFilePath = argumentConsumer.get_required_argument("-i");
-  const std::string outputFilePath = argumentConsumer.get_required_argument("-o");
+  const std::filesystem::path inputFilePath =
+      argumentConsumer.get_required_argument("-i");
+  const std::filesystem::path outputFilePath =
+      argumentConsumer.get_required_argument("-o");
 
   if (!FileAccess::file_exist(inputFilePath))
   {
-    throw UserViewException("Input file doesnt exist: " + inputFilePath);
+    throw UserViewException("Input file doesnt exist: " + inputFilePath.string());
   }
 
   const std::vector<BYTE> key =
       UserInput::get_input_from_console_hidden_as_bytes("Type key: ");
+
+  EncryptionApi::encrypt_file(inputFilePath, outputFilePath, key);
+  Logger::log_info("Encryption successful");
+}
+
+void FunctionLibrary::decrypt_file(const ArgumentConsumer &argumentConsumer)
+{
+  const std::filesystem::path inputFilePath =
+      argumentConsumer.get_required_argument("-i");
+  const std::filesystem::path outputFilePath =
+      argumentConsumer.get_required_argument("-o");
+
+  if (!FileAccess::file_exist(inputFilePath))
+  {
+    throw UserViewException("Input file doesnt exist: " + inputFilePath.string());
+  }
+
+  const std::vector<BYTE> key =
+      UserInput::get_input_from_console_hidden_as_bytes("Type key: ");
+
+  EncryptionApi::decrypt_file(inputFilePath, outputFilePath, key);
+  Logger::log_info("Decryption successful");
 }

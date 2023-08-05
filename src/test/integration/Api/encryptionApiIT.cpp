@@ -24,7 +24,7 @@ namespace
     const std::vector<BYTE> bytesInFile =
         Encryption::get_random_bytes(fileSizeDeclared);
     const std::vector<BYTE> randomKey = Encryption::get_random_bytes(
-        Global::get_random_u64(4, Encryption::KEY_BYTE_SIZE));
+        Global::get_random_u64(1, Encryption::KEY_BYTE_SIZE));
 
     // When
     bool createdFile = FileAccess::create_file(TEST_FILE_PATH_SOURCE);
