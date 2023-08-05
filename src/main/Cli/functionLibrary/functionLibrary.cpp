@@ -34,7 +34,7 @@ std::unordered_map<std::string, ConsoleFunction> FunctionLibrary::get_mapped_fun
       &FunctionLibrary::show_help,
       "help");
   helpFunction.add_description("Shows list of all possible commands for the application.");
-  
+
   ConsoleFunction encryptionFunction(
       &FunctionLibrary::encrypt_file,
       "encryptfile");
@@ -84,10 +84,11 @@ void FunctionLibrary::encrypt_file(const ArgumentConsumer &argumentConsumer)
   const std::string inputFilePath = argumentConsumer.get_required_argument("-i");
   const std::string outputFilePath = argumentConsumer.get_required_argument("-o");
 
-  if(!FileAccess::file_exist(inputFilePath))
+  if (!FileAccess::file_exist(inputFilePath))
   {
     throw UserViewException("Input file doesnt exist: " + inputFilePath);
   }
 
-
+  const std::vector<BYTE> key =
+      UserInput::get_input_from_console_hidden_as_bytes("Type key: ");
 }

@@ -48,7 +48,6 @@ namespace
 class Logger
 {
 private:
-
   std::atomic<bool> supressError;
 
   Logger() { supressError = false; }

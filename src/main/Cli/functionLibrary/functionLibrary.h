@@ -10,6 +10,7 @@
 #include <Api/encryptionApi.h>
 
 #include "consoleFunction/consoleFunction.h"
+#include "userInput.h"
 
 // --------------------------------------------
 // Declarations
