@@ -57,7 +57,7 @@ void ConsoleFunction::add_description(const std::string &description)
   _description = description;
 }
 
-void ConsoleFunction::run_bound_function(const ArgumentConsumer &argumentConsumer)
+void ConsoleFunction::run_bound_function(const ArgumentConsumer &argumentConsumer) const
 {
   for (auto &[option, description] : this->get_required_options())
   {
@@ -67,10 +67,5 @@ void ConsoleFunction::run_bound_function(const ArgumentConsumer &argumentConsume
     }
   }
 
-  if (!bindedFunction)
-  {
-    THROW_EXCEPTION("Tried to call not bound console function!");
-  }
-
-  bindedFunction(argumentConsumer);
+  bound_function(argumentConsumer);
 }

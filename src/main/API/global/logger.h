@@ -38,11 +38,14 @@ namespace
 {
   static const std::string INFO_MARKER = "[INFO] ";
   static const std::string ERROR_MARKER = "[ERROR] ";
+  static const std::string OK_MARKER = "[OK] ";
 
   static const std::string INFO_MARKER_ANSI =
       std::string(_BOLD) + std::string(_BLUE) + INFO_MARKER;
   static const std::string ERROR_MARKER_ANSI =
       std::string(_BOLD) + std::string(_RED) + ERROR_MARKER;
+  static const std::string OK_MARKER_ANSI =
+      std::string(_BOLD) + std::string(_GREEN) + OK_MARKER;
 }
 
 class Logger
@@ -79,6 +82,13 @@ public:
   {
     VARARGS_FORMAT_STRING(msg, args);
     log_stdout(format_log(INFO_MARKER_ANSI + msg, INFO_MARKER));
+  }
+
+  template <typename... Args>
+  static void log_ok(Args... args)
+  {
+    VARARGS_FORMAT_STRING(msg, args);
+    log_stdout(format_log(OK_MARKER_ANSI + msg, OK_MARKER));
   }
 
   template <typename... Args>

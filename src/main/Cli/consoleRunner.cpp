@@ -13,8 +13,7 @@ void ConsoleRunner::run()
 
 void ConsoleRunner::run_default_function()
 {
-  FunctionLibrary::get_mapped_functions()[FunctionLibrary::DEFAULT_FUNCTION_NAME]
-      .run_bound_function(argumentConsumer);
+  FunctionLibrary::show_help();
 }
 
 void ConsoleRunner::run_function(const ArgumentConsumer &argumentConsumer)
@@ -22,11 +21,16 @@ void ConsoleRunner::run_function(const ArgumentConsumer &argumentConsumer)
   auto mappedFunctions = FunctionLibrary::get_mapped_functions();
   const std::string commandName = argumentConsumer.get_command_name();
 
+  if(commandName == "help")
+  {
+    run_default_function();
+    return;
+  }
+
   if (mappedFunctions.count(commandName) == 0)
   {
     throw UserViewException("No command with name: " + commandName);
   }
 
-  ConsoleFunction consoleFunction = mappedFunctions[commandName];
-  consoleFunction.run_bound_function(argumentConsumer);
+  mappedFunctions[commandName].get()->run_bound_function(argumentConsumer);
 }

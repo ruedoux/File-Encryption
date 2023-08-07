@@ -9,8 +9,8 @@
 
 #include <Api/encryptionApi.h>
 
-#include "consoleFunction/consoleFunction.h"
-#include "userInput.h"
+#include "consoleDecryptionFunction.h"
+#include "consoleEncryptionFunction.h"
 
 // --------------------------------------------
 // Declarations
@@ -18,15 +18,10 @@
 
 class FunctionLibrary
 {
-private:
-  static void show_help(const ArgumentConsumer &argumentConsumer);
-  static void encrypt_file(const ArgumentConsumer &argumentConsumer);
-  static void decrypt_file(const ArgumentConsumer &argumentConsumer);
-
 public:
-  static const std::string DEFAULT_FUNCTION_NAME;
-
-  static std::unordered_map<std::string, ConsoleFunction> get_mapped_functions();
+  static void show_help();
+  static std::unordered_map<std::string, std::unique_ptr<ConsoleFunction>>
+  get_mapped_functions();
 };
 
 #endif
