@@ -10,7 +10,8 @@ namespace
 
   void encrypt_and_decrypt_a_file_test(
       const u64 exactChunkCount,
-      const bool randomBytes)
+      const bool randomBytes,
+      const u64 maxRandomBytes = DataChunk::get_desired_chunk_size() - 1)
   {
     // Given
     const u64 chunkSize = DataChunk::get_desired_chunk_size();
@@ -18,7 +19,7 @@ namespace
     u64 fileSizeDeclared = chunkSize * exactChunkCount;
     if (randomBytes)
     {
-      fileSizeDeclared += Global::get_random_u64(1, chunkSize - 1);
+      fileSizeDeclared += Global::get_random_u64(1, maxRandomBytes);
     }
 
     const std::vector<BYTE> bytesInFile =
@@ -67,6 +68,11 @@ struct EncryptionApiIT : public ::testing::Test
     std::filesystem::remove_all(TEST_FOLDER);
   }
 };
+
+TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_small)
+{
+  encrypt_and_decrypt_a_file_test(0, true, 12);
+}
 
 TEST_F(EncryptionApiIT, encrypts_and_decrypts_a_file_with_random_less_than_one)
 {

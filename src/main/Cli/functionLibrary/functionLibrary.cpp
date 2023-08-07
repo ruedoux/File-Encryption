@@ -15,13 +15,15 @@ std::unordered_map<std::string, ConsoleFunction> FunctionLibrary::get_mapped_fun
   encryptionFunction.add_description("Encrypts a given file.");
   encryptionFunction.add_required_option("-i", "Input File path.");
   encryptionFunction.add_required_option("-o", "Output File path.");
+  encryptionFunction.add_optional_option("-fp", "Path to file with password.");
 
   ConsoleFunction decryptionFunction(
       &FunctionLibrary::decrypt_file,
       "decryptfile");
-  encryptionFunction.add_description("Decrypts a given file.");
-  encryptionFunction.add_required_option("-i", "Input File path.");
-  encryptionFunction.add_required_option("-o", "Output File path.");
+  decryptionFunction.add_description("Decrypts a given file.");
+  decryptionFunction.add_required_option("-i", "Input File path.");
+  decryptionFunction.add_required_option("-o", "Output File path.");
+  encryptionFunction.add_optional_option("-fp", "Path to file with password.");
 
   std::vector<ConsoleFunction> functions(
       {helpFunction, encryptionFunction, decryptionFunction});
@@ -67,6 +69,7 @@ void FunctionLibrary::encrypt_file(const ArgumentConsumer &argumentConsumer)
       argumentConsumer.get_required_argument("-i");
   const std::filesystem::path outputFilePath =
       argumentConsumer.get_required_argument("-o");
+  
 
   if (!FileAccess::file_exist(inputFilePath))
   {

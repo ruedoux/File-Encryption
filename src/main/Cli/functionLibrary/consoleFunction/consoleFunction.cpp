@@ -15,7 +15,12 @@ std::unordered_map<std::string, std::string> ConsoleFunction::get_required_optio
   return requiredOptions;
 }
 
-std::string ConsoleFunction::get_reqired_option(const std::string &optionName) const
+std::unordered_map<std::string, std::string> ConsoleFunction::get_optional_options() const
+{
+  return optionalOptions;
+}
+
+std::string ConsoleFunction::get_required_option(const std::string &optionName) const
 {
   if (requiredOptions.count(optionName) == 0)
   {
@@ -25,10 +30,26 @@ std::string ConsoleFunction::get_reqired_option(const std::string &optionName) c
   return requiredOptions.at(optionName);
 }
 
+std::string ConsoleFunction::get_optional_option(const std::string &optionName) const
+{
+  if (requiredOptions.count(optionName) == 0)
+  {
+    return "";
+  }
+
+  return optionalOptions.at(optionName);
+}
+
 void ConsoleFunction::add_required_option(
     const std::string &option, const std::string &description)
 {
   requiredOptions[option] = description;
+}
+
+void ConsoleFunction::add_optional_option(
+    const std::string &option, const std::string &description)
+{
+  optionalOptions[option] = description;
 }
 
 void ConsoleFunction::add_description(const std::string &description)
