@@ -49,7 +49,6 @@ std::vector<BYTE> Encryption::get_random_bytes(const u64 size)
 std::vector<BYTE> Encryption::get_hashed_key(const std::vector<BYTE> &key)
 {
   std::vector<BYTE> paddedKey = get_padded_bytes(key, KEY_BYTE_SIZE);
-  ;
   std::vector<BYTE> hashedKey(KEY_BYTE_SIZE);
 
   Sha256::SHA256_CTX sha;
@@ -62,13 +61,12 @@ std::vector<BYTE> Encryption::get_hashed_key(const std::vector<BYTE> &key)
 
 std::vector<BYTE> Encryption::get_stretched_key(const std::vector<BYTE> &key)
 {
-  std::vector<BYTE> stretchedKey = key;
-  stretchedKey = get_padded_bytes(stretchedKey, KEY_BYTE_SIZE);
+  std::vector<BYTE> stretchedKey = get_padded_bytes(key, KEY_BYTE_SIZE);
   for (size_t i = 0; i < HASH_ROTATIONS; i++)
   {
     stretchedKey = get_hashed_key(stretchedKey);
   }
-  return key;
+  return stretchedKey;
 }
 
 std::vector<BYTE> Encryption::get_padded_bytes(
@@ -85,5 +83,6 @@ std::vector<BYTE> Encryption::get_padded_bytes(
   {
     paddedBytes[i] = bytes[i];
   }
+
   return paddedBytes;
 }
