@@ -4,8 +4,9 @@ std::unordered_map<std::string, std::unique_ptr<ConsoleFunction>>
 FunctionLibrary::get_mapped_functions()
 {
   std::vector<std::unique_ptr<ConsoleFunction>> functions;
-  functions.push_back(std::make_unique<ConsoleDecryptionFunction>("decryptfile"));
-  functions.push_back(std::make_unique<ConsoleEncryptionFunction>("encryptfile"));
+  functions.push_back(std::make_unique<ConsoleDecryption>("decryptfile"));
+  functions.push_back(std::make_unique<ConsoleEncryption>("encryptfile"));
+  functions.push_back(std::make_unique<ConsoleDecryptionPrint>("decryptprint"));
 
   std::unordered_map<std::string, std::unique_ptr<ConsoleFunction>> mappedFunctions;
   for (std::unique_ptr<ConsoleFunction> &consoleFunction : functions)

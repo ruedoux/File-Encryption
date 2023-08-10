@@ -12,20 +12,16 @@ void EncryptionApi::encrypt_file(
     THROW_FILE_EXCEPTION("Unable to create file!", filePathDestination);
   }
 
+  const u64 chunkSizeFrom = DataChunk::get_desired_chunk_size();
+  const uintmax_t fileSize = FileAccess::get_file_size(filePathSource);
+
+  THROW_EXCEPTION_IF_TRUE(fileSize == 0);
+
   const u64 chunkCount = Batching::get_chunk_count_in_file(
       filePathSource, DataChunk::get_desired_chunk_size());
   for (u64 chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++)
   {
-    THROW_EXCEPTION_IF_FILE_MISSING(filePathSource);
-    THROW_EXCEPTION_IF_FILE_MISSING(filePathDestination);
-
-    const u64 chunkSizeFrom = DataChunk::get_desired_chunk_size();
-    const uintmax_t fileSize = FileAccess::get_file_size(filePathSource);
-    const u64 maxChunks = Batching::get_chunk_count_in_file(filePathSource, chunkSizeFrom);
     const uintmax_t lastByteIndex = chunkSizeFrom * chunkIndex + chunkSizeFrom;
-
-    THROW_EXCEPTION_IF_MORE(chunkIndex, maxChunks);
-    THROW_EXCEPTION_IF_TRUE(fileSize == 0);
 
     const u64 bytesToRead =
         (lastByteIndex < fileSize) ? chunkSizeFrom : chunkSizeFrom - (lastByteIndex - fileSize);
@@ -50,20 +46,16 @@ void EncryptionApi::decrypt_file(
     THROW_FILE_EXCEPTION("Unable to create file!", filePathDestination);
   }
 
+  const u64 chunkSizeFrom = EncryptedDataChunk::get_desired_chunk_size();
+  const uintmax_t fileSize = FileAccess::get_file_size(filePathSource);
+
+  THROW_EXCEPTION_IF_TRUE(fileSize == 0);
+
   const u64 chunkCount = Batching::get_chunk_count_in_file(
       filePathSource, EncryptedDataChunk::get_desired_chunk_size());
   for (u64 chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++)
   {
-    THROW_EXCEPTION_IF_FILE_MISSING(filePathSource);
-    THROW_EXCEPTION_IF_FILE_MISSING(filePathDestination);
-
-    const u64 chunkSizeFrom = EncryptedDataChunk::get_desired_chunk_size();
-    const uintmax_t fileSize = FileAccess::get_file_size(filePathSource);
-    const u64 maxChunks = Batching::get_chunk_count_in_file(filePathSource, chunkSizeFrom);
     const uintmax_t lastByteIndex = chunkSizeFrom * chunkIndex + chunkSizeFrom;
-
-    THROW_EXCEPTION_IF_MORE(chunkIndex, maxChunks);
-    THROW_EXCEPTION_IF_TRUE(fileSize == 0);
 
     const u64 bytesToRead =
         (lastByteIndex < fileSize) ? chunkSizeFrom : chunkSizeFrom - (lastByteIndex - fileSize);

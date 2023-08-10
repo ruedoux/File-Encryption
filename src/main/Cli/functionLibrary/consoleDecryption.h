@@ -16,7 +16,7 @@
 // Declarations
 // --------------------------------------------
 
-class ConsoleDecryptionFunction : public ConsoleFunction
+class ConsoleDecryption : public ConsoleFunction
 {
 protected:
   virtual void bound_function(const ArgumentConsumer &argumentConsumer) const override
@@ -26,7 +26,7 @@ protected:
     const std::filesystem::path outputFilePath =
         argumentConsumer.get_required_argument("-o");
     const std::filesystem::path passwordFilePath =
-        argumentConsumer.get_required_argument("-fp");
+        argumentConsumer.get_optional_argument("-fp");
 
     if (!FileAccess::file_exist(inputFilePath))
     {
@@ -53,7 +53,7 @@ protected:
   }
 
 public:
-  ConsoleDecryptionFunction(const std::string &commandName)
+  ConsoleDecryption(const std::string &commandName)
       : ConsoleFunction(commandName)
   {
     add_description("Decrypts a given file.");

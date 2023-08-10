@@ -21,6 +21,7 @@ namespace
 #define _BOLD "\033[1m"
 #define _RED "\033[31m"
 #define _GREEN "\033[32m"
+#define _YELLOW "\033[33m"
 #define _BLUE "\033[34m"
 #define _ANSI_RESET "\033[0m"
 
@@ -39,6 +40,7 @@ namespace
   static const std::string INFO_MARKER = "[INFO] ";
   static const std::string ERROR_MARKER = "[ERROR] ";
   static const std::string OK_MARKER = "[OK] ";
+  static const std::string WARN_MARKER = "[WARN] ";
 
   static const std::string INFO_MARKER_ANSI =
       std::string(_BOLD) + std::string(_BLUE) + INFO_MARKER;
@@ -46,6 +48,8 @@ namespace
       std::string(_BOLD) + std::string(_RED) + ERROR_MARKER;
   static const std::string OK_MARKER_ANSI =
       std::string(_BOLD) + std::string(_GREEN) + OK_MARKER;
+  static const std::string WARN_MARKER_ANSI =
+      std::string(_BOLD) + std::string(_YELLOW) + WARN_MARKER;
 }
 
 class Logger
@@ -89,6 +93,13 @@ public:
   {
     VARARGS_FORMAT_STRING(msg, args);
     log_stdout(format_log(OK_MARKER_ANSI + msg, OK_MARKER));
+  }
+
+  template <typename... Args>
+  static void log_warn(Args... args)
+  {
+    VARARGS_FORMAT_STRING(msg, args);
+    log_stdout(format_log(WARN_MARKER_ANSI + msg, WARN_MARKER));
   }
 
   template <typename... Args>

@@ -9,8 +9,9 @@
 
 #include <Api/encryptionApi.h>
 
-#include "consoleDecryptionFunction.h"
-#include "consoleEncryptionFunction.h"
+#include "consoleDecryption.h"
+#include "consoleEncryption.h"
+#include "consoleDecryptPrint.h"
 
 // --------------------------------------------
 // Declarations
