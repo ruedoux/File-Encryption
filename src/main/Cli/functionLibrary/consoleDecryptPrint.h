@@ -102,7 +102,7 @@ protected:
     for (size_t i = 0; i < bytes.size(); i++)
     {
       BYTE byte = bytes[i];
-      if (byte > 126)
+      if (byte > 126 || byte < 48)
       {
         byte = 48;
       }
