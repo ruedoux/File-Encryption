@@ -3,10 +3,9 @@ File-Encryption
 
 About
 -----
-Simple implementation of AES-CTR crypting using 256 bit hashed key. Hasihing is done using SHA-256. 
+Simple implementation of AES-CTR crypting using 256 bit hashed key. Hasihing is done using SHA-256 with stretching. 
 
 Encryption is done in 1MB blocks, IV is prepended in the clear for each block.
-
 
 Building
 -----------
@@ -18,12 +17,9 @@ Compilation requires:
 Compilation:
 - Run `python build.py` command
 
-
 Development
 -----
+Project has built in CI/CD with gtest and cmake so it wont compile unless all tests pass (`src/test` folder) to ensure the program works as expected.
 
-**(!Currently project is WIP!)**
-
-Project will only build after all unit tests pass. All testing is located in src/test directory. Library for doing the tests is [gtest](https://github.com/google/googletest).
 
 
