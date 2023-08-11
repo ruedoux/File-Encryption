@@ -68,6 +68,34 @@ public:
     return input;
   }
 
+  static std::string convert_byte_vector_to_string(const std::vector<BYTE> &bytes)
+  {
+    std::string output;
+    for (size_t i = 0; i < bytes.size(); i++)
+    {
+      BYTE byte = bytes[i];
+      if (byte >= 32 && byte <= 126)
+      {
+        output.push_back(static_cast<char>(byte));
+      }
+      else if (byte == '\n')
+      {
+        output.push_back('\n');
+      }
+      #ifdef _WIN32
+      else if (byte == '\r')
+      {
+        output.push_back('\r');
+      }
+      #endif
+      else
+      {
+        output.push_back('0');
+      }
+    }
+    return output;
+  }
+
   static std::vector<BYTE> string_to_bytes(const std::string &in)
   {
     std::vector<BYTE> out;

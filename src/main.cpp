@@ -13,6 +13,6 @@ int main(int argc, char *argv[])
   {
     ex.log();
   }
-  
+
   return EXIT_SUCCESS;
 }

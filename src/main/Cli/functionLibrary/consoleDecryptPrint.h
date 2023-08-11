@@ -58,9 +58,9 @@ protected:
     }
 
     Logger::log("");
-    Logger::log("-------START---------");
+    Logger::log("-----------------START-------------------");
     print_decrypted_file_content_to_stdout(inputFilePath, key);
-    Logger::log("--------END----------");
+    Logger::log("------------------END--------------------");
     Logger::log("");
 
     Logger::log_info("Press any key to clear the console output.");
@@ -92,23 +92,10 @@ protected:
       const EncryptedDataChunk encryptedChunk = Batching::read_chunk_from_file<EncryptedDataChunk>(
           inputFilePath, chunkIndex, bytesToRead);
 
-      Logger::log(convert_byte_vector_to_string(ChunkEncryption::decrypt_chunk(encryptedChunk, key).get_data()));
+      Logger::log(
+          UserInput::convert_byte_vector_to_string(
+              ChunkEncryption::decrypt_chunk(encryptedChunk, key).get_data()));
     }
-  }
-
-  std::string convert_byte_vector_to_string(const std::vector<BYTE> &bytes) const
-  {
-    std::string output;
-    for (size_t i = 0; i < bytes.size(); i++)
-    {
-      BYTE byte = bytes[i];
-      if (byte > 126 || byte < 48)
-      {
-        byte = 48;
-      }
-      output.push_back(static_cast<char>(byte));
-    }
-    return output;
   }
 
 public:
