@@ -126,7 +126,7 @@ public:
   }
 
 #elif __linux__
-  static void get_clear_command()
+  static void clear_console()
   {
     system("clear");
   }
