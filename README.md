@@ -21,7 +21,7 @@ Compilation:
 
 Development
 -----
-Project has built in CI/CD with gtest and cmake so it wont compile unless all tests pass (`src/test` folder) to ensure the program works as expected.
+Project is built using cmake pipeline that runs gtest, so it wont compile unless all tests pass (`src/test` folder) to ensure the program works as expected.
 
 
 
